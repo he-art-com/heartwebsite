@@ -14,6 +14,7 @@ import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import HelpCenter from "./pages/HelpCenter";
+import Overview from "./pages/Overview"; // <--- TAMBAHAN
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/gallery/overview" element={<Overview />} /> {/* TAMBAHAN */}
         <Route path="/for-sale" element={<ForSale />} />
         <Route path="/for-sale/:id" element={<ForSaleDetail />} />
         <Route path="/event" element={<Event />} />
@@ -34,7 +36,6 @@ function App() {
       </Routes>
 
       <Footer />
-      
     </Router>
   );
 }
