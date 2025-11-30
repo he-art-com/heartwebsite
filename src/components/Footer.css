@@ -1,0 +1,106 @@
+.footer {
+  width: 100%;
+  background: #f5dfc7;
+  padding: 60px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* COLUMNS */
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-logo {
+  width: 130px;
+  margin-bottom: 15px;
+}
+
+.footer-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.footer-section a {
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+}
+
+.footer-section a:hover {
+  color: #a46a3f;
+}
+
+/* LIMIT WIDTH BAGIAN LEFT SECTION */
+.footer-section.about {
+  max-width: 500px;   /* kamu bisa ubah jadi 240 / 280 sesuai selera */
+}
+.footer-section.about p {
+  line-height: 1.4;
+}
+
+
+/* INPUT */
+.footer-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.footer-input input {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  background: transparent;
+  width: 200px;
+}
+
+.footer-input button {
+  padding: 8px 20px;
+  background: #a46a3f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* SOCIAL ICONS */
+.footer-social {
+  display: flex;
+  gap: 15px;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+/* CONTACT BAR (BARIS HORIZONTAL) */
+.footer-contact-bar {
+  width: 100%;
+  background: #f5dfc7;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  font-size: 15px;
+  font-weight: 500;
+  align-items: center;
+}
+
+.footer-contact-bar div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* COPYRIGHT */
+.footer-bottom {
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  font-size: 14px;
+  background: #e8c8a6;
+}
+
+

@@ -1,0 +1,345 @@
+/* GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.home {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* --------------------------------------- */
+/* HERO BANNER */
+/* --------------------------------------- */
+
+.hero {
+  width: 100%;
+  height: 520px;
+  position: relative;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(65%);
+}
+
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  max-width: 760px;
+}
+
+.hero-text h1 {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.hero-text p {
+  font-size: 16px;
+  line-height: 24px;
+  opacity: 0.9;
+}
+
+
+/* --------------------------------------- */
+/* FAVORITES SECTION */
+/* --------------------------------------- */
+
+.favorites {
+  padding: 50px 80px;
+}
+
+.favorites h2 {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.fav-grid {
+  display: flex;
+  gap: 26px;
+}
+
+.fav-card img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 0px;
+  box-shadow: 10px 9px 7px 0px #00000040;
+}
+
+.fav-card .title {
+  font-size: 12px;
+  margin-top: 8px;
+  color: #444;
+}
+
+
+/* --------------------------------------- */
+/* DISCOVER BANNER */
+/* --------------------------------------- */
+
+.discover {
+  width: 1365px;        
+  height: 574px;        
+  position: relative;
+  left: 46px;      
+}
+
+.discover-bg {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 0px;
+  filter: brightness(60%);
+}
+
+.discover-text {
+  position: absolute;
+  top: 32%;
+  left: 40px;
+  color: white;
+}
+
+.discover-text h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.discover-text p {
+  max-width: 380px;
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 24px;
+}
+
+
+/* --------------------------------------- */
+/* EVENTS */
+/* --------------------------------------- */
+
+.events {
+  padding: 60px 80px;
+  margin-top: -170px;
+}
+
+
+.events h2 {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.event-grid {
+  display: flex;
+  justify-content: center; 
+  gap: 40px;
+  width: 100%;
+}
+
+
+.event-card img {
+  width: 297px;
+  height: 473px;
+  object-fit: cover;
+  border-radius: 0px;
+  box-shadow: 10px 9px 7px 0px #00000040;
+}
+
+.event-card .title {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
+
+.event-card .subtitle {
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.event-card .location {
+  font-size: 16px;
+  color: #777;
+  margin-top: 2px;
+}
+
+
+
+
+/* --------------------------------------- */
+/* FEATURED ARTISTS */
+/* --------------------------------------- */
+
+.artists {
+  padding: 60px 80px;
+}
+
+/* header: "Featured Artist" + See All Artists */
+.artists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.artists h2 {
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* "See All Artists" seperti di Figma */
+.see-all-artists {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  font-size: 20px;         /* gede dikit, kayak di Figma */
+  font-weight: 500;
+  color: #7b7b7b;          /* abu-abu */
+  letter-spacing: 0.04em;  /* sedikit renggang */
+  text-transform: none;    /* biar persis: "See All Artists" */
+  text-decoration: none;
+
+  display: inline-block;
+  border-bottom: 3px solid #7b7b7b; /* underline selebar teks */
+  line-height: 1.1;
+
+  margin-right: 150px; /* <<< geser ke kiri (coba 40, 80, 120 dll) */
+
+}
+
+.artist-grid {
+  display: flex;
+  justify-content: center; 
+  gap: 40px;
+  width: 100%;
+}
+
+.artist-card {
+  text-align: center;
+}
+
+.artist-card img {
+  width: 297px;
+  height: 473px;
+  object-fit: cover;
+  border-radius: 0px;
+  box-shadow: 10px 9px 7px 0px #00000040;
+}
+
+.artist-card .name {
+  font-weight: 600;
+  margin: 12px 0 10px;
+  margin-left: -150px;
+}
+
+/* subtitle artist – sama gaya dengan events */
+.artist-card .subtitle {
+  font-size: 12px;
+  color: #777;            /* abu-abu lembut, mirip Figma */
+  margin-top: -4px;       /* naik sedikit supaya dekat dengan name */
+  margin-left: -190px;    /* samakan align kiri sama .name */
+  margin-bottom: 8px;     /* jarak ke tombol view */
+  font-weight: 400;
+}
+
+
+
+.artist-card button {
+  font-size: 12px;
+  padding: 4px 50px;
+  background: transparent;
+  border: 2px solid #583101;
+  border-radius: 55px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  margin-left: -135px;
+  
+
+}
+
+
+/* --------------------------------------- */
+/* FOOTER */
+/* --------------------------------------- */
+
+.footer {
+  margin-top: 60px;
+}
+
+/* ---------- FAVORITES PAGINATION: GARIS + "< 1 of 10 >" ---------- */
+
+.fav-pagination {
+  margin-top: 32px;
+}
+
+/* garis coklat */
+.fav-line {
+  height: 1.5px;
+  width: 100%;
+  background-color: #583101;
+  margin-bottom: 6px;   /* jarak ke text bawah */
+}
+
+/* baris "< 1 of 10 >" di bawah garis */
+.fav-page-inline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #583101;
+}
+
+/* tombol kecil utk < dan >, tapi tampilannya kayak text */
+.fav-arrow-inline {
+  border: none;
+  background: transparent;
+  color: #583101;
+  font-size: 12px;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.fav-page-text-inline {
+  font-size: 12px;
+}
+
+.discover-explore-btn {
+  margin-top: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.discover-explore-arrow {
+  font-size: 18px;
+  line-height: 1;
+}
+
+
+
+
+
+
+
