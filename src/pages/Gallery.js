@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Gallery.css";
 
 import img1 from "../assets/images/11.png";
@@ -13,6 +14,50 @@ import img9 from "../assets/images/14.png";
 import img10 from "../assets/images/13.png";
 
 const TOTAL_PAGES = 6;
+
+/** META DATA ARTWORK (judul + subtitle di modal) */
+const artworkMeta = {
+  [img5]: {
+    title: "The Scream",
+    subtitle: "Edvard Munch, 1893",
+  },
+  [img6]: {
+    title: "Swans on the Lake",
+    subtitle: "Oil on canvas",
+  },
+  [img7]: {
+    title: "Relief of the Flood",
+    subtitle: "Anonymous, c. 1900",
+  },
+  [img8]: {
+    title: "The Raft of the Survivors",
+    subtitle: "Lithograph, 19th century",
+  },
+  [img9]: {
+    title: "Old Man Portrait",
+    subtitle: "Oil on canvas",
+  },
+  [img10]: {
+    title: "Girl in a Gilded Frame",
+    subtitle: "Oil on canvas",
+  },
+  [img1]: {
+    title: "Abstract Portrait Study",
+    subtitle: "Mixed media",
+  },
+  [img2]: {
+    title: "The Starry Night",
+    subtitle: "Vincent van Gogh, 1889",
+  },
+  [img3]: {
+    title: "Water Lilies",
+    subtitle: "Claude Monet, c. 1916",
+  },
+  [img4]: {
+    title: "Nymphs’ Descent",
+    subtitle: "Classical painting",
+  },
+};
 
 // TEXT HERO PER PAGE
 const heroConfigs = {
@@ -75,6 +120,9 @@ const Gallery = () => {
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
 
+  // LIGHTBOX: index artwork yg lagi dibuka (di current page)
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
   const toggleStyleDropdown = () => {
     setIsStyleOpen((prev) => !prev);
   };
@@ -82,9 +130,9 @@ const Gallery = () => {
   const goToPage = (page) => {
     if (page < 1 || page > TOTAL_PAGES) return;
     setCurrentPage(page);
+    setLightboxIndex(null); // tutup modal kalau ganti page
   };
 
-  // saat klik salah satu style, ganti label + pindah page
   const handleStyleSelect = (value) => {
     setSelectedStyle(value.toUpperCase());
     setIsStyleOpen(false);
@@ -105,15 +153,43 @@ const Gallery = () => {
 
   const currentImages = pageImages[currentPage] || pageImages[1];
 
+  // flatten artworks dengan meta
+  const artworks = currentImages.map((src) => ({
+    src,
+    title: artworkMeta[src]?.title || "Artwork",
+    subtitle: artworkMeta[src]?.subtitle || "",
+  }));
+
   // bagi ke 4 kolom masonry
   const columns = [[], [], [], []];
-  currentImages.forEach((src, index) => {
-    columns[index % 4].push(src);
+  artworks.forEach((art, index) => {
+    columns[index % 4].push({ ...art, index });
   });
 
   // hero text sesuai page
   const hero = heroConfigs[currentPage] || heroConfigs[1];
   const isCenteredHero = currentPage !== 1; // cuma page 2–6 yang center
+
+  const openLightbox = (index) => {
+    setLightboxIndex(index);
+  };
+
+  const closeLightbox = () => setLightboxIndex(null);
+
+  const showPrev = () => {
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev - 1 + artworks.length) % artworks.length
+    );
+  };
+
+  const showNext = () => {
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev + 1) % artworks.length
+    );
+  };
+
+  const activeArtwork =
+    lightboxIndex === null ? null : artworks[lightboxIndex];
 
   return (
     <div className="gallery-page">
@@ -154,10 +230,10 @@ const Gallery = () => {
 
               {/* Explore more hanya di page 1 */}
               {currentPage === 1 && (
-                <button className="hero-cta">
+                <Link to="/gallery/overview" className="hero-cta">
                   <span className="hero-cta-arrow">→</span>
                   <span>Explore more</span>
-                </button>
+                </Link>
               )}
             </div>
           </div>
@@ -216,17 +292,19 @@ const Gallery = () => {
           <div className="masonry">
             {columns.map((col, colIndex) => (
               <div className="masonry-column" key={colIndex}>
-                {col.map((src, idx) => (
-                  <div
+                {col.map((art) => (
+                  <button
+                    type="button"
                     className="masonry-item"
-                    key={`${colIndex}-${idx}-${src}`}
+                    key={`${colIndex}-${art.index}`}
+                    onClick={() => openLightbox(art.index)}
                   >
                     <img
-                      src={src}
-                      alt={`Artwork ${colIndex + 1}-${idx + 1}`}
+                      src={art.src}
+                      alt={art.title}
                       className="masonry-img"
                     />
-                  </div>
+                  </button>
                 ))}
               </div>
             ))}
@@ -267,6 +345,58 @@ const Gallery = () => {
           </button>
         </section>
       </main>
+
+      {/* LIGHTBOX / CLOSE-UP MODAL */}
+      {activeArtwork && (
+        <div className="lightbox-overlay" onClick={closeLightbox}>
+          <div
+            className="lightbox-inner"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="lightbox-close"
+              onClick={closeLightbox}
+              aria-label="Close"
+            >
+              ×
+            </button>
+
+            <div className="lightbox-image-wrapper">
+              <img
+                src={activeArtwork.src}
+                alt={activeArtwork.title}
+                className="lightbox-image"
+              />
+
+              <button
+                type="button"
+                className="lightbox-nav-btn lightbox-nav-left"
+                onClick={showPrev}
+                aria-label="Previous artwork"
+              >
+                ‹
+              </button>
+
+              <button
+                type="button"
+                className="lightbox-nav-btn lightbox-nav-right"
+                onClick={showNext}
+                aria-label="Next artwork"
+              >
+                ›
+              </button>
+            </div>
+
+            <div className="lightbox-caption">
+              <h3>{activeArtwork.title}</h3>
+              {activeArtwork.subtitle && (
+                <p className="lightbox-subtitle">{activeArtwork.subtitle}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

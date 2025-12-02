@@ -1,3 +1,5 @@
+/* ================= FOOTER MAIN ================= */
+
 .footer {
   width: 100%;
   background: #f5dfc7;
@@ -5,6 +7,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 40px;
+  flex-wrap: nowrap; /* di desktop tetap sejajar */
 }
 
 /* COLUMNS */
@@ -36,12 +40,12 @@
 
 /* LIMIT WIDTH BAGIAN LEFT SECTION */
 .footer-section.about {
-  max-width: 500px;   /* kamu bisa ubah jadi 240 / 280 sesuai selera */
+  max-width: 500px; /* kamu bisa ubah 240/280/320 kalau mau lebih sempit */
 }
+
 .footer-section.about p {
   line-height: 1.4;
 }
-
 
 /* INPUT */
 .footer-input {
@@ -75,7 +79,8 @@
   margin-top: 10px;
 }
 
-/* CONTACT BAR (BARIS HORIZONTAL) */
+/* ================= CONTACT BAR (BARIS HORIZONTAL) ================= */
+
 .footer-contact-bar {
   width: 100%;
   background: #f5dfc7;
@@ -94,7 +99,8 @@
   gap: 8px;
 }
 
-/* COPYRIGHT */
+/* ================= COPYRIGHT ================= */
+
 .footer-bottom {
   width: 100%;
   text-align: center;
@@ -103,4 +109,90 @@
   background: #e8c8a6;
 }
 
+/* ===================================================== */
+/* ==================== RESPONSIVE ===================== */
+/* ===================================================== */
 
+/* Tablet / medium screens */
+@media (max-width: 992px) {
+  .footer {
+    padding: 40px 24px;
+    gap: 32px;
+  }
+
+  .footer-section.about {
+    max-width: 380px;
+  }
+
+  .footer-contact-bar {
+    gap: 32px;
+    font-size: 14px;
+  }
+}
+
+/* HP / small screens */
+@media (max-width: 768px) {
+  .footer {
+    padding: 32px 20px;
+    flex-direction: column;
+    align-items: flex-start;   /* text rata kiri */
+    gap: 24px;
+  }
+
+  .footer-section.about {
+    max-width: 100%;
+  }
+
+  .footer-input {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-input input {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .footer-input button {
+    width: auto;
+  }
+
+  .footer-social {
+    gap: 12px;
+    font-size: 18px;
+  }
+
+  .footer-contact-bar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+
+  .footer-contact-bar div {
+    justify-content: center;
+  }
+
+  .footer-bottom {
+    font-size: 13px;
+  }
+}
+
+/* HP kecil banget */
+@media (max-width: 480px) {
+  .footer {
+    padding: 28px 16px;
+  }
+
+  .footer-contact-bar {
+    font-size: 13px;
+  }
+
+  .footer-section h3 {
+    font-size: 18px;
+  }
+
+  .footer-section a {
+    font-size: 13px;
+  }
+}

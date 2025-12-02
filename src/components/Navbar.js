@@ -1,19 +1,24 @@
 import React from "react";
 import "./Navbar.css";
 import logo from "../assets/logo.png";
-import { AiOutlineShoppingCart, AiOutlineHeart, AiOutlineBell } from "react-icons/ai";
+import {
+  AiOutlineShoppingCart,
+  AiOutlineHeart,
+  AiOutlineBell,
+} from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 
 const Navbar = () => {
   return (
     <header className="navbar">
-
       {/* TOP ROW */}
       <div className="nav-top">
-        {/* LEFT LOGO */}
+        {/* LEFT LOGO (klik => Home) */}
         <div className="nav-left">
-          <img src={logo} alt="HeArt Logo" className="logo" />
+          <a href="/" className="logo-link">
+            <img src={logo} alt="HeArt Logo" className="logo" />
+          </a>
         </div>
 
         {/* SEARCH BAR */}
@@ -35,12 +40,11 @@ const Navbar = () => {
       <nav className="nav-menu">
         <a href="/">Home</a>
         <a href="/gallery">Gallery</a>
-        <a href="/forsale">For Sale</a>
+        <a href="/for-sale">For Sale</a>
         <a href="/artists">Artists</a>
         <a href="/about">About Us</a>
-        <a href="/events">Events</a>
+        <a href="/event">Events</a>
       </nav>
-
     </header>
   );
 };

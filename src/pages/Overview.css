@@ -8,7 +8,9 @@
 }
 
 .overview-main {
-  padding-bottom: 80px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
 }
 
 /* ------- BREADCRUMB ------- */
@@ -197,7 +199,7 @@
 
 .overview-lookcloser-text p {
   font-size: 18px;
-  margin: 0 0 200px;               /* jarak ke tombol */
+  margin: 0 0 200px;               /* jarak ke tombol (nanti diubah di mobile) */
   opacity: 0.9;
 }
 
@@ -225,25 +227,6 @@
   display: block;
   border-radius: 0px;
   box-shadow: 10px 9px 7px 0px #00000040;
-}
-
-/* responsive biar rapi di tablet/HP */
-@media (max-width: 992px) {
-  .overview-lookcloser {
-    padding: 64px 0;
-  }
-
-  .overview-lookcloser-inner {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .overview-lookcloser-image img {
-    margin: 32px auto 0;
-  }
-
-  .overview-lookcloser-text h2 {
-    font-size: 32px;
-  }
 }
 
 /* ------- TESTIMONIALS ------- */
@@ -366,23 +349,49 @@
   color: #777;
 }
 
-/* ------- RESPONSIVE ------- */
+/* ===================================================== */
+/* ===================== RESPONSIVE ==================== */
+/* ===================================================== */
 
+/* ------- Tablet / Medium screens ------- */
 @media (max-width: 992px) {
+  .overview-main {
+    padding: 0 20px 64px;
+  }
+
   .overview-hero {
     grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .overview-hero-info {
+    margin-left: 0;
+    max-width: 100%;
   }
 
   .overview-specs {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .overview-lookcloser {
+    padding: 72px 0;
+  }
+
   .overview-lookcloser-inner {
     grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
   }
 
   .overview-lookcloser-image img {
     margin: 0 auto;
+  }
+
+  .overview-lookcloser-text h2 {
+    font-size: 32px;
+  }
+
+  .overview-lookcloser-text p {
+    margin-bottom: 40px;   /* kecilkan margin biar nggak kepanjangan di tablet */
   }
 
   .overview-testimonial-grid {
@@ -394,7 +403,12 @@
   }
 }
 
+/* ------- Phone / Small screens ------- */
 @media (max-width: 640px) {
+  .overview-main {
+    padding: 0 16px 48px;
+  }
+
   .overview-breadcrumb {
     padding-top: 16px;
   }
@@ -407,10 +421,25 @@
 
   .overview-title {
     font-size: 22px;
+    letter-spacing: 0.18em;
   }
 
   .overview-history {
     padding-top: 28px;
+  }
+
+  .overview-lookcloser {
+    margin-top: 56px;
+    padding: 56px 0;
+  }
+
+  .overview-lookcloser-text h2 {
+    font-size: 26px;
+  }
+
+  .overview-lookcloser-text p {
+    font-size: 15px;
+    margin-bottom: 24px;
   }
 
   .overview-testimonials-header {

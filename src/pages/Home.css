@@ -50,7 +50,6 @@
   opacity: 0.9;
 }
 
-
 /* --------------------------------------- */
 /* FAVORITES SECTION */
 /* --------------------------------------- */
@@ -82,203 +81,6 @@
   font-size: 12px;
   margin-top: 8px;
   color: #444;
-}
-
-
-/* --------------------------------------- */
-/* DISCOVER BANNER */
-/* --------------------------------------- */
-
-.discover {
-  width: 1365px;        
-  height: 574px;        
-  position: relative;
-  left: 46px;      
-}
-
-.discover-bg {
-  width: 100%;
-  height: 420px;
-  object-fit: cover;
-  border-radius: 0px;
-  filter: brightness(60%);
-}
-
-.discover-text {
-  position: absolute;
-  top: 32%;
-  left: 40px;
-  color: white;
-}
-
-.discover-text h2 {
-  font-size: 30px;
-  font-weight: 700;
-}
-
-.discover-text p {
-  max-width: 380px;
-  margin-top: 10px;
-  font-size: 15px;
-  line-height: 24px;
-}
-
-
-/* --------------------------------------- */
-/* EVENTS */
-/* --------------------------------------- */
-
-.events {
-  padding: 60px 80px;
-  margin-top: -170px;
-}
-
-
-.events h2 {
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 30px;
-}
-
-.event-grid {
-  display: flex;
-  justify-content: center; 
-  gap: 40px;
-  width: 100%;
-}
-
-
-.event-card img {
-  width: 297px;
-  height: 473px;
-  object-fit: cover;
-  border-radius: 0px;
-  box-shadow: 10px 9px 7px 0px #00000040;
-}
-
-.event-card .title {
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #111;
-}
-
-.event-card .subtitle {
-  font-size: 12px;
-  color: #555;
-  margin-top: 4px;
-}
-
-.event-card .location {
-  font-size: 16px;
-  color: #777;
-  margin-top: 2px;
-}
-
-
-
-
-/* --------------------------------------- */
-/* FEATURED ARTISTS */
-/* --------------------------------------- */
-
-.artists {
-  padding: 60px 80px;
-}
-
-/* header: "Featured Artist" + See All Artists */
-.artists-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-}
-
-.artists h2 {
-  font-size: 40px;
-  font-weight: 700;
-  margin: 0;
-}
-
-/* "See All Artists" seperti di Figma */
-.see-all-artists {
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-
-  font-size: 20px;         /* gede dikit, kayak di Figma */
-  font-weight: 500;
-  color: #7b7b7b;          /* abu-abu */
-  letter-spacing: 0.04em;  /* sedikit renggang */
-  text-transform: none;    /* biar persis: "See All Artists" */
-  text-decoration: none;
-
-  display: inline-block;
-  border-bottom: 3px solid #7b7b7b; /* underline selebar teks */
-  line-height: 1.1;
-
-  margin-right: 150px; /* <<< geser ke kiri (coba 40, 80, 120 dll) */
-
-}
-
-.artist-grid {
-  display: flex;
-  justify-content: center; 
-  gap: 40px;
-  width: 100%;
-}
-
-.artist-card {
-  text-align: center;
-}
-
-.artist-card img {
-  width: 297px;
-  height: 473px;
-  object-fit: cover;
-  border-radius: 0px;
-  box-shadow: 10px 9px 7px 0px #00000040;
-}
-
-.artist-card .name {
-  font-weight: 600;
-  margin: 12px 0 10px;
-  margin-left: -150px;
-}
-
-/* subtitle artist – sama gaya dengan events */
-.artist-card .subtitle {
-  font-size: 12px;
-  color: #777;            /* abu-abu lembut, mirip Figma */
-  margin-top: -4px;       /* naik sedikit supaya dekat dengan name */
-  margin-left: -190px;    /* samakan align kiri sama .name */
-  margin-bottom: 8px;     /* jarak ke tombol view */
-  font-weight: 400;
-}
-
-
-
-.artist-card button {
-  font-size: 12px;
-  padding: 4px 50px;
-  background: transparent;
-  border: 2px solid #583101;
-  border-radius: 55px;
-  cursor: pointer;
-  box-shadow: 0px 4px 4px 0px #00000040;
-  margin-left: -135px;
-  
-
-}
-
-
-/* --------------------------------------- */
-/* FOOTER */
-/* --------------------------------------- */
-
-.footer {
-  margin-top: 60px;
 }
 
 /* ---------- FAVORITES PAGINATION: GARIS + "< 1 of 10 >" ---------- */
@@ -318,6 +120,44 @@
   font-size: 12px;
 }
 
+/* --------------------------------------- */
+/* DISCOVER BANNER */
+/* --------------------------------------- */
+
+.discover {
+  width: 1365px;
+  height: 574px;
+  position: relative;
+  left: 46px;
+}
+
+.discover-bg {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 0px;
+  filter: brightness(60%);
+}
+
+.discover-text {
+  position: absolute;
+  top: 32%;
+  left: 40px;
+  color: white;
+}
+
+.discover-text h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.discover-text p {
+  max-width: 380px;
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 24px;
+}
+
 .discover-explore-btn {
   margin-top: 24px;
   display: inline-flex;
@@ -337,9 +177,320 @@
   line-height: 1;
 }
 
+/* --------------------------------------- */
+/* EVENTS */
+/* --------------------------------------- */
 
+.events {
+  padding: 60px 80px;
+  margin-top: -170px;
+}
 
+.events h2 {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
 
+.event-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+}
 
+.event-card img {
+  width: 297px;
+  height: 473px;
+  object-fit: cover;
+  border-radius: 0px;
+  box-shadow: 10px 9px 7px 0px #00000040;
+}
 
+.event-card .title {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
 
+.event-card .subtitle {
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.event-card .location {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+/* --------------------------------------- */
+/* FEATURED ARTISTS */
+/* --------------------------------------- */
+
+.artists {
+  padding: 60px 80px;
+}
+
+/* header: "Featured Artist" + See All Artists */
+.artists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.artists h2 {
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* "See All Artists" seperti di Figma */
+.see-all-artists {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  font-size: 20px;
+  font-weight: 500;
+  color: #7b7b7b;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  text-decoration: none;
+
+  display: inline-block;
+  border-bottom: 3px solid #7b7b7b;
+  line-height: 1.1;
+
+  margin-right: 150px;
+}
+
+.artist-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+}
+
+.artist-card {
+  text-align: center;
+}
+
+.artist-card img {
+  width: 297px;
+  height: 473px;
+  object-fit: cover;
+  border-radius: 0px;
+  box-shadow: 10px 9px 7px 0px #00000040;
+}
+
+.artist-card .name {
+  font-weight: 600;
+  margin: 12px 0 10px;
+  margin-left: -150px;
+}
+
+/* subtitle artist – sama gaya dengan events */
+.artist-card .subtitle {
+  font-size: 12px;
+  color: #777;
+  margin-top: -4px;
+  margin-left: -190px;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.artist-card button {
+  font-size: 12px;
+  padding: 4px 50px;
+  background: transparent;
+  border: 2px solid #583101;
+  border-radius: 55px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  margin-left: -135px;
+}
+
+/* --------------------------------------- */
+/* FOOTER */
+/* --------------------------------------- */
+
+.footer {
+  margin-top: 60px;
+}
+
+/* ================================================================== */
+/* ======================== RESPONSIVE CSS ========================== */
+/* ================================================================== */
+
+/* --------- Medium screens (max-width: 1200px) --------- */
+@media (max-width: 1200px) {
+  .favorites,
+  .events,
+  .artists {
+    padding: 40px 40px;
+  }
+
+  .discover {
+    width: 100%;
+    left: 0;
+    height: auto;
+  }
+
+  .discover-bg {
+    height: 360px;
+  }
+
+  .event-grid,
+  .artist-grid,
+  .fav-grid {
+    gap: 24px;
+  }
+}
+
+/* --------- Tablet & small devices (max-width: 900px) --------- */
+@media (max-width: 900px) {
+  .hero {
+    height: 420px;
+  }
+
+  .hero-text h1 {
+    font-size: 32px;
+  }
+
+  .hero-text p {
+    font-size: 14px;
+  }
+
+  /* Favorites */
+  .fav-grid {
+    flex-direction: column;
+  }
+
+  .fav-card img {
+    height: 380px;
+  }
+
+  /* Events */
+  .events {
+    margin-top: 40px; /* hilangkan minus supaya tidak tabrakan di mobile */
+  }
+
+  .event-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .event-card img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Artists */
+  .artist-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .artist-card img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* reset margin kiri negatif di mobile */
+  .artist-card .name,
+  .artist-card .subtitle,
+  .artist-card button {
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .artists-header {
+    align-items: center;
+  }
+
+  .see-all-artists {
+    margin-right: 0;
+  }
+}
+
+/* --------- Phone (max-width: 768px) --------- */
+@media (max-width: 768px) {
+  .favorites,
+  .events,
+  .artists {
+    padding: 32px 20px;
+  }
+
+  .hero {
+    height: 380px;
+  }
+
+  .hero-text h1 {
+    font-size: 26px;
+  }
+
+  .hero-text p {
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .discover {
+    width: 100%;
+    left: 0;
+    height: auto;
+  }
+
+  .discover-bg {
+    height: 260px;
+  }
+
+  .discover-text {
+    top: 30%;
+    left: 20px;
+    right: 20px;
+  }
+
+  .discover-text h2 {
+    font-size: 24px;
+  }
+
+  .discover-text p {
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .discover-explore-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .events h2,
+  .favorites h2,
+  .artists h2 {
+    font-size: 28px;
+    text-align: left;
+  }
+
+  .event-card .title {
+    font-size: 14px;
+  }
+
+  .event-card .subtitle,
+  .event-card .location {
+    font-size: 11px;
+  }
+
+  .see-all-artists {
+    font-size: 16px;
+    border-bottom-width: 2px;
+  }
+
+  .fav-page-inline {
+    font-size: 11px;
+  }
+}

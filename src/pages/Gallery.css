@@ -4,6 +4,8 @@
   box-sizing: border-box;
 }
 
+/* ============== PAGE WRAPPER ============== */
+
 .gallery-page {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Poppins",
     "Segoe UI", sans-serif;
@@ -45,7 +47,7 @@
     transparent 70%
   );
   display: flex;
-  align-items: center; /* default, nanti kita override untuk page1 */
+  align-items: center; /* default center; PAGE 1 bisa di-offset dengan transform */
 }
 
 /* PAGE 1: content kiri (pakai transform biar agak turun) */
@@ -55,43 +57,6 @@
   margin-left: 72px;
   transform: translateY(40px);
   text-align: left;
-}
-
-.hero-title-left {
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: 0.01em;
-  margin: 0 0 16px 0;
-  text-shadow: 0 12px 35px rgba(0, 0, 0, 0.95);
-}
-
-.hero-subtitle-left {
-  font-size: 15px;
-  line-height: 1.7;
-  margin: 0 0 18px 0;
-  max-width: 520px;
-  text-shadow: 0 5px 18px rgba(0, 0, 0, 0.8);
-}
-
-/* button Explore more (page1 only) */
-.hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.75);
-}
-
-.hero-cta-arrow {
-  font-size: 15px;
-  transform: translateY(1px);
 }
 
 /* PAGE 2–6: center hero */
@@ -108,36 +73,7 @@
   transform: none;
 }
 
-.hero-title-centered {
-  font-size: 52px;
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: 0.01em;
-  margin: 0 0 18px 0;
-  text-shadow: 0 12px 35px rgba(0, 0, 0, 0.95);
-}
-
-.hero-subtitle-centered {
-  font-size: 15px;
-  line-height: 1.7;
-  margin: 0;
-  text-shadow: 0 5px 18px rgba(0, 0, 0, 0.8);
-}
-
-/* base class biar nggak error (dipakai di JSX) */
-.hero-content {
-  /* dikosongin, styling dihandle sama .hero-content-left / .hero-content-centered */
-}
-
-.hero-title {
-  /* dikosongin, ada versi bawah untuk typografi */
-}
-
-.hero-subtitle {
-  /* dikosongin, ada versi bawah untuk typografi */
-}
-
-/* ======= TYPO HERO BESAR (GLOBAL) ======= */
+/* ======= TYPO HERO (GLOBAL) ======= */
 
 .hero-title {
   font-size: 56px;
@@ -160,6 +96,41 @@
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
 }
 
+/* versi khusus untuk center */
+.hero-title-centered {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  margin: 0 0 18px 0;
+  text-shadow: 0 12px 35px rgba(0, 0, 0, 0.95);
+}
+
+.hero-subtitle-centered {
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+  text-shadow: 0 5px 18px rgba(0, 0, 0, 0.8);
+}
+
+/* versi khusus untuk left (kalau mau beda dikit) */
+.hero-title-left {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  margin: 0 0 16px 0;
+  text-shadow: 0 12px 35px rgba(0, 0, 0, 0.95);
+}
+
+.hero-subtitle-left {
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0 0 18px 0;
+  max-width: 520px;
+  text-shadow: 0 5px 18px rgba(0, 0, 0, 0.8);
+}
+
 /* "Explore more" seperti link dengan arrow */
 .hero-cta {
   display: inline-flex;
@@ -180,7 +151,7 @@
   transform: translateY(1px);
 }
 
-/* SECTION BASE */
+/* ============== SECTION BASE ============== */
 
 .section {
   padding: 48px 0;
@@ -196,7 +167,7 @@
   margin-bottom: 8px;
 }
 
-/* A FEW OF OUR ARTWORKS */
+/* ============== A FEW OF OUR ARTWORKS (FEATURED GRID) ============== */
 
 .featured-grid {
   display: grid;
@@ -226,7 +197,7 @@
   height: 340px;
 }
 
-/* MORE WAYS TO EXPLORE HEADER */
+/* ============== MORE WAYS TO EXPLORE HEADER (STYLE DROPDOWN) ============== */
 
 .section-header {
   display: flex;
@@ -302,7 +273,7 @@
   background: #f3f4f6;
 }
 
-/* MASONRY GRID */
+/* ============== MASONRY GRID ============== */
 
 .masonry {
   display: grid;
@@ -329,7 +300,7 @@
   object-fit: cover;
 }
 
-/* PAGINATION – versi ikon bulat + angka 1..6 */
+/* ============== PAGINATION (CIRCLE + NUMBERS) ============== */
 
 .pagination-section {
   display: flex;
@@ -398,11 +369,23 @@
   font-weight: 600;
 }
 
-/* RESPONSIVE */
+/* ============== RESPONSIVE ============== */
 
+/* --------- Tablet landscape / medium screens --------- */
 @media (max-width: 1024px) {
-  .masonry {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .hero-section {
+    height: 360px;
+  }
+
+  .hero-content-left {
+    margin-left: 40px;
+    transform: translateY(20px);
+  }
+
+  .hero-title,
+  .hero-title-left,
+  .hero-title-centered {
+    font-size: 40px;
   }
 
   .featured-grid {
@@ -412,18 +395,266 @@
   .featured-grid > :last-child {
     grid-column: span 2;
   }
+
+  .masonry {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
+/* --------- Tablet portrait / small devices --------- */
 @media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
   .hero-section {
     height: 280px;
   }
 
-  .hero-title {
+  .hero-overlay {
+    align-items: flex-end;
+  }
+
+  .hero-content-left,
+  .hero-content-centered {
+    margin: 0 auto 32px;
+    max-width: 100%;
+    text-align: left;
+    transform: none;
+    padding: 0 8px;
+  }
+
+  .hero-title,
+  .hero-title-left,
+  .hero-title-centered {
     font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .hero-subtitle,
+  .hero-subtitle-left,
+  .hero-subtitle-centered {
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .section {
+    padding: 32px 0;
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-large,
+  .featured-grid .featured-item:not(.featured-large) {
+    height: 260px;
   }
 
   .masonry {
     grid-template-columns: 1fr;
   }
+
+  .pagination-section {
+    padding-bottom: 40px;
+    gap: 16px;
+  }
+
+  .page-number {
+    font-size: 18px;
+  }
 }
+
+/* --------- Very small phones --------- */
+@media (max-width: 480px) {
+  .hero-section {
+    height: 240px;
+  }
+
+  .hero-title,
+  .hero-title-left,
+  .hero-title-centered {
+    font-size: 24px;
+  }
+
+  .hero-subtitle,
+  .hero-subtitle-left,
+  .hero-subtitle-centered {
+    font-size: 12px;
+  }
+
+  .page-arrow-btn {
+    width: 38px;
+    height: 38px;
+    border-width: 2px;
+  }
+
+  .page-number {
+    font-size: 16px;
+  }
+
+  .page-number.page-number-active {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ============ LIGHTBOX / CLOSE-UP PROFESSIONAL ============ */
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.9); /* gelap ke-biru2an */
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 999;
+}
+
+.lightbox-inner {
+  position: relative;
+  max-width: 980px;
+  width: 100%;
+  background: #020617; /* hampir hitam */
+  border-radius: 24px;
+  padding: 18px 24px 22px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+/* tombol X */
+.lightbox-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  border: none;
+  background: #020617;
+  border-radius: 999px;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  line-height: 1;
+  color: #e5e7eb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.lightbox-close:hover {
+  background: #111827;
+}
+
+/* wrapper gambar + nav */
+.lightbox-image-wrapper {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #020617;
+}
+
+/* gambar besar */
+.lightbox-image {
+  width: 100%;
+  max-height: 70vh;
+  display: block;
+  object-fit: contain;
+}
+
+/* tombol panah kiri/kanan */
+.lightbox-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 28px;
+  line-height: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-nav-left {
+  left: 14px;
+}
+
+.lightbox-nav-right {
+  right: 14px;
+}
+
+.lightbox-nav-btn:hover {
+  background: rgba(30, 64, 175, 0.9);
+}
+
+/* caption */
+.lightbox-caption {
+  padding: 14px 4px 4px;
+  color: #e5e7eb;
+}
+
+.lightbox-caption h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.lightbox-subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* responsive HP */
+@media (max-width: 640px) {
+  .lightbox-inner {
+    padding: 16px 16px 18px;
+    border-radius: 18px;
+  }
+
+  .lightbox-nav-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+  }
+
+  .lightbox-image {
+    max-height: 60vh;
+  }
+}
+
+/* MASONRY GRID CARD TANPA BORDER/SHADOW */
+.masonry-item {
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+
+  border-radius: 0;        /* atau 8px kalau mau sedikit rounded */
+  background: transparent; /* hilangin panel abu-abu */
+  box-shadow: 10px 9px 7px 0px #00000040;
+}
+
+/* pastikan button tidak ada fokus biru jelek */
+.masonry-item:focus {
+  outline: none;
+}
+
+/* gambar tetap full */
+.masonry-img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+

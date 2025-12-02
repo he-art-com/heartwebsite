@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Home.css";
+import { useNavigate } from "react-router-dom";
 
 /* IMPORT IMAGES */
 import img1 from "../assets/images/1.png";
@@ -14,7 +15,23 @@ import img9 from "../assets/images/9.png";
 import img10 from "../assets/images/10.jpg";
 
 function Home() {
-  const TOTAL_PAGES = 10;
+  const navigate = useNavigate();
+
+  // daftar artwork yang akan diputar
+  const artworks = [
+    { img: img3, title: "Leonardo da Vinci, Mona Lisa, 1503" },
+    { img: img1, title: "Elias Tinoco, Harmonia Mundi, 1703" },
+    { img: img7, title: "Cassian Alistair, The Starry Night, 1803" },
+    { img: img2, title: "Art Exhibition Poster, 2024" },
+    { img: img4, title: "Matsumi Kanemitsu, Untitled, 1965" },
+    { img: img5, title: "IB-AP Art Exhibition Poster, 2025" },
+    { img: img6, title: "George Romney, Portrait Study" },
+    { img: img8, title: "Baroque Musicians, 17th c." },
+    { img: img9, title: "Art Exhibition Day #5 Poster" },
+    { img: img10, title: "Discover our Artworks Banner" },
+  ];
+
+  const TOTAL_PAGES = 10; // biar sesuai desain: 1 of 10
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePrev = () => {
@@ -25,7 +42,15 @@ function Home() {
     setCurrentPage((prev) => (prev === TOTAL_PAGES ? 1 : prev + 1));
   };
 
-  // klik Explore => scroll ke favorites (bisa kamu ganti ke section lain kalau mau)
+  // hitung 3 artwork yang ditampilkan di page sekarang
+  const startIndex = (currentPage - 1) % artworks.length;
+  const currentArtworks = [
+    artworks[startIndex],
+    artworks[(startIndex + 1) % artworks.length],
+    artworks[(startIndex + 2) % artworks.length],
+  ];
+
+  // klik Explore => scroll ke favorites
   const handleExploreClick = () => {
     const section = document.getElementById("favorites-section");
     if (section) {
@@ -54,20 +79,12 @@ function Home() {
         <h2>A few of our favorites</h2>
 
         <div className="fav-grid">
-          <div className="fav-card">
-            <img src={img3} alt="Artwork 1" />
-            <p className="title">Leonardo da Vinci, Mona Lisa, 1503</p>
-          </div>
-
-          <div className="fav-card">
-            <img src={img1} alt="Artwork 2" />
-            <p className="title">Elias Tinoco, Harmonia Mundi, 1703</p>
-          </div>
-
-          <div className="fav-card">
-            <img src={img7} alt="Artwork 3" />
-            <p className="title">Cassian Alistair, The Starry Night, 1803</p>
-          </div>
+          {currentArtworks.map((art, idx) => (
+            <div className="fav-card" key={idx}>
+              <img src={art.img} alt={`Artwork ${idx + 1}`} />
+              <p className="title">{art.title}</p>
+            </div>
+          ))}
         </div>
 
         {/* ================== GARIS + PAGINATION ================== */}
@@ -117,7 +134,6 @@ function Home() {
             Explore by artist, and more.
           </p>
 
-          {/* tombol Explore ditempatkan DI SINI */}
           <button
             className="discover-explore-btn"
             type="button"
@@ -130,75 +146,70 @@ function Home() {
       </section>
 
       {/* ====================== UPCOMING EVENTS ========================== */}
-<section className="events">
-  <h2>Upcoming Events</h2>
+      <section className="events">
+        <h2>Upcoming Events</h2>
 
-  <div className="event-grid">
-    <div className="event-card">
-      <img src={img9} alt="Event 1" />
-      <p className="title">Art Exhibition Day #5</p>
-      <p className="subtitle">19 August – 24 August 2025</p>
-      <p className="location">GOR Senayan Jakarta</p>
-    </div>
+        <div className="event-grid">
+          <div className="event-card">
+            <img src={img9} alt="Event 1" />
+            <p className="title">Art Exhibition Day #5</p>
+            <p className="subtitle">19 August – 24 August 2025</p>
+            <p className="location">GOR Senayan Jakarta</p>
+          </div>
 
-    <div className="event-card">
-      <img src={img2} alt="Event 2" />
-      <p className="title">Art Exhibition Day #4</p>
-      <p className="subtitle">29 July – 24 July 2025</p>
-      <p className="location">Tennis Indoor Senayan</p>
-    </div>
+          <div className="event-card">
+            <img src={img2} alt="Event 2" />
+            <p className="title">Art Exhibition Day #4</p>
+            <p className="subtitle">29 July – 24 July 2025</p>
+            <p className="location">Tennis Indoor Senayan</p>
+          </div>
 
-    <div className="event-card">
-      <img src={img5} alt="Event 3" />
-      <p className="title">Art Exhibition Day #2</p>
-      <p className="subtitle">18 – 24 April 2025</p>
-      <p className="location">Gelora Bung Karno Stadium</p>
-    </div>
-  </div>
-</section>
-
+          <div className="event-card">
+            <img src={img5} alt="Event 3" />
+            <p className="title">Art Exhibition Day #2</p>
+            <p className="subtitle">18 – 24 April 2025</p>
+            <p className="location">Gelora Bung Karno Stadium</p>
+          </div>
+        </div>
+      </section>
 
       {/* ====================== FEATURED ARTIST ========================== */}
-<section className="artists">
-  <div className="artists-header">
-    <h2>Featured Artist</h2>
+      <section className="artists">
+        <div className="artists-header">
+          <h2>Featured Artist</h2>
 
-    <button
-      className="see-all-artists"
-      type="button"
-      onClick={() => {
-        // nanti bisa diganti ke navigate atau scroll
-        console.log("See all artists clicked");
-      }}
-    >
-      See All Artists
-    </button>
-  </div>
+          <button
+            className="see-all-artists"
+            type="button"
+            onClick={() => navigate("/artists")}
+          >
+            See All Artists
+          </button>
+        </div>
 
-  <div className="artist-grid">
-    <div className="artist-card">
-      <img src={img6} alt="Artist 1" />
-      <p className="name">George Romney</p>
-      <p className="subtitle">British,  1734-1802</p>
-      <button className="view-btn">View Profile</button>
-    </div>
+        <div className="artist-grid">
+          <div className="artist-card">
+            <img src={img6} alt="Artist 1" />
+            <p className="name">George Romney</p>
+            <p className="subtitle">British, 1734-1802</p>
+            <button className="view-btn">View Profile</button>
+          </div>
 
-    <div className="artist-card">
-      <img src={img7} alt="Artist 2" />
-      <p className="name">Cassian Alistair</p>
-      <p className="subtitle">born.</p>
-      <button className="view-btn">View Profile</button>
-    </div>
+          <div className="artist-card">
+            <img src={img7} alt="Artist 2" />
+            <p className="name">Cassian Alistair</p>
+            <p className="subtitle">born.</p>
+            <button className="view-btn">View Profile</button>
+          </div>
 
-    <div className="artist-card">
-      <img src={img4} alt="Artist 3" />
-      <p className="name">Matsumi Kanemitsu</p>
-      <p className="subtitle">American,  1922-1992</p>
-      <button className="view-btn">View Profile</button>
-    </div>
-  </div>
-</section>
-
+          <div className="artist-card">
+            <img src={img4} alt="Artist 3" />
+            <p className="name">Matsumi Kanemitsu</p>
+            <p className="subtitle">American, 1922-1992</p>
+            <button className="view-btn">View Profile</button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
