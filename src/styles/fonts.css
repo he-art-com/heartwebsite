@@ -1,0 +1,36 @@
+/* ============================================================
+   FONT: CLASH DISPLAY
+   Digunakan di seluruh aplikasi
+============================================================ */
+
+/* Regular (300) */
+@font-face {
+  font-family: "ClashDisplay";
+  src: url("../assets/fonts/Clash-Display/ClashDisplay-Regular.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Medium (500) */
+@font-face {
+  font-family: "ClashDisplay";
+  src: url("../assets/fonts/Clash-Display/ClashDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* Semibold (600) */
+@font-face {
+  font-family: "ClashDisplay";
+  src: url("../assets/fonts/Clash-Display/ClashDisplay-Semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Bold (700) */
+@font-face {
+  font-family: "ClashDisplay";
+  src: url("../assets/fonts/Clash-Display/ClashDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
