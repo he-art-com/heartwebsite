@@ -4,15 +4,15 @@
 
 /* Regular (300) */
 @font-face {
-  font-family: "ClashDisplay";
+  font-family: "ClashDisplayRegular";
   src: url("../assets/fonts/Clash-Display/ClashDisplay-Regular.ttf") format("truetype");
-  font-weight: 300;
+  font-weight: 400;
   font-style: normal;
 }
 
 /* Medium (500) */
 @font-face {
-  font-family: "ClashDisplay";
+  font-family: "ClashDisplayMedium";
   src: url("../assets/fonts/Clash-Display/ClashDisplay-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
@@ -20,7 +20,7 @@
 
 /* Semibold (600) */
 @font-face {
-  font-family: "ClashDisplay";
+  font-family: "ClashDisplaySemibold";
   src: url("../assets/fonts/Clash-Display/ClashDisplay-Semibold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
@@ -28,7 +28,7 @@
 
 /* Bold (700) */
 @font-face {
-  font-family: "ClashDisplay";
+  font-family: "ClashDisplayBold";
   src: url("../assets/fonts/Clash-Display/ClashDisplay-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
@@ -40,16 +40,48 @@
 
 /* Regular (400) */
 @font-face {
-  font-family: "Nexa";
+  font-family: "NexaRegular";
   src: url("../assets/fonts/Nexa/Nexa-Regular.otf") format("truetype");
-  font-weight: 400;
+  /* font-weight: 400; */
   font-style: normal;
 }
 
 /* Heavy (700) */
 @font-face {
-  font-family: "Nexa";
-  src: url("../assets/fonts/Nexa/Nexa-Heavy.otf") format("truetype");
-  font-weight: 700;
+  font-family: "NexaHeavy";
+  src: url("../assets/fonts/Nexa/Nexa-Heavy.otf") format("truetype");       
+  /* font-weight: 700; */
   font-style: normal;
+}
+
+/* ============================================================
+   FONT: Nunito
+============================================================ */
+
+/* Regular (400) */
+@font-face {
+  font-family: "NunitoRegular";
+  src: url("../assets/fonts/Nunito/Nunito-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+/* Medium (500) */
+@font-face {
+  font-family: "NunitoMedium";
+  src: url("../assets/fonts/Nunito/Nunito-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+/* SemiBold (600) */
+@font-face {
+  font-family: "NunitoSemiBold";
+  src: url("../assets/fonts/Nunito/Nunito-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+/* Bold (700) */
+@font-face {
+  font-family: "NunitoBold";
+  src: url("../assets/fonts/Nunito/Nunito-Bold.ttf") format("truetype");
+  font-weight: 700;
 }
