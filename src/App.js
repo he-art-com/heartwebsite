@@ -1,4 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// src/App.js
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -15,14 +23,34 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import HelpCenter from "./pages/HelpCenter";
 import Overview from "./pages/Overview";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Favorites from "./pages/Favorites";
+import Cart from "./pages/Cart";
 
-function App() {
+import { StoreProvider } from "./context/StoreContext";
+
+function AppContent() {
+  const location = useLocation();
+
+  // Halaman yang TIDAK pakai navbar/footer
+  const authPaths = ["/login", "/register"];
+  const isAuthPage = authPaths.includes(location.pathname);
+
   return (
-    <Router>
-      <Navbar />
+    <>
+      {!isAuthPage && <Navbar />}
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* default: ke /login dulu */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* AUTH */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* MAIN PAGES */}
+        <Route path="/home" element={<Home />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/gallery/overview" element={<Overview />} />
         <Route path="/for-sale" element={<ForSale />} />
@@ -33,11 +61,23 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/help" element={<HelpCenter />} />
+
+        {/* BARU */}
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
 
-      <Footer />
-    </Router>
+      {!isAuthPage && <Footer />}
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <StoreProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </StoreProvider>
+  );
+}

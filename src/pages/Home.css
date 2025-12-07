@@ -3,17 +3,67 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
 }
 
-.home {
-  width: 100%;
-  overflow-x: hidden;
+/* ---------- FONT VARIABLES DARI FIGMA ---------- */
+:root {
+  /* Heading / Display – Clash Display */
+  --font-heading: "Clash Display", "Clash Display Variable", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Alias supaya kalau kamu pakai var(--font-display) tetap jalan */
+  --font-display: "Clash Display", "Clash Display Variable", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Body – NexaRegular */
+  --font-body: "NexaRegular", "Inter", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Body italic */
+  --font-body-italic: "Nexa-Light-Italic", "NexaRegular", "Inter", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Heavy – bold Nexa */
+  --font-heavy: "NexaHeavy", "NexaRegular", "Inter", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* --------------------------------------- */
-/* HERO BANNER */
-/* --------------------------------------- */
+/* ======================================= */
+/* HOME PAGE TYPOGRAPHY                    */
+/* ======================================= */
+
+.home-page {
+  background: #ffffff;
+  color: #000000;
+  font-family: var(--font-body);
+}
+
+/* HERO di Home:
+   Title & CTA = Clash Display (display),
+   Subtitle = Nexa (body),
+   Tebalnya sama kayak Artists & Gallery (700) */
+
+.home-page .hero-title,
+.home-page .hero-title-left,
+.home-page .hero-title-centered {
+  font-family: var(--font-heading); /* pakai Clash Display */
+  font-weight: 700;
+}
+
+.home-page .hero-subtitle,
+.home-page .hero-subtitle-left,
+.home-page .hero-subtitle-centered {
+  font-family: var(--font-body); /* NexaRegular */
+}
+
+.home-page .hero-cta {
+  font-family: var(--font-heading); /* Clash Display */
+  font-weight: 700; /* supaya CTA kelihatan bold juga */
+}
+
+/* ======================================= */
+/* HERO BANNER (GLOBAL)                    */
+/* ======================================= */
 
 .hero {
   width: 100%;
@@ -39,16 +89,21 @@
 }
 
 .hero-text h1 {
+  font-family: var(--font-heading); /* Clash Display */
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 700; /* sesuai Clash Display di figma */
+  line-height: 150%;
+  letter-spacing: 0;
   margin-bottom: 12px;
 }
 
 .hero-text p {
+  font-family: var(--font-body); /* NexaRegular */
   font-size: 16px;
-  line-height: 24px;
+  line-height: 150%;
   opacity: 0.9;
 }
+
 
 /* --------------------------------------- */
 /* FAVORITES SECTION */
@@ -59,8 +114,10 @@
 }
 
 .favorites h2 {
+  font-family: var(--font-heading);
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 150%;
   margin-bottom: 24px;
 }
 
@@ -78,6 +135,7 @@
 }
 
 .fav-card .title {
+  font-family: var(--font-body);
   font-size: 12px;
   margin-top: 8px;
   color: #444;
@@ -94,7 +152,7 @@
   height: 1.5px;
   width: 100%;
   background-color: #583101;
-  margin-bottom: 6px;   /* jarak ke text bawah */
+  margin-bottom: 6px; /* jarak ke text bawah */
 }
 
 /* baris "< 1 of 10 >" di bawah garis */
@@ -104,6 +162,7 @@
   gap: 4px;
   font-size: 12px;
   color: #583101;
+  font-family: var(--font-body);
 }
 
 /* tombol kecil utk < dan >, tapi tampilannya kayak text */
@@ -114,6 +173,7 @@
   font-size: 12px;
   padding: 0 2px;
   cursor: pointer;
+  font-family: var(--font-body);
 }
 
 .fav-page-text-inline {
@@ -147,15 +207,18 @@
 }
 
 .discover-text h2 {
-  font-size: 30px;
-  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 150%;
 }
 
 .discover-text p {
+  font-family: var(--font-body);
   max-width: 380px;
   margin-top: 10px;
   font-size: 15px;
-  line-height: 24px;
+  line-height: 150%;
 }
 
 .discover-explore-btn {
@@ -170,6 +233,7 @@
   color: #ffffff;
   font-size: 14px;
   cursor: pointer;
+  font-family: var(--font-heavy); /* NexaHeavy untuk feel tombol */
 }
 
 .discover-explore-arrow {
@@ -187,8 +251,10 @@
 }
 
 .events h2 {
+  font-family: var(--font-heading);
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 150%;
   margin-bottom: 30px;
 }
 
@@ -208,22 +274,28 @@
 }
 
 .event-card .title {
+  font-family: var(--font-heading);
   margin-top: 10px;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 150%;
   color: #111;
 }
 
 .event-card .subtitle {
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 9px;
   color: #555;
   margin-top: 4px;
+  line-height: 150%;
 }
 
 .event-card .location {
-  font-size: 12px;
+  font-family: var(--font-heading);
+  font-size: 14px;
   color: #777;
   margin-top: 2px;
+  line-height: 150%;
 }
 
 /* --------------------------------------- */
@@ -243,8 +315,10 @@
 }
 
 .artists h2 {
+  font-family: var(--font-heading);
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 150%;
   margin: 0;
 }
 
@@ -255,15 +329,14 @@
   padding: 0;
   cursor: pointer;
 
-  font-size: 20px;
+  font-family: var(--font-heading);
+  font-size: 14px;
   font-weight: 500;
-  color: #7b7b7b;
-  letter-spacing: 0.04em;
-  text-transform: none;
-  text-decoration: none;
+  color: rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.1em;
 
   display: inline-block;
-  border-bottom: 3px solid #7b7b7b;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
   line-height: 1.1;
 
   margin-right: 150px;
@@ -289,23 +362,29 @@
 }
 
 .artist-card .name {
+  font-family: var(--font-heading);
   font-weight: 600;
+  font-size: 20px;
   margin: 12px 0 10px;
   margin-left: -150px;
+  line-height: 150%;
 }
 
 /* subtitle artist – sama gaya dengan events */
 .artist-card .subtitle {
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 10px;
   color: #777;
   margin-top: -4px;
   margin-left: -190px;
   margin-bottom: 8px;
   font-weight: 400;
+  line-height: 150%;
 }
 
 .artist-card button {
-  font-size: 12px;
+  font-family: var(--font-heading);
+  font-size: 8px;
   padding: 4px 50px;
   background: transparent;
   border: 2px solid #583101;
@@ -316,7 +395,7 @@
 }
 
 /* --------------------------------------- */
-/* FOOTER */
+/* FOOTER PLACEHOLDER */
 /* --------------------------------------- */
 
 .footer {
@@ -477,7 +556,7 @@
   }
 
   .event-card .title {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .event-card .subtitle,

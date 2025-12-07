@@ -173,7 +173,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ====================== FEATURED ARTIST ========================== */}
+            {/* ====================== FEATURED ARTIST ========================== */}
       <section className="artists">
         <div className="artists-header">
           <h2>Featured Artist</h2>
@@ -192,21 +192,39 @@ function Home() {
             <img src={img6} alt="Artist 1" />
             <p className="name">George Romney</p>
             <p className="subtitle">British, 1734-1802</p>
-            <button className="view-btn">View Profile</button>
+            <button
+              className="view-btn"
+              type="button"
+              onClick={() => navigate("/artists")}
+            >
+              View Profile
+            </button>
           </div>
 
           <div className="artist-card">
             <img src={img7} alt="Artist 2" />
             <p className="name">Cassian Alistair</p>
             <p className="subtitle">born.</p>
-            <button className="view-btn">View Profile</button>
+            <button
+              className="view-btn"
+              type="button"
+              onClick={() => navigate("/artists")}
+            >
+              View Profile
+            </button>
           </div>
 
           <div className="artist-card">
             <img src={img4} alt="Artist 3" />
             <p className="name">Matsumi Kanemitsu</p>
             <p className="subtitle">American, 1922-1992</p>
-            <button className="view-btn">View Profile</button>
+            <button
+              className="view-btn"
+              type="button"
+              onClick={() => navigate("/artists")}
+            >
+              View Profile
+            </button>
           </div>
         </div>
       </section>
