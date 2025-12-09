@@ -39,12 +39,15 @@
 }
 
 .hero-text h1 {
+  font-family: "ClashDisplay", sans-serif;
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 12px;
 }
 
 .hero-text p {
+  font-family: "Nexa", sans-serif;
+  font-weight: 400;
   font-size: 16px;
   line-height: 24px;
   opacity: 0.9;

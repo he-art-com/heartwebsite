@@ -11,6 +11,9 @@ import ForSaleDetail from "./pages/ForSaleDetail";
 import Event from "./pages/Event";
 import Artists from "./pages/Artists";
 import About from "./pages/About";
+import AboutMission from "./pages/AboutMission";
+import AboutOurStory from "./pages/AboutOurStory";
+import AboutWhatWeDo from "./pages/AboutWhatWeDo";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import HelpCenter from "./pages/HelpCenter";
@@ -30,6 +33,9 @@ function App() {
         <Route path="/event" element={<Event />} />
         <Route path="/artists" element={<Artists />} />
         <Route path="/about" element={<About />} />
+        <Route path="/about/mission-vision-values" element={<AboutMission />} />
+        <Route path="/about/our-story" element={<AboutOurStory />} />
+        <Route path="/about/what-we-do" element={<AboutWhatWeDo />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/help" element={<HelpCenter />} />

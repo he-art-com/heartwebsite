@@ -1,0 +1,375 @@
+/* Page container */
+.about-container {
+  width: 100%;
+  padding: 40px 80px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Header */
+.about-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.about-header h1 {
+  font-family: "ClashDisplay", sans-serif;
+  font-weight: 600;        
+  font-style: normal;
+  font-size: 40px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.about-header p {
+  font-family: "NexaRegular", sans-serif;
+  font-weight: 400;
+  font-size: 25px;
+  font-style: normal;
+  margin-top: 20px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-align: center;
+  color: #000;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Stats */
+.about-stats {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.about-stats-box {
+  width: 100%;
+  max-width: 1326px;
+  padding: 30px 0;
+  display: flex;
+  justify-content: center; /* tengah */
+  align-items: center;
+  gap: 250px; /* jarak antar box */
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-box h2 {
+  font-family: "ClashDisplay", sans-serif;
+  font-weight: 600;       
+  font-size: 50px;
+  line-height: 100%;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.stat-box p {
+  font-family: "ClashDisplay", sans-serif;
+  font-weight: 500;        /* Medium */
+  font-size: 12px;
+  line-height: 100%;
+  letter-spacing: 0;
+  margin: 4px 0 0 0;
+  color: #00000080;           /* sesuai desain */
+}
+
+/* Cards Section */
+.about-cards {
+  max-width: 1326px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(320px, 1fr));
+  gap: 50px;
+  padding-inline: 20px;
+  box-sizing: border-box;
+}
+
+.card-item {
+  background: none;
+  border: none;
+    cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-image {
+  width: 100%;
+  max-width: 350px;     /* gambar tidak membesar lebih dari ini */
+  aspect-ratio: 4 / 3;
+  height: auto;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 10px 9px 7px #00000040;
+  display: block;
+  margin: 0 auto;       /* center image in grid cell */
+}
+
+.card-title {
+  font-family: "ClashDisplay", sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  margin-top: 22px;
+  margin-bottom: 10px;
+  line-height: 120%;
+  color: #000;
+  text-align: left;
+}
+
+
+/* Testimonial Title */
+.about-testimonial {
+  max-width: 1326px;      /* lebar konten sama seperti Figma */
+  margin: 80px auto 0;    /* center di halaman, jarak dari atas bisa disesuaikan */
+  padding: 0 40px;        /* padding kiri-kanan agar tidak mepet layar */
+}
+
+/* Header: judul + summary rating di kiri (stack vertikal) */
+.about-testimonial-header {
+  display: flex;
+  flex-direction: column; /* title di atas, rating di bawah, kiri semua */
+  align-items: flex-start;
+}
+
+/* Judul "HeArt in Their Words" */
+.about-testimonial-title {
+  font-family: "ClashDisplay", sans-serif;
+  font-weight: 600;        /* SemiBold */
+  font-size: 32px;
+  line-height: 100%;
+  margin-bottom: 8px;
+}
+
+/* Summary rating: bintang + teks kecil di bawahnya */
+.about-testimonial-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Baris bintang kuning kecil */
+.about-summary-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 16px; /* TYPOGRAFI: sesuaikan ukuran icon bintang */
+}
+
+.star.full {
+  color: #ffd600;
+}
+
+.star.half {
+  color: #ffd600;
+  opacity: 0.5;
+}
+
+/* Teks "4.5 Average", "952 Reviews" */
+.about-summary-average,
+.about-summary-reviews {
+  font-family: "NexaRegular", sans-serif;
+  font-weight: 400;       /* Regular */
+  color: #342E58;
+  line-height: 150%;
+  font-size: 12px;
+}
+
+/* Jarak dari header ke cards */
+.about-testimonial-body {
+  position: relative;
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+}
+
+/* Track cards (deretan kartu) */
+.about-testimonial-track {
+  display: flex;
+  gap: 24px;                 /* jarak antar kartu seperti di Figma */
+  overflow-x: auto;          /* bisa scroll kalau layar kecil */
+  padding: 0 40px;           /* ruang untuk panah kiri-kanan */
+  scroll-behavior: smooth;
+  align-items: flex-start;
+}
+
+/* scrollbar optional */
+.about-testimonial-track::-webkit-scrollbar {
+  height: 6px;
+}
+.about-testimonial-track::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 999px;
+}
+
+/* Kartu testimonial */
+.about-testimonial-card {
+  display: block;
+  min-width: 260px;
+  max-width: 280px;          /* kontrol lebar kartu agar mirip Figma */
+  border-radius: 16px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box, /* Warna isi */
+    linear-gradient(91.86deg, #573100 0%, #D5A277 100%) border-box; /* Border */
+  padding: 16px 18px;
+}
+
+/* Header di dalam kartu: nama + bintang */
+.about-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+/* Nama orang (Park Chanyeol, dsb.) */
+.about-card-name {
+  font-family: "Nexaheavy", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 5%;
+}
+
+/* Bintang di dalam kartu lebih kecil dari summary */
+.about-card-stars .star {
+  font-size: 16px;
+}
+
+/* Isi teks testimonial */
+.about-card-text {
+  font-family: "NexaRegular", sans-serif;
+  font-weight: 400px;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 5%;
+  color: #333333;
+}
+
+/* Tombol panah kiri & kanan (posisi tengah vertikal di sisi card) */
+.about-carousel-btn {
+  width: 56px;       /* ukuran tombol lebih besar */
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 50px;   /* ikon panah lebih besar */
+  color: #7b4a0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.about-carousel-btn-left {
+  left: 0;
+}
+
+.about-carousel-btn-right {
+  right: 0;
+}
+
+.about-carousel-btn:hover {
+  background: #f3e6d5;
+}
+
+/* ========= RESPONSIVE ========= */
+@media (max-width: 768px) {
+  .about-stats-box {
+    flex-direction: column;  /* TURUN KE BAWAH */
+    gap: 24px;               /* jarak antar item di mobile */
+  }
+}
+
+@media (max-width: 992px) {
+  .about-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+    padding: 0 32px;  /* sedikit lebih kecil di tablet */
+  }
+}
+
+@media (max-width: 600px) {
+  .about-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 20px;  /* padding kiri–kanan lebih kecil di HP */
+  }
+
+  .card-image {
+    height: 220px;
+  }
+
+  .card-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 992px) {
+  .about-testimonial {
+    padding: 0 24px;
+    margin-top: 64px;
+  }
+
+  .about-testimonial-track {
+    gap: 20px;
+    padding: 0 24px;
+  }
+
+  .about-testimonial-card {
+    min-width: 240px;
+    max-width: 260px;
+  }
+
+  .about-carousel-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-testimonial {
+    padding: 0 16px;
+    margin-top: 48px;
+  }
+
+  /* Panah dihilangkan, user scroll swipe */
+  .about-carousel-btn {
+    display: none;
+  }
+
+  .about-testimonial-track {
+    gap: 16px;
+    padding: 0;
+  }
+
+  /* Card tampil 1–1 di mobile */
+  .about-testimonial-card {
+    min-width: 240px;
+    max-width: 240px;
+    padding: 14px;
+  }
+
+  .about-card-text {
+    font-size: 11px;
+  }
+
+  .about-testimonial-title {
+    font-size: 28px; /* TYPOGRAPHY: kamu atur lagi */
+  }
+
+  .about-summary-stars .star {
+    font-size: 14px;
+  }
+}
