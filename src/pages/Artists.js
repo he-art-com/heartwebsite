@@ -1,6 +1,8 @@
+// src/pages/Artists.js
 import React, { useState } from "react";
 import "./Artists.css";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
+import { useStore } from "../context/StoreContext"; // <<< pakai global store
 
 // ==== IMPORT GAMBAR ====
 import imgGustave from "../assets/images/11.png"; // old man colorful
@@ -143,7 +145,7 @@ const getArtistDescription = (artist) => {
   );
 };
 
-// ====== KOMPONEN PAGINATION (style sama dengan Gallery) ======
+// ====== KOMPONEN PAGINATION ======
 const Pagination = ({ currentPage, totalPages, onChange }) => {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -191,6 +193,16 @@ const Pagination = ({ currentPage, totalPages, onChange }) => {
 
 const Artists = () => {
   const [currentPage, setCurrentPage] = useState(1);
+
+  // ambil fungsi & state global dari StoreContext
+  const {
+    toggleFollowArtist,
+    isArtistFollowed,
+    toggleFavourite,
+    toggleCart,
+    isFavourite,
+    isInCart,
+  } = useStore();
 
   // page 2–10 map ke detail artist.
   // page 2 -> ARTISTS[0], page 3 -> ARTISTS[1], dst.
@@ -268,31 +280,44 @@ const Artists = () => {
 
           {/* GRID 3x3 */}
           <div className="artists-grid">
-            {ARTISTS.map((artist, index) => (
-              <article
-                key={artist.id}
-                className="artists-card"
-                onClick={() => openDetailFromGrid(index)} // klik card buka detail (page 2–10)
-              >
-                <div className="artists-card-image">
-                  <img src={artist.image} alt={artist.name} />
-                  <div className="artists-card-hover">
-                    <span className="artists-card-logo">HeArt</span>
-                  </div>
-                </div>
+            {ARTISTS.map((artist, index) => {
+              const followed = isArtistFollowed(artist.id);
 
-                <div className="artists-card-info">
-                  <div className="artists-card-text">
-                    <h3>{artist.name}</h3>
-                    <p>{artist.meta}</p>
+              return (
+                <article
+                  key={artist.id}
+                  className="artists-card"
+                  onClick={() => openDetailFromGrid(index)} // klik card buka detail (page 2–10)
+                >
+                  <div className="artists-card-image">
+                    <img src={artist.image} alt={artist.name} />
+                    <div className="artists-card-hover">
+                      <span className="artists-card-logo">HeArt</span>
+                    </div>
                   </div>
 
-                  <button type="button" className="artists-follow-btn">
-                    Follow
-                  </button>
-                </div>
-              </article>
-            ))}
+                  <div className="artists-card-info">
+                    <div className="artists-card-text">
+                      <h3>{artist.name}</h3>
+                      <p>{artist.meta}</p>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={`artists-follow-btn ${
+                        followed ? "is-following" : ""
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation(); // jangan buka detail
+                        toggleFollowArtist(artist.id);
+                      }}
+                    >
+                      {followed ? "Following" : "Follow"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
 
           {/* pagination di bawah grid */}
@@ -339,7 +364,19 @@ const Artists = () => {
               </p>
 
               <div className="artist-main-follow-row">
-                <button className="artist-main-follow">Follow</button>
+                {currentArtist && (
+                  <button
+                    className={`artist-main-follow ${
+                      isArtistFollowed(currentArtist.id) ? "is-following" : ""
+                    }`}
+                    type="button"
+                    onClick={() => toggleFollowArtist(currentArtist.id)}
+                  >
+                    {isArtistFollowed(currentArtist.id)
+                      ? "Following"
+                      : "Follow"}
+                  </button>
+                )}
                 <span className="artist-main-followers">
                   {currentArtist?.followers || "23k Followers"}
                 </span>
@@ -365,9 +402,21 @@ const Artists = () => {
             </div>
 
             <div className="artist-artworks-grid">
-              {DEFAULT_ARTWORKS.map((art) => (
-                <article key={art.id} className="artist-artwork-card">
-                  {currentArtist && (
+              {DEFAULT_ARTWORKS.map((art) => {
+                if (!currentArtist) return null;
+
+                const fav = isFavourite(currentArtist.id, art.id);
+                const inCart = isInCart(currentArtist.id, art.id);
+
+                const artworkPayload = {
+                  artistName: currentArtist.name,
+                  title: art.title,
+                  price: art.price,
+                  image: currentArtist.image,
+                };
+
+                return (
+                  <article key={art.id} className="artist-artwork-card">
                     <div className="artist-artwork-image-wrapper">
                       <img
                         src={currentArtist.image}
@@ -375,40 +424,58 @@ const Artists = () => {
                         className="artist-artwork-image"
                       />
                     </div>
-                  )}
 
-                  <div className="artist-artwork-text">
-                    {/* baris atas: title kiri, icon kanan */}
-                    <div className="artist-artwork-row-top">
-                      <div className="artist-artwork-title">{art.title}</div>
+                    <div className="artist-artwork-text">
+                      {/* baris atas: title kiri, icon kanan */}
+                      <div className="artist-artwork-row-top">
+                        <div className="artist-artwork-title">{art.title}</div>
 
-                      <div className="artist-artwork-icons">
-                        <button
-                          className="artist-artwork-icon-btn"
-                          aria-label="Add to favourites"
-                          type="button"
-                        >
-                          <FiHeart className="artist-artwork-icon" />
-                        </button>
-                        <button
-                          className="artist-artwork-icon-btn"
-                          aria-label="Add to cart"
-                          type="button"
-                        >
-                          <FiShoppingCart className="artist-artwork-icon" />
-                        </button>
+                        <div className="artist-artwork-icons">
+                          <button
+                            className={`artist-artwork-icon-btn ${
+                              fav ? "is-active" : ""
+                            }`}
+                            aria-label="Add to favourites"
+                            type="button"
+                            onClick={() =>
+                              toggleFavourite(
+                                currentArtist.id,
+                                art.id,
+                                artworkPayload
+                              )
+                            }
+                          >
+                            <FiHeart className="artist-artwork-icon" />
+                          </button>
+                          <button
+                            className={`artist-artwork-icon-btn ${
+                              inCart ? "is-active" : ""
+                            }`}
+                            aria-label="Add to cart"
+                            type="button"
+                            onClick={() =>
+                              toggleCart(
+                                currentArtist.id,
+                                art.id,
+                                artworkPayload
+                              )
+                            }
+                          >
+                            <FiShoppingCart className="artist-artwork-icon" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="artist-artwork-meta">{art.meta}</div>
-                    <div className="artist-artwork-price">{art.price}</div>
-                  </div>
-                </article>
-              ))}
+                      <div className="artist-artwork-meta">{art.meta}</div>
+                      <div className="artist-artwork-price">{art.price}</div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
 
-          {/* pagination di bawah artworks (seperti Leonardo page) */}
+          {/* pagination di bawah artworks */}
           <Pagination
             currentPage={currentPage}
             totalPages={TOTAL_PAGES}

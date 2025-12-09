@@ -1,0 +1,328 @@
+/* ========= WRAPPER HALAMAN ========= */
+
+.login-page {
+  min-height: 100vh;
+  padding: 40px 0;              /* biar nggak mepet atas/bawah */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fdfdfd;
+}
+
+/* ========= GRADIENT BESAR (Union) ========= */
+
+.login-shell {
+  position: relative;
+  width: 1440px;
+  height: 1024px;
+  background: linear-gradient(180deg, #d5a277 0%, #573100 100%);
+  box-shadow: inset 0px 10px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 60px;
+  overflow: hidden;
+}
+
+/* ========= STRIPES ABU-ABU (Rectangle 172–176) ========= */
+
+.login-stripe {
+  position: absolute;
+  height: 205px;
+  background: #d9d9d9;
+  pointer-events: none; /* dekorasi saja, jangan blok klik */
+  z-index: 0;
+}
+
+/* Rectangle 172 */
+.login-stripe-1 {
+  width: 476.98px;
+  left: 963.02px;
+  top: 0px;
+  border-radius: 60px 1px 0px 0px;
+}
+
+/* Rectangle 173 */
+.login-stripe-2 {
+  width: 750.69px;
+  left: 689.31px;
+  top: 205px;
+  border-radius: 60px 0px 0px 0px;
+}
+
+/* Rectangle 174 */
+.login-stripe-3 {
+  width: 952.96px;
+  left: 487.04px;
+  top: 410px;
+  border-radius: 60px 0px 0px 0px;
+}
+
+/* Rectangle 175 */
+.login-stripe-4 {
+  width: 1183.4px;
+  left: 256.6px;
+  top: 615px;
+  border-radius: 60px 0px 0px 0px;
+}
+
+/* Rectangle 176 */
+.login-stripe-5 {
+  width: 1440px;
+  left: 0px;
+  top: 820px;
+  border-radius: 60px 0px 1px 1px;
+}
+
+/* ========= KARTU PUTIH (Rectangle 165) ========= */
+
+.login-card {
+  position: absolute;
+  width: 1244px;
+  min-height: 825px;         /* tinggi minimum, bisa nambah kalau ada error */
+  left: 98px;
+  top: 117px;
+  background: #fdfdfd;
+  box-shadow: 5px 0px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 40px;
+  padding-bottom: 40px;      /* ekstra ruang di bawah konten */
+  overflow: visible;         /* biar teks tambahannya nggak kepotong */
+}
+
+/* ========= FORM KIRI ========= */
+
+.login-form {
+  position: absolute;
+  /* posisi mengikuti Masuk (216, 258) relatif ke kartu (98, 117) */
+  left: 118px; /* 216 - 98 */
+  top: 141px;  /* 258 - 117 */
+  width: 386px; /* lebar input / button di Figma */
+  font-family: "Creato Display", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  color: #282828;
+  z-index: 2; /* di atas stripes & logo */
+}
+
+/* "Masuk" / "Daftar" – Daminga 48px, bold */
+.login-title {
+  font-family: "Daminga PERSONAL USE ONLY", "ClashDisplay", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 53px;
+  letter-spacing: 0.05em;
+  margin: 0;
+  color: #282828;
+}
+
+/* Subjudul */
+.login-subtitle {
+  margin: 14px 0 40px;
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.05em;
+  color: #545454;
+}
+
+/* Label "Email" / "Kata Sandi" / dst. */
+.login-label {
+  display: block;
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.05em;
+  color: #282828;
+  margin-bottom: 8px;
+}
+
+/* Wrapper input */
+.login-input {
+  box-sizing: border-box;
+  width: 386px;
+  height: 53px;
+  border: 1px solid #545454;
+  border-radius: 10px;
+  padding: 18px 19px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;        /* diperkecil supaya error nggak terlalu jauh */
+}
+
+.login-input input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.05em;
+  color: rgba(84, 84, 84, 0.9);
+}
+
+.login-input input::placeholder {
+  color: rgba(84, 84, 84, 0.5);
+}
+
+/* ========= BUTTON MASUK / DAFTAR ========= */
+
+.login-button {
+  width: 386px;
+  height: 53px;
+  border: none;
+  border-radius: 10px;
+  margin-top: 12px;
+  background: linear-gradient(180deg, #d5a277 0%, #573100 100%);
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.05em;
+  color: #fdfdfd;
+  cursor: pointer;
+}
+
+/* ========= "atau" ========= */
+
+.login-or {
+  margin-top: 24px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.login-or-text {
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  color: #282828;
+}
+
+/* ========= BUTTON GOOGLE ========= */
+
+.login-google {
+  width: 386px;
+  height: 53px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #282828;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.login-google-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.login-google-text {
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.05em;
+  color: #282828;
+}
+
+/* ========= FOOTER TEXT "Belum punya akun?/Sudah punya akun?" ========= */
+
+.login-register {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  align-items: center;
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+}
+
+.login-register-text {
+  font-weight: 700;
+  color: #282828;
+}
+
+.login-register-link {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: "Creato Display", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  background: linear-gradient(180deg, #d5a277 0%, #573100 100%), #282828;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========= AREA LOGO KANAN (Rectangle 61 + HeArt) ========= */
+
+.login-hero {
+  position: absolute;
+  /* kira-kira posisi Rectangle 61 di Figma (720, 401) relatif ke kartu (98, 117) */
+  left: 622px;           /* 720 - 98 */
+  top: 284px;            /* 401 - 117 */
+  width: 607px;
+  height: 262px;
+  pointer-events: none;  /* jangan blok klik form */
+  z-index: 1;
+}
+
+/* gradient coklat–emas di belakang (kalau nanti mau ditambah) */
+.login-hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90.04deg, #573100 24.9%, #d5a277 99.96%);
+  border-radius: 40px;
+}
+
+/* logo HeArt di atas gradient, sejajar kanan tengah */
+.login-hero-image {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 80%;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* ========= PESAN ERROR & SUKSES ========= */
+
+.form-error {
+  margin-top: 2px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #d9534f; /* merah error */
+}
+
+.form-success {
+  margin: 8px 0 16px;
+  font-size: 12px;
+  color: #2e7d32; /* hijau sukses */
+}
+
+/* (optional) scaling biar nggak kepotong di layar lebih kecil */
+@media (max-width: 1440px) {
+  .login-shell {
+    transform: scale(0.85);
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 1200px) {
+  .login-shell {
+    transform: scale(0.7);
+  }
+}

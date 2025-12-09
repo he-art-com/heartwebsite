@@ -3,20 +3,25 @@
 .artists-page {
   background: #ffffff;
   color: #000000;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Clash Display",
-    "NexaRegular", "Segoe UI", sans-serif;
+  font-family: var(--font-body);
 }
 
-/* HERO di Artists pakai class yang sama dengan Gallery
-   Di sini cuma paksa font-nya biar match Gallery */
+/* HERO di Artists pakai font sama kayak Figma:
+   Title & CTA = Clash Display (display), subtitle = Nexa (body) */
 
 .artists-page .hero-title,
-.artists-page .hero-title-left,
+.artists-page .hero-title-left {
+  font-family: var(--font-display);
+  font-weight: 700; /* biar lebih tebal */
+}
+
 .artists-page .hero-subtitle,
-.artists-page .hero-subtitle-left,
+.artists-page .hero-subtitle-left {
+  font-family: var(--font-body);
+}
+
 .artists-page .hero-cta {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Poppins",
-    "Segoe UI", sans-serif;
+  font-family: var(--font-display);
 }
 
 /* ================= FEATURED SECTION ================= */
@@ -34,7 +39,7 @@
 }
 
 .artists-featured-title {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 40px;
   line-height: 150%;
@@ -42,7 +47,7 @@
 }
 
 .artists-featured-subtitle {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display-var);
   font-weight: 500;
   font-size: 11px;
   line-height: 150%;
@@ -59,7 +64,7 @@
 }
 
 .artists-sort-label {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display-var);
   font-weight: 500;
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -132,7 +137,7 @@
 }
 
 .artists-card-logo {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 32px;
   letter-spacing: 0.12em;
@@ -152,7 +157,7 @@
 }
 
 .artists-card-text h3 {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 20px;
   line-height: 150%;
@@ -160,7 +165,7 @@
 }
 
 .artists-card-text p {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 10px;
   line-height: 150%;
@@ -179,7 +184,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 8px;
   line-height: 150%;
@@ -224,7 +229,7 @@
 
 /* breadcrumb "Artists / Leonardo da Vinci" */
 .artist-breadcrumb {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display-var);
   font-size: 11px;
   letter-spacing: 0.12em;
   color: #777777;
@@ -240,7 +245,7 @@
   background: transparent;
   padding: 0;
   margin: 0;
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display-var);
   font-size: 11px;
   letter-spacing: 0.12em;
   color: #777777;
@@ -267,21 +272,21 @@
 /* kolom kanan */
 .artist-main-info {
   flex: 1;
-  max-width: 480px;        /* Figma: text frame sekitar 344, tapi ada ruang extra */
+  max-width: 480px;
 }
 
 /* nama artist: Leonardo da Vinci */
 .artist-main-name {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
-  font-size: 32px;         /* heading besar seperti di design */
+  font-size: 32px;
   line-height: 1.3;
   margin: 0 0 6px;
 }
 
 /* meta "Italy, 1452–1519" */
 .artist-main-meta {
-  font-family: "NexaRegular", system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.4;
   margin: 0 0 20px;
@@ -306,14 +311,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: 0.04em;
   cursor: pointer;
 }
 
 .artist-main-followers {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-size: 11px;
   color: #777777;
 }
@@ -321,7 +326,7 @@
 /* paragraf deskripsi panjang di kanan */
 .artist-main-description {
   margin-top: 4px;
-  font-family: "NexaRegular", system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 13px;
   line-height: 1.65;
   max-width: 480px;
@@ -345,14 +350,14 @@
 }
 
 .artist-artworks-title {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 20px;
   margin: 0;
 }
 
 .artist-artworks-subtitle {
-  font-family: "Clash Display", system-ui, sans-serif;
+  font-family: var(--font-display);
   font-size: 11px;
   color: #777777;
   margin: 0;
@@ -388,7 +393,7 @@
 
 /* text bawah image */
 .artist-artwork-text {
-  font-family: "NexaRegular", system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 11px;
 }
 
@@ -402,6 +407,7 @@
 }
 
 .artist-artwork-title {
+  font-family: var(--font-display);
   font-size: 11px;
   font-weight: 500;
 }
@@ -438,13 +444,15 @@
 }
 
 .artist-artwork-meta {
+  font-family: var(--font-body);
   color: #777777;
   margin-bottom: 2px;
 }
 
 .artist-artwork-price {
+  font-family: var(--font-heavy);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* ========== RESPONSIVE DETAIL ========== */
@@ -473,4 +481,17 @@
   .artist-artworks-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* FOLLOW state */
+.artists-follow-btn.is-following,
+.artist-main-follow.is-following {
+  background: #573101;
+  color: #ffffff;
+}
+
+/* icon aktif (favourite / cart) */
+.artist-artwork-icon-btn.is-active .artist-artwork-icon {
+  color: #573101;
+  fill: #573101;
 }
