@@ -6,32 +6,67 @@ import "./Login.css";
 import heartHero from "../assets/heart.svg";
 import googleLogo from "../assets/google.png";
 
+const API_BASE_URL = "http://localhost:5000"; // ganti kalau backend beda port/url
+
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg("");
 
     if (!email || !password) {
-      alert("Isi email dan kata sandi");
+      setErrorMsg("Isi email dan kata sandi.");
       return;
     }
 
-    // setelah login sukses → pindah ke HOME
-    navigate("/home");
+    try {
+      setLoading(true);
+
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMsg(data.message || "Login gagal. Cek kembali email dan kata sandi.");
+        setLoading(false);
+        return;
+      }
+
+      // simpan token & user di localStorage
+      localStorage.setItem("heart_token", data.token);
+      localStorage.setItem("heart_user", JSON.stringify(data.user));
+
+      // pindah ke HOME
+      navigate("/home");
+    } catch (err) {
+      console.error("Login error:", err);
+      setErrorMsg("Terjadi kesalahan pada server. Coba lagi nanti.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
-    // nanti bisa kamu ganti dengan OAuth beneran
     alert("Masuk dengan Google (dummy).");
     navigate("/home");
   };
 
   const handleRegisterClick = () => {
-    // pindah ke halaman daftar
     navigate("/register");
   };
 
@@ -50,9 +85,10 @@ const Login = () => {
           {/* FORM KIRI */}
           <form className="login-form" onSubmit={handleSubmit}>
             <h1 className="login-title">Masuk</h1>
-            <p className="login-subtitle">
-              Masuk ke dalam akun anda
-            </p>
+            <p className="login-subtitle">Masuk ke dalam akun anda</p>
+
+            {/* ERROR MESSAGE */}
+            {errorMsg && <p className="form-error">{errorMsg}</p>}
 
             {/* EMAIL */}
             <label className="login-label" htmlFor="email">
@@ -83,8 +119,8 @@ const Login = () => {
             </div>
 
             {/* BUTTON MASUK */}
-            <button type="submit" className="login-button">
-              Masuk
+            <button type="submit" className="login-button" disabled={loading}>
+              {loading ? "Memproses..." : "Masuk"}
             </button>
 
             {/* ATAU */}

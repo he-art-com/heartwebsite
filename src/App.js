@@ -27,6 +27,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Favorites from "./pages/Favorites";
 import Cart from "./pages/Cart";
+import ProfileSettings from "./pages/ProfileSettings";
 
 import { StoreProvider } from "./context/StoreContext";
 
@@ -34,7 +35,7 @@ function AppContent() {
   const location = useLocation();
 
   // Halaman yang TIDAK pakai navbar/footer
-  const authPaths = ["/login", "/register"];
+  const authPaths = ["/login", "/register","/profile"];
   const isAuthPage = authPaths.includes(location.pathname);
 
   return (
@@ -48,7 +49,7 @@ function AppContent() {
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        <Route path="/profile" element={<ProfileSettings />} />
         {/* MAIN PAGES */}
         <Route path="/home" element={<Home />} />
         <Route path="/gallery" element={<Gallery />} />
@@ -65,6 +66,7 @@ function AppContent() {
         {/* BARU */}
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/cart" element={<Cart />} />
+
       </Routes>
 
       {!isAuthPage && <Footer />}

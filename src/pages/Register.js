@@ -1,16 +1,17 @@
 // src/pages/Register.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Register.css"; // atau "./Login.css" kalau stylenya sama persis
+import "./Register.css"; // atau Login.css kalau digabung
 
 import heartHero from "../assets/heart.svg";
 import googleLogo from "../assets/google.png";
+
+const API_BASE_URL = "http://localhost:5000"; // samain dengan backend-mu
 
 const Register = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -18,21 +19,17 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
   const [successMsg, setSuccessMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    // hapus error per-field saat user ngetik lagi
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setErrors((prev) => ({ ...prev, [name]: "", general: "" }));
     setSuccessMsg("");
   };
 
   const validate = () => {
     const newErrors = {};
-
-    if (!form.name.trim()) {
-      newErrors.name = "Nama wajib diisi.";
-    }
 
     if (!form.email.trim()) {
       newErrors.email = "Email wajib diisi.";
@@ -58,7 +55,7 @@ const Register = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validationErrors = validate();
@@ -68,34 +65,54 @@ const Register = () => {
       return;
     }
 
-    // ---- SIMULASI REGISTER (front-end only) ----
-    // Simpan user ke localStorage supaya nanti login bisa baca (kalau mau).
-    const existingUsers =
-      JSON.parse(localStorage.getItem("heart_users") || "[]");
+    try {
+      setLoading(true);
+      setErrors({});
+      setSuccessMsg("");
 
-    existingUsers.push({
-      name: form.name,
-      email: form.email,
-      password: form.password,
-    });
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      });
 
-    localStorage.setItem("heart_users", JSON.stringify(existingUsers));
+      const data = await res.json();
 
-    setSuccessMsg("Pendaftaran berhasil! Silakan masuk dengan akun Anda.");
-    setErrors({});
+      if (!res.ok) {
+        setErrors((prev) => ({
+          ...prev,
+          general: data.message || "Pendaftaran gagal.",
+        }));
+        setLoading(false);
+        return;
+      }
 
-    // opsional: reset form
-    setForm({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+      setSuccessMsg("Pendaftaran berhasil! Silakan masuk dengan akun Anda.");
 
-    // redirect ke login setelah sedikit jeda
-    setTimeout(() => {
-      navigate("/login");
-    }, 1200);
+      setForm({
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+
+      // otomatis pindah ke login setelah sedikit jeda
+      setTimeout(() => {
+        navigate("/login");
+      }, 1200);
+    } catch (err) {
+      console.error("Register error:", err);
+      setErrors((prev) => ({
+        ...prev,
+        general: "Terjadi kesalahan pada server. Coba lagi nanti.",
+      }));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const goToLogin = () => {
@@ -105,7 +122,7 @@ const Register = () => {
   return (
     <div className="login-page">
       <div className="login-shell">
-        {/* STRIPES ABU-ABU */}
+        {/* STRIPES */}
         <div className="login-stripe login-stripe-1" />
         <div className="login-stripe login-stripe-2" />
         <div className="login-stripe login-stripe-3" />
@@ -119,28 +136,11 @@ const Register = () => {
             <h1 className="login-title">Daftar</h1>
             <p className="login-subtitle">Daftar akun anda</p>
 
-            {/* PESAN SUKSES */}
-            {successMsg && (
-              <p className="form-success">
-                {successMsg}
-              </p>
-            )}
+            {/* ERROR UMUM */}
+            {errors.general && <p className="form-error">{errors.general}</p>}
 
-            {/* NAMA */}
-            <label className="login-label" htmlFor="name">
-              Nama
-            </label>
-            <div className="login-input">
-              <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Masukan nama anda"
-                value={form.name}
-                onChange={handleChange}
-              />
-            </div>
-            {errors.name && <p className="form-error">{errors.name}</p>}
+            {/* SUKSES */}
+            {successMsg && <p className="form-success">{successMsg}</p>}
 
             {/* EMAIL */}
             <label className="login-label" htmlFor="email">
@@ -158,7 +158,7 @@ const Register = () => {
             </div>
             {errors.email && <p className="form-error">{errors.email}</p>}
 
-            {/* KATA SANDI */}
+            {/* PASSWORD */}
             <label className="login-label" htmlFor="password">
               Kata Sandi
             </label>
@@ -176,7 +176,7 @@ const Register = () => {
               <p className="form-error">{errors.password}</p>
             )}
 
-            {/* KONFIRMASI KATA SANDI */}
+            {/* CONFIRM PASSWORD */}
             <label className="login-label" htmlFor="confirmPassword">
               Konfirmasi Kata Sandi
             </label>
@@ -195,11 +195,11 @@ const Register = () => {
             )}
 
             {/* BUTTON DAFTAR */}
-            <button type="submit" className="login-button">
-              Daftar
+            <button type="submit" className="login-button" disabled={loading}>
+              {loading ? "Memproses..." : "Daftar"}
             </button>
 
-            {/* KEMBALI KE LOGIN */}
+            {/* KE LOGIN */}
             <div className="login-register">
               <span className="login-register-text">Sudah punya akun?</span>
               <button

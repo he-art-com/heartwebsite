@@ -10,20 +10,54 @@ import {
 } from "react-icons/ai";
 import { FaUserCircle } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
+import { FiSettings } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  // fungsi load user dari localStorage
+  const loadUserFromStorage = () => {
+    const stored = localStorage.getItem("heart_user");
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch (err) {
+        console.error("Error parse heart_user:", err);
+      }
+    } else {
+      setUser(null);
+    }
+  };
+
+  // Load user saat Navbar pertama kali mount
+  useEffect(() => {
+    loadUserFromStorage();
+
+    // dengarkan event custom dari ProfileSettings
+    const handler = () => loadUserFromStorage();
+    window.addEventListener("heart_user_updated", handler);
+
+    return () => {
+      window.removeEventListener("heart_user_updated", handler);
+    };
+  }, []);
 
   const toggleProfile = () => {
     setIsProfileOpen((prev) => !prev);
   };
 
   const handleLogout = () => {
-    // nanti kalau ada auth beneran, bersihin token di sini
+    // bersihkan semua jejak login
     localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("heart_token");
+    localStorage.removeItem("heart_user");
+
+    setUser(null);
     setIsProfileOpen(false);
     navigate("/login");
   };
@@ -43,6 +77,9 @@ const Navbar = () => {
   const goHome = () => navigate("/home");
   const goToCart = () => navigate("/cart");
   const goToFavorites = () => navigate("/favorites");
+
+  const displayName = user?.nickname || user?.full_name || "Hi, User";
+  const displayEmail = user?.email || "user@example.com";
 
   return (
     <header className="navbar">
@@ -85,7 +122,7 @@ const Navbar = () => {
             <AiOutlineHeart />
           </button>
 
-          {/* NOTIFICATION (belum ada aksi) */}
+          {/* NOTIFICATION */}
           <button
             type="button"
             className="nav-icon-btn"
@@ -103,15 +140,39 @@ const Navbar = () => {
               aria-haspopup="true"
               aria-expanded={isProfileOpen}
             >
-              <FaUserCircle className="profile" />
+              {user?.avatar_url ? (
+                <img
+                  src={user.avatar_url}
+                  alt="Avatar"
+                  className="nav-avatar"
+                />
+              ) : (
+                <FaUserCircle className="profile" />
+              )}
             </button>
 
             {isProfileOpen && (
               <div className="profile-dropdown">
                 <div className="profile-dropdown-header">
-                  <span className="profile-name">Hi, User</span>
-                  <span className="profile-email">user@example.com</span>
+                  <div className="profile-info">
+                    <span className="profile-name">{displayName}</span>
+                    <span className="profile-email">{displayEmail}</span>
+                  </div>
+
+                  {/* ICON SETTINGS → KE PROFILE */}
+                  <button
+                    type="button"
+                    className="settings-btn"
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      navigate("/profile");
+                    }}
+                    aria-label="Profile settings"
+                  >
+                    <FiSettings size={18} />
+                  </button>
                 </div>
+
                 <button
                   type="button"
                   className="profile-dropdown-item"
