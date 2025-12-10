@@ -7,18 +7,15 @@ import FilterIcon from "../assets/filter-icon.svg";
 /* 🆕 NEW: contoh import image artwork
    Ganti nama file & jumlahnya sesuai asset kamu.
    Kalau ekstensi bukan .img, sesuaikan (mis. .jpg / .png) */
-import Artwork1 from "../assets/artwork-1.img"; // 🆕 NEW
-import Artwork2 from "../assets/artwork-2.img"; // 🆕 NEW
-import Artwork3 from "../assets/artwork-3.img"; // 🆕 NEW
-import Artwork4 from "../assets/artwork-4.img"; // 🆕 NEW
-import Artwork5 from "../assets/artwork-5.img"; // 🆕 NEW
-import Artwork6 from "../assets/artwork-6.img"; // 🆕 NEW
-import Artwork7 from "../assets/artwork-7.img"; // 🆕 NEW
-import Artwork8 from "../assets/artwork-8.img"; // 🆕 NEW
-import Artwork9 from "../assets/artwork-9.img"; // 🆕 NEW
-import Artwork10 from "../assets/artwork-10.img"; // 🆕 NEW
-import Artwork11 from "../assets/artwork-11.img"; // 🆕 NEW
-import Artwork12 from "../assets/artwork-12.img"; // 🆕 NEW
+import Artwork1 from "../assets/images/1.png"; // 🆕 NEW
+import Artwork2 from "../assets/images/3.png"; // 🆕 NEW
+import Artwork3 from "../assets/images/6.jpg"; // 🆕 NEW
+import Artwork4 from "../assets/images/7.png"; // 🆕 NEW
+import Artwork5 from "../assets/images/11.png"; // 🆕 NEW
+import Artwork6 from "../assets/images/12.png"; // 🆕 NEW
+import Artwork7 from "../assets/images/13.png"; // 🆕 NEW
+import Artwork8 from "../assets/images/14.png"; // 🆕 NEW
+import Artwork9 from "../assets/images/16.png"; // 🆕 NEW
 
 const STYLE_OPTIONS = ["Realistic", "Abstract", "Surrealist", "Geometric", "Illustrative"];
 const PRICE_OPTIONS = ["Any", "Under 40 cm", "40 - 80 cm", "80 - 120 cm", "120+ cm"];
@@ -113,7 +110,7 @@ const ARTWORKS = [ // 🆕 NEW
   },
   {
     id: 10,
-    image: Artwork10,
+    image: Artwork1,
     title: "The Starry Night",
     dimensions: "70 x 110 cm",
     frameDetails: "Outer frame included",
@@ -122,7 +119,7 @@ const ARTWORKS = [ // 🆕 NEW
   },
   {
     id: 11,
-    image: Artwork11,
+    image: Artwork3,
     title: "Umbra Fenestre",
     dimensions: "60 x 90 cm",
     frameDetails: "Outer frame included",
@@ -131,7 +128,7 @@ const ARTWORKS = [ // 🆕 NEW
   },
   {
     id: 12,
-    image: Artwork12,
+    image: Artwork5,
     title: "Le Désespéré",
     dimensions: "60 x 120 cm",
     frameDetails: "Outer frame included",
