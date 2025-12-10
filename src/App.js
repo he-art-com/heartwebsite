@@ -17,6 +17,8 @@ import Gallery from "./pages/Gallery";
 import ForSale from "./pages/ForSale";
 import ForSaleDetail from "./pages/ForSaleDetail";
 import Event from "./pages/Event";
+import EventDetail from "./pages/EventDetail";
+import BuyTicket from "./pages/BuyTicket";
 import Artists from "./pages/Artists";
 import About from "./pages/About";
 import AboutMission from "./pages/AboutMission";
@@ -60,6 +62,8 @@ function AppContent() {
         <Route path="/for-sale" element={<ForSale />} />
         <Route path="/for-sale/:id" element={<ForSaleDetail />} />
         <Route path="/event" element={<Event />} />
+        <Route path="/event/:id" element={<EventDetail />} />
+        <Route path="/event/:id/buy" element={<BuyTicket />} />
         <Route path="/artists" element={<Artists />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/mission-vision-values" element={<AboutMission />} />
