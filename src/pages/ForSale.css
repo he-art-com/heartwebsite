@@ -1,0 +1,416 @@
+/* ========================= */
+/* PAGE CONTAINER            */
+/* ========================= */
+
+.for-sale-page {
+  background-color: #ffffff; /* TODO: sesuaikan dengan Figma */
+  min-height: 100vh;
+}
+
+.for-sale-page__container {
+  max-width: 1200px;      /* TODO: sesuaikan dengan grid Figma (mis. 1120 / 1200) */
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+
+/* ========================= */
+/* FILTER BAR                */
+/* ========================= */
+
+.for-sale-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  /* TODO: atur jarak ke grid cards sesuai Figma */
+}
+
+.for-sale-filter-bar__filters {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* TODO: sesuaikan jarak antar filter (STYLE, PRICE, dst) */
+  flex-wrap: nowrap;
+}
+
+/* ========================= */
+/* FILTER DROPDOWN           */
+/* ========================= */
+
+.filter-dropdown {
+  position: relative;
+  margin: 0;
+}
+
+.filter-dropdown__trigger {
+  width: 150px;              /* TODO: atur panjang garis/area filter */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-top: 2px;
+  padding-bottom: 6px;       /* jarak teks ke garis */
+  background: transparent;
+  border: none;              /* HILANGKAN BORDER BAWAH LAMA */
+  cursor: pointer;
+
+  border-bottom: 1px solid #000; /* TODO: panjang garis mengikuti width */
+  
+  /* TYPOGRAPHY */
+  font-family: "ClashDisplayMedium";
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.filter-dropdown__trigger--open {
+  /* optional: ubah warna saat active */
+  border-bottom-color: #c4874b; /* TODO: warna accent di Figma */
+}
+
+/* Garis bawah custom */
+
+
+.filter-dropdown__trigger--open::after {
+  background-color: #c4874b; /* TODO: warna accent saat aktif */
+}
+
+.filter-dropdown__label {
+  font-family: "ClashDisplayMedium", system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  line-height: 150%;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+/* Chevron kecil di kanan label */
+.filter-dropdown__chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.filter-dropdown__chevron--open {
+  transform: rotate(-135deg); /* arrow ke atas */
+}
+
+/* ========================= */
+/* OVERRIDE: DROPDOWN MENU   */
+/* ========================= */
+
+.filter-dropdown__menu {
+  top: calc(100% + 8px); /* lebih dekat ke label, mirip screenshot */
+  left: 0;
+
+  min-width: 210px; /* sedikit lebih lebar agar lega */
+  padding: 10px 10px 12px;
+
+  background-color: #ffffff;
+  border-radius: 16px;      /* sudut rounded seperti Figma */
+  border: 1px solid #e7dccb; /* garis halus coklat muda / krem */
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+
+  opacity: 0;
+  transform: translateY(6px);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms ease;
+  z-index: 20;
+}
+
+.filter-dropdown__menu--open {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.filter-dropdown__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Option di dalam dropdown */
+.filter-dropdown__option {
+  width: 100%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
+  padding: 10px 14px;
+  margin: 2px 0; /* jarak tipis antar row */
+
+  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+
+  color: #2a2623; /* agak coklat gelap seperti di screenshot */
+}
+
+.filter-dropdown__option:hover {
+  background-color: #f7eee6; /* hover lembut */
+  border-radius: 10px;
+}
+
+.filter-dropdown__option--selected {
+  background-color: #f7eee6; /* krem lembut */
+  border-radius: 10px;
+  border: 1px solid #c4874b; /* outline coklat accent */
+  padding: 9px 13px;         /* sedikit dikurangi karena ada border */
+  margin: 2px 0;
+  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+}
+
+.filter-dropdown__check {
+  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: #c4874b; /* warna sama dengan outline */
+}
+
+/* ========================= */
+/* APPLY FILTER BUTTON       */
+/* ========================= */
+
+.for-sale-filter-bar__apply {
+  position: relative; /* diperlukan untuk pseudo-element */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 6px 28px;
+
+  border: none;                  /* RESET */
+  border-radius: 999px;          /* pill shape */
+  background-color: #ffffff;
+  cursor: pointer;
+
+  font-family: "ClashDisplayMedium", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+
+  /* agar hover smooth & pseudo-element ikut radius */
+  overflow: hidden; /* ✅ supaya ::before/::after tidak keluar radius */
+  transition: color 0.25s ease, background-color 0.25s ease;
+  margin-top: -235px;
+}
+
+/* BORDER GRADIENT — pakai pseudo-element */
+.for-sale-filter-bar__apply::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+
+  padding: 2px; /* tebal border */
+
+  background: linear-gradient(90deg, #573100 0%, #d5a277 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+
+  opacity: 1; /* gradient terlihat di normal state */
+  transition: opacity 0.25s ease;
+}
+
+/* BORDER SOLID UNTUK HOVER (layer kedua) */
+.for-sale-filter-bar__apply::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+
+  padding: 2px;
+
+  background: #573100;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+
+  opacity: 0; /* default tidak terlihat */
+  transition: opacity 0.25s ease;
+}
+
+/* ICON SVG (pakai <img>) */
+.for-sale-filter-bar__apply-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  z-index: 2; /* di atas border gradient */
+  display: block;
+  pointer-events: none;
+}
+
+/* TEXT gradient (sesuai Figma) */
+.for-sale-filter-bar__apply-text {
+  background: linear-gradient(180deg, #573100 0%, #d5a277 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  letter-spacing: 0.03em;
+  z-index: 2;
+  transition: all 0.25s ease;
+}
+
+/* ========================= */
+/* HOVER STATE               */
+/* ========================= */
+
+/* border: gradient fade out → solid #573100 fade in */
+.for-sale-filter-bar__apply:hover::before {
+  opacity: 0; /* gradient pelan2 hilang */
+}
+
+.for-sale-filter-bar__apply:hover::after {
+  opacity: 1; /* solid #573100 pelan2 muncul */
+}
+
+/* teks berubah solid #573100 */
+.for-sale-filter-bar__apply:hover .for-sale-filter-bar__apply-text {
+  background: none;
+  color: #573100;
+  -webkit-text-fill-color: #573100;
+}
+
+/* ========================= */
+/* ARTWORK GRID SECTION      */
+/* ========================= */
+
+/* Wrapper section untuk seluruh grid */
+.for-sale-artworks { /* 🆕 NEW */
+  margin-top: 64px; /* jarak dari filter bar, bisa disesuaikan dengan Figma */
+}
+
+/* Grid 4 kolom seperti di Figma */
+.for-sale-artworks__grid { /* 🆕 NEW */
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 40px;  /* jarak horizontal antar card */
+  row-gap: 64px;     /* jarak vertikal antar baris */
+}
+
+/* CARD ARTWORK */
+.artwork-card { /* 🆕 NEW */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Wrapper gambar untuk handle radius & shadow */
+.artwork-card__image-wrapper { /* 🆕 NEW */
+  width: 100%;
+  border-radius: 18px;             /* sesuaikan dengan Figma */
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18); /* shadow lembut */
+  margin-bottom: 18px;
+}
+
+/* Gambar artwork */
+.artwork-card__image { /* 🆕 NEW */
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Header: title (kiri) + wishlist heart (kanan) */
+.artwork-card__header { /* 🆕 NEW */
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+/* Title artwork */
+.artwork-card__title { /* 🆕 NEW */
+  font-family: "ClashDisplayMedium", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: #161310;
+}
+
+/* Tombol wishlist (heart) */
+.artwork-card__wishlist { /* 🆕 NEW */
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  margin: -4px; /* supaya optik lebih rapat ke kanan */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.artwork-card__wishlist-icon { /* 🆕 NEW */
+  font-size: 16px;
+  line-height: 1;
+  color: #8e8a84; /* abu-abu halus */
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.artwork-card__wishlist:hover .artwork-card__wishlist-icon { /* 🆕 NEW */
+  transform: scale(1.1);
+  color: #c4874b; /* accent coklat, konsisten dengan filter */
+}
+
+/* Dimensions (60 x 90 cm) */
+.artwork-card__dimensions { /* 🆕 NEW */
+  margin: 0;
+  margin-bottom: 2px;
+  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #5a5450;
+}
+
+/* Frame / detail kecil di bawah dimensions */
+.artwork-card__frame { /* 🆕 NEW */
+  margin: 0;
+  margin-bottom: 8px;
+  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #8e8a84;
+}
+
+/* Harga (Rp...) */
+.artwork-card__price { /* 🆕 NEW */
+  margin: 0;
+  margin-bottom: 4px;
+  font-family: "ClashDisplayMedium", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #11100e;
+}
+
+/* Nama artist */
+.artwork-card__artist { /* 🆕 NEW */
+  margin: 0;
+  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #5a5450;
+}
+
