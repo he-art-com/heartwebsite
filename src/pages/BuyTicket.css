@@ -1,0 +1,409 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600;700&display=swap');
+
+.buy-ticket-wrapper {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background-color: #fff;
+    padding: 30px 20px;
+}
+
+.breadcrumb {
+    max-width: 1100px;
+    margin: 0 auto 30px;
+    font-size: 14px;
+    color: #888;
+}
+.breadcrumb a { text-decoration: none; color: #888; }
+.breadcrumb span { color: #8d6e63; font-weight: 600; }
+
+.buy-ticket-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    /* Kolom kiri sedikit lebih lebar agar judul muat bagus */
+    grid-template-columns: 400px 1fr; 
+    gap: 60px;
+}
+
+/* --- KIRI: POSTER & INFO TAMBAHAN --- */
+.buy-left-col {
+    /* Agar tidak menumpuk saat scroll (opsional) */
+    position: relative;
+}
+
+.buy-poster {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    margin-bottom: 30px; /* Jarak poster ke judul */
+}
+
+/* Judul Event di Bawah Poster */
+.buy-event-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    color: #000;
+}
+
+/* Group Info (Lokasi & Tanggal) */
+.info-group {
+    margin-bottom: 25px;
+}
+
+.info-group h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+/* Kotak Krem untuk Info */
+.info-box-beige {
+    background-color: #fcf8f3; /* Warna krem sangat muda */
+    border: 1px solid #f0e6d8;
+    border-radius: 10px;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Ikon Pin Lokasi */
+.info-box-beige .icon-pin {
+    display: inline-block;
+    margin-right: 10px;
+    color: #5d4037;
+    font-size: 18px;
+}
+
+/* Styling Teks Lokasi agar sejajar icon */
+.info-group:nth-child(2) .info-box-beige {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.location-text {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.date-text {
+    font-weight: 400;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.time-text {
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+}
+
+/* --- KANAN: FORM --- */
+.buy-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.form-input:focus { border-color: #8d6e63; }
+
+.section-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* TICKET CARDS */
+.ticket-card {
+    background-color: #8B5E34; /* Coklat sesuai desain */
+    color: white;
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(141, 110, 99, 0.3);
+}
+
+.reguler-card {
+    background-color: #8B5E34; 
+}
+
+.ticket-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.ticket-info h4 { margin: 0; font-size: 16px; font-weight: 700; text-transform: uppercase; }
+.ticket-info p { margin: 0; font-size: 14px; opacity: 0.9; }
+
+.ticket-counter {
+    text-align: right;
+}
+.counter-label { font-size: 12px; display: block; margin-bottom: 5px; opacity: 0.8; }
+.counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+.counter-controls button {
+    background: none; border: none; color: white; cursor: pointer; font-size: 16px; font-weight: bold;
+}
+
+/* SUMMARY & TOTAL */
+.summary-section {
+    margin-top: 10px;
+    padding: 15px 0;
+    border-top: 1px dashed #ddd;
+    border-bottom: 1px dashed #ddd;
+}
+.summary-row, .total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #555;
+}
+.total-row {
+    font-weight: 700;
+    font-size: 18px;
+    color: #000;
+    margin-top: 15px;
+}
+
+/* PAYMENT OPTIONS */
+.payment-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+.payment-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #eee;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #f9f9f9;
+}
+.payment-option.selected {
+    border-color: #8d6e63;
+    background: #fff;
+}
+.payment-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+.bank-logo-placeholder {
+    width: 40px; height: 25px; background: #ddd; border-radius: 4px; 
+    font-size: 9px; display: flex; align-items: center; justify-content: center;
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+.btn-cancel {
+    padding: 12px 30px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-buy {
+    padding: 12px 40px;
+    background: linear-gradient(to right, #573100, #D5A277);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.btn-buy:hover { background: #8d6e63; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .buy-ticket-container {
+        grid-template-columns: 1fr;
+    }
+    .buy-poster {
+        max-width: 300px;
+        margin: 0 auto;
+        display: block;
+    }
+    .buy-left-col {
+        text-align: center;
+    }
+    .info-box-beige {
+        align-items: center;
+    }
+}
+
+.pay-view-container {
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Animasi halus saat ganti step */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* KARTU PEMBAYARAN */
+.pay-card {
+    border: 1px solid #e0d4c3; /* Border Coklat Tipis */
+    border-radius: 12px;
+    padding: 40px;
+    background: #fff;
+    margin-bottom: 30px;
+}
+
+.pay-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+/* RINCIAN HARGA */
+.price-details {
+    margin-bottom: 40px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #555;
+}
+
+.price-row.total-row {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+    font-weight: 700;
+    font-size: 24px;
+    color: #000;
+    align-items: center;
+}
+
+/* QRIS SECTION */
+.qris-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.qris-box {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.qris-logo-img {
+    height: 35px;
+    margin-bottom: 15px;
+}
+
+.merchant-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.qr-code-img {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 25px;
+}
+
+.btn-download-qr {
+    background: #fff;
+    border: 1px solid #333;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-download-qr:hover {
+    background: #f0f0f0;
+}
+
+/* TOMBOL KONFIRMASI */
+.pay-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-confirm-wa {
+    background: linear-gradient(to right, #573100, #D5A277);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(109, 76, 65, 0.3);
+}
+
+.btn-confirm-wa:hover {
+    filter: brightness(1.1);
+}
+
+/* Responsif Mobile untuk Payment */
+@media (max-width: 600px) {
+    .pay-card {
+        padding: 20px;
+    }
+    .qris-box {
+        width: 100%;
+    }
+}
