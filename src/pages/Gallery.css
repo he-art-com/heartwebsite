@@ -34,6 +34,22 @@
   padding: 0 24px;
 }
 
+.gallery-page  .hero-title,
+.gallery-page  .hero-title-left {
+  font-family: var(--font-display);
+  font-weight: 700; /* biar lebih tebal */
+}
+
+.gallery-page  .hero-subtitle,
+.gallery-page  .hero-subtitle-left {
+  font-family: var(--font-body);
+}
+
+.gallery-page .hero-cta {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
 /* ============== HERO ============== */
 
 .hero-section {

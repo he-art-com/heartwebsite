@@ -165,7 +165,7 @@ const Gallery = () => {
                 together diverse masterpieces to inspire your next creation.
               </p>
               <Link to="/gallery/overview" className="hero-cta">
-                <span className="hero-cta-arrow">→</span>
+                <span className="hero-cta-arrow" aria-hidden="true">➜</span>
                 <span>Explore more</span>
               </Link>
             </div>
