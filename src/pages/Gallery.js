@@ -73,10 +73,7 @@ const Gallery = () => {
       ? allArtworks
       : allArtworks.filter((art) => art.style === selectedStyle);
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredArtworks.length / PER_PAGE)
-  );
+  const totalPages = Math.max(1, Math.ceil(filteredArtworks.length / PER_PAGE));
 
   // kalau jumlah halaman mengecil (misal habis delete), jangan dibiarkan di page kosong
   useEffect(() => {
@@ -118,12 +115,23 @@ const Gallery = () => {
     setLightboxArtwork(null);
   };
 
+  /**
+   * DOWNLOAD:
+   * sekarang pakai endpoint backend:
+   *   GET /api/artworks/:id/download
+   * yang sudah kamu buat di server.js
+   * Backend akan handle path file & paksa jadi attachment.
+   */
   const handleDownload = (art) => {
-    if (!art || !art.image_url) return;
+    if (!art || !art.id) return;
 
+    const downloadUrl = `${API_BASE_URL}/api/artworks/${art.id}/download`;
+
+    // bikin <a> hidden lalu klik programmatically
     const link = document.createElement("a");
-    link.href = art.image_url;
-    link.download = art.title ? art.title.replace(/\s+/g, "_") : "artwork";
+    link.href = downloadUrl;
+    // attribute download biar browser treat sebagai download (plus header dari server)
+    link.setAttribute("download", "");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
