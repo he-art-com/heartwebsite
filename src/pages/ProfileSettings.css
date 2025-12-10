@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .back-btn {
@@ -32,12 +32,43 @@
   font-weight: 700;
 }
 
+/* ===== TAB MENU ===== */
+
+.profile-tabs {
+  display: inline-flex;
+  gap: 8px;
+  margin: 12px 0 18px;
+  background: #f5f5f5;
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.tab-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #555;
+}
+
+.tab-btn.active {
+  background: #000;
+  color: #fff;
+}
+
 /* LAYOUT GRID: KIRI (PROFILE) + KANAN (ARTWORK) */
 
 .profile-layout {
   display: grid;
   grid-template-columns: 2fr 1.5fr;
   gap: 24px;
+}
+
+/* layout untuk tab Upload/Jual: 1 kolom */
+.profile-layout.single-column {
+  grid-template-columns: 1fr;
 }
 
 /* ===== CARD / SECTION ===== */
@@ -82,7 +113,8 @@
 }
 
 .form-group input,
-.profile-form textarea {
+.profile-form textarea,
+.profile-form select {
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid #dddddd;
@@ -91,7 +123,8 @@
 }
 
 .form-group input:focus,
-.profile-form textarea:focus {
+.profile-form textarea:focus,
+.profile-form select:focus {
   border-color: #b87a35;
 }
 
@@ -188,6 +221,25 @@
   font-size: 12px;
 }
 
+/* ===== PREVIEW GAMBAR KARYA ===== */
+
+.artwork-preview-wrapper {
+  margin-top: 6px;
+  width: 100%;
+  max-width: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #dddddd;
+  background: #f5f5f5;
+}
+
+.artwork-preview-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 /* ===== MESSAGES ===== */
 
 .form-error {
@@ -210,7 +262,91 @@
 /* RIGHT COLUMN FULL HEIGHT */
 
 .profile-right .profile-section {
+  height: auto;
+}
+
+/* ===== ARTWORK LIST TABLE ===== */
+
+.artworks-list {
+  margin-top: 20px;
+}
+
+.artworks-list-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.artworks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.artworks-table thead tr {
+  background: #f5f5f5;
+}
+
+.artworks-table th,
+.artworks-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eeeeee;
+  text-align: left;
+  vertical-align: top;
+}
+
+.art-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5f5f5;
+  border: 1px solid #dddddd;
+}
+
+.art-thumb img {
+  width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.art-title-cell {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.art-desc-cell {
+  font-size: 12px;
+  color: #777777;
+}
+
+.btn-table {
+  border-radius: 999px;
+  border: 1px solid #000000;
+  background: #ffffff;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.btn-table:hover {
+  background: #f3f3f3;
+}
+
+.btn-table-danger {
+  border-color: #d11a2a;
+  color: #d11a2a;
+}
+
+.btn-table-danger:hover {
+  background: #ffe5e8;
+}
+
+.art-empty {
+  font-size: 13px;
+  color: #777777;
+  margin-top: 6px;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -220,8 +356,18 @@
     grid-template-columns: 1fr;
   }
 
+  .profile-layout.single-column {
+    grid-template-columns: 1fr;
+  }
+
   .profile-page {
     margin-top: 24px;
+  }
+
+  .profile-tabs {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 
@@ -233,5 +379,126 @@
 
   .form-row {
     flex-direction: column;
+  }
+
+  .artworks-table th:nth-child(4),
+  .artworks-table td:nth-child(4) {
+    display: none; /* kolom tanggal bisa disembunyiin di HP */
+  }
+}
+/* ===== PREVIEW KARYA (UPLOAD) ===== */
+
+.artwork-preview-wrapper {
+  margin-top: 8px;
+}
+
+.artwork-preview-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.artwork-preview-box {
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  padding: 8px;
+  background: #fafafa;
+  max-width: 420px;
+}
+
+.artwork-preview-img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ===== TABEL KARYAKU DI GALLERY ===== */
+
+.artwork-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.artwork-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.artwork-table thead {
+  background: #f5f5f5;
+}
+
+.artwork-table th,
+.artwork-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e5e5;
+  text-align: left;
+  vertical-align: top;
+}
+
+.artwork-table th {
+  font-weight: 600;
+}
+
+.artwork-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f3f3;
+}
+
+.artwork-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artwork-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== BUTTON KECIL DI TABEL ===== */
+
+.btn.small {
+  padding: 4px 10px;
+  font-size: 12px;
+  margin-top: 0;
+}
+
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.btn.danger {
+  background: #d11a2a;
+  color: #fff;
+  border-color: #d11a2a;
+}
+
+.btn.danger:hover {
+  background: #b01422;
+}
+
+/* ===== RESPONSIVE TABEL ===== */
+
+@media (max-width: 600px) {
+  .artwork-table th,
+  .artwork-table td {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .artwork-thumb {
+    width: 56px;
+    height: 56px;
   }
 }

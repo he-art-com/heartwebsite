@@ -1,8 +1,8 @@
 // src/pages/Artists.js
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "./Artists.css";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
-import { useStore } from "../context/StoreContext"; // <<< pakai global store
+import { useStore } from "../context/StoreContext";
 
 // ==== IMPORT GAMBAR ====
 import imgGustave from "../assets/images/11.png"; // old man colorful
@@ -194,7 +194,10 @@ const Pagination = ({ currentPage, totalPages, onChange }) => {
 const Artists = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  // ambil fungsi & state global dari StoreContext
+  // === SORT STATE (featured grid, page 1) ===
+  const [sortOpen, setSortOpen] = useState(false);
+  const [sortOption, setSortOption] = useState("default");
+
   const {
     toggleFollowArtist,
     isArtistFollowed,
@@ -204,8 +207,7 @@ const Artists = () => {
     isInCart,
   } = useStore();
 
-  // page 2–10 map ke detail artist.
-  // page 2 -> ARTISTS[0], page 3 -> ARTISTS[1], dst.
+  // halaman 2–10 map ke detail artist.
   const detailIndex = currentPage - 2;
   const currentArtist =
     detailIndex >= 0 && detailIndex < ARTISTS.length
@@ -222,6 +224,30 @@ const Artists = () => {
   const openDetailFromGrid = (index) => {
     setCurrentPage(index + 2);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // === HITUNG ARTIST YANG SUDAH DI-SORT (untuk page 1) ===
+  const sortedArtists = useMemo(() => {
+    const arr = [...ARTISTS];
+
+    if (sortOption === "name-asc") {
+      arr.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOption === "name-desc") {
+      arr.sort((a, b) => b.name.localeCompare(a.name));
+    } else if (sortOption === "followers-desc") {
+      arr.sort((a, b) => {
+        const fa = parseInt(String(a.followers || "").replace(/[^\d]/g, ""), 10) || 0;
+        const fb = parseInt(String(b.followers || "").replace(/[^\d]/g, ""), 10) || 0;
+        return fb - fa;
+      });
+    }
+    // "default" -> urutan asli
+    return arr;
+  }, [sortOption]);
+
+  const handleSortSelect = (value) => {
+    setSortOption(value);
+    setSortOpen(false);
   };
 
   return (
@@ -247,7 +273,9 @@ const Artists = () => {
                 className="hero-cta"
                 onClick={handleHeroExplore}
               >
-                <span className="hero-cta-arrow">→</span>
+                <span className="hero-cta-arrow" aria-hidden="true">
+                  ➜
+                </span>
                 <span>Explore more</span>
               </button>
             </div>
@@ -266,28 +294,74 @@ const Artists = () => {
               </p>
             </div>
 
+            {/* SORT BY dengan icon custom + dropdown */}
             <div className="artists-sort">
               <span className="artists-sort-label">SORT BY</span>
-              <button
-                type="button"
-                className="artists-sort-btn"
-                aria-label="Sort artists"
-              >
-                <span className="artists-sort-icon" />
-              </button>
+
+              <div className="artists-sort-dropdown">
+                <button
+                  type="button"
+                  className="artists-sort-btn"
+                  aria-label="Sort artists"
+                  onClick={() => setSortOpen((prev) => !prev)}
+                >
+                  <span className="artists-sort-icon" aria-hidden="true" />
+                </button>
+
+                {sortOpen && (
+                  <div className="artists-sort-menu">
+                    <button
+                      type="button"
+                      className={`artists-sort-option ${
+                        sortOption === "default" ? "is-active" : ""
+                      }`}
+                      onClick={() => handleSortSelect("default")}
+                    >
+                      Default
+                    </button>
+                    <button
+                      type="button"
+                      className={`artists-sort-option ${
+                        sortOption === "name-asc" ? "is-active" : ""
+                      }`}
+                      onClick={() => handleSortSelect("name-asc")}
+                    >
+                      Name A–Z
+                    </button>
+                    <button
+                      type="button"
+                      className={`artists-sort-option ${
+                        sortOption === "name-desc" ? "is-active" : ""
+                      }`}
+                      onClick={() => handleSortSelect("name-desc")}
+                    >
+                      Name Z–A
+                    </button>
+                    <button
+                      type="button"
+                      className={`artists-sort-option ${
+                        sortOption === "followers-desc" ? "is-active" : ""
+                      }`}
+                      onClick={() => handleSortSelect("followers-desc")}
+                    >
+                      Most followers
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </header>
 
-          {/* GRID 3x3 */}
+          {/* GRID 3x3 – pakai sortedArtists */}
           <div className="artists-grid">
-            {ARTISTS.map((artist, index) => {
+            {sortedArtists.map((artist, index) => {
               const followed = isArtistFollowed(artist.id);
 
               return (
                 <article
                   key={artist.id}
                   className="artists-card"
-                  onClick={() => openDetailFromGrid(index)} // klik card buka detail (page 2–10)
+                  onClick={() => openDetailFromGrid(index)}
                 >
                   <div className="artists-card-image">
                     <img src={artist.image} alt={artist.name} />
@@ -308,7 +382,7 @@ const Artists = () => {
                         followed ? "is-following" : ""
                       }`}
                       onClick={(e) => {
-                        e.stopPropagation(); // jangan buka detail
+                        e.stopPropagation();
                         toggleFollowArtist(artist.id);
                       }}
                     >
@@ -320,7 +394,6 @@ const Artists = () => {
             })}
           </div>
 
-          {/* pagination di bawah grid */}
           <Pagination
             currentPage={currentPage}
             totalPages={TOTAL_PAGES}
@@ -413,6 +486,8 @@ const Artists = () => {
                   title: art.title,
                   price: art.price,
                   image: currentArtist.image,
+                  meta: art.meta,
+                  dimension: art.meta,
                 };
 
                 return (
@@ -426,7 +501,6 @@ const Artists = () => {
                     </div>
 
                     <div className="artist-artwork-text">
-                      {/* baris atas: title kiri, icon kanan */}
                       <div className="artist-artwork-row-top">
                         <div className="artist-artwork-title">{art.title}</div>
 
@@ -475,7 +549,6 @@ const Artists = () => {
             </div>
           </section>
 
-          {/* pagination di bawah artworks */}
           <Pagination
             currentPage={currentPage}
             totalPages={TOTAL_PAGES}

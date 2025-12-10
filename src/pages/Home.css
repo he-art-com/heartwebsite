@@ -89,32 +89,20 @@
 }
 
 .hero-text h1 {
-<<<<<<< HEAD
-  font-family: "ClashDisplay", sans-serif;
-  font-size: 40px;
-  font-weight: 600;
-=======
   font-family: var(--font-heading); /* Clash Display */
   font-size: 40px;
-  font-weight: 700; /* sesuai Clash Display di figma */
+  font-weight: 700; /* sesuai Clash Display di Figma */
   line-height: 150%;
   letter-spacing: 0;
->>>>>>> 1a627f599b53bbfb00eed5a1acd42f889ad90e8b
   margin-bottom: 12px;
 }
 
 .hero-text p {
-<<<<<<< HEAD
-  font-family: "Nexa", sans-serif;
-  font-weight: 400;
-=======
   font-family: var(--font-body); /* NexaRegular */
->>>>>>> 1a627f599b53bbfb00eed5a1acd42f889ad90e8b
   font-size: 16px;
   line-height: 150%;
   opacity: 0.9;
 }
-
 
 /* --------------------------------------- */
 /* FAVORITES SECTION */
