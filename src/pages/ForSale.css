@@ -23,7 +23,7 @@
   justify-content: space-between;
   gap: 32px;
   margin-top: 24px;
-  margin-bottom: 16px;
+  margin-bottom: -200px;
   /* TODO: atur jarak ke grid cards sesuai Figma */
 }
 
@@ -304,31 +304,46 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: 40px;  /* jarak horizontal antar card */
-  row-gap: 64px;     /* jarak vertikal antar baris */
+  row-gap: 80px;     /* jarak vertikal antar baris */
 }
 
 /* CARD ARTWORK */
 .artwork-card { /* 🆕 NEW */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  display: block;
 }
 
 /* Wrapper gambar untuk handle radius & shadow */
-.artwork-card__image-wrapper { /* 🆕 NEW */
+.artwork-card__image-wrapper { 
   width: 100%;
-  border-radius: 18px;             /* sesuaikan dengan Figma */
-  overflow: hidden;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18); /* shadow lembut */
   margin-bottom: 18px;
+
+  /* semua card punya tinggi area gambar yang sama */
+  height: 360px;              /* silakan tweak 340–380 sesuai rasa Figma */
+
+  display: flex;
+  align-items: center;        /* center vertikal */
+  justify-content: center;    /* center horizontal */
+
+  /* tidak ada shadow di slot (biar tidak jadi kotak putih) */
+  box-shadow: none;
+  background-color: transparent;
+  overflow: visible;          /* supaya shadow di image tidak ter-cut */
 }
 
+
 /* Gambar artwork */
-.artwork-card__image { /* 🆕 NEW */
-  width: 100%;
-  height: 100%;
+.artwork-card__image {
   display: block;
-  object-fit: cover;
+
+  /* gambar pakai ukuran natural, tidak dipaksa isi slot */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+
+  /* SHADOW FIGMA NEMPEL DI GAMBAR */
+  box-shadow: 10px 9px 7px 0px #00000040;
+  border-radius: 0;
 }
 
 /* Header: title (kiri) + wishlist heart (kanan) */
@@ -337,15 +352,14 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 /* Title artwork */
 .artwork-card__title { /* 🆕 NEW */
-  font-family: "ClashDisplayMedium", system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  line-height: 1.4;
+  font-family: "ClashDisplayMedium", sans-serif;
+  font-size: 18px;
+  line-height: 150%;
   letter-spacing: 0.04em;
   text-transform: none;
   color: #161310;
@@ -364,7 +378,7 @@
 }
 
 .artwork-card__wishlist-icon { /* 🆕 NEW */
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1;
   color: #8e8a84; /* abu-abu halus */
   transition: transform 0.18s ease, color 0.18s ease;
@@ -381,28 +395,29 @@
   margin-bottom: 2px;
   font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
   font-size: 12px;
-  line-height: 1.4;
-  color: #5a5450;
+  line-height: 150%;
+  color: #00000070;
 }
 
 /* Frame / detail kecil di bawah dimensions */
 .artwork-card__frame { /* 🆕 NEW */
   margin: 0;
-  margin-bottom: 8px;
-  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+  margin-bottom: 12px;
+  font-family: "ClashDisplayVariable", sans-serif;
   font-size: 11px;
-  line-height: 1.4;
-  color: #8e8a84;
+  line-height: 150%;
+  color: #00000070;
 }
 
 /* Harga (Rp...) */
 .artwork-card__price { /* 🆕 NEW */
   margin: 0;
   margin-bottom: 4px;
-  font-family: "ClashDisplayMedium", system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #11100e;
+  font-family: "NexaHeavy", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 150%;
+  letter-spacing: 2px;
+  color: #000000;
 }
 
 /* Nama artist */
@@ -414,3 +429,136 @@
   color: #5a5450;
 }
 
+/* ========================= */
+/* HOVER OVERLAY EFFECT      */
+/* ========================= */
+
+.artwork-card__image-wrapper {
+  position: relative; /* penting untuk overlay */
+  cursor: pointer;
+}
+
+/* overlay hidden secara default */
+.artwork-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6); /* putih lembut seperti screenshot */
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.35s ease;
+  pointer-events: none; /* agar image tetap klik-able */
+  backdrop-filter: blur(1px);
+}
+
+/* logo svg */
+.artwork-card__overlay-logo {
+  width: 55%;               /* tweak sesuai estetika */
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* saat hover → overlay muncul */
+.artwork-card__image-wrapper:hover .artwork-card__overlay {
+  opacity: 1;
+}
+
+/* logo fade-in + sedikit zoom */
+.artwork-card__image-wrapper:hover .artwork-card__overlay-logo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* gambar fade-out sedikit */
+.artwork-card__image-wrapper:hover .artwork-card__image {
+  opacity: 0.35; /* seperti screenshot */
+  transition: opacity 0.35s ease;
+}
+
+/* ========================= */
+/* PAGINATION (Figma Style)  */
+/* ========================= */
+
+.for-sale-pagination {
+  margin-top: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 38px;
+}
+
+/* ARROW BUTTONS */
+/* 🔁 EDITED: tidak pakai border/lingkaran di CSS, hanya image SVG */
+.pagination-arrow {
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.pagination-arrow__icon {
+  width: 40px;  /* sesuaikan dengan ukuran SVG */
+  height: 40px;
+}
+
+/* SVG asli biasanya >, jadi rotate utk left */
+.pagination-arrow__icon--left {
+  transform: rotate(0deg);
+}
+
+.pagination-arrow__icon--right {
+  transform: rotate(180deg);
+}
+
+.pagination-arrow:hover:not(:disabled) {
+  transform: scale(1.05);
+  opacity: 0.7;
+}
+
+.pagination-arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* PAGE NUMBERS */
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+}
+
+.pagination-page {
+  background: transparent;
+  border: none;
+  font-family: "ClashDisplayVariable", sans-serif;
+  font-size: 20px;
+  cursor: pointer;
+  color: #000;
+  transition: opacity 0.2s ease;
+}
+
+.pagination-page:hover {
+  opacity: 0.6;
+}
+
+/* ACTIVE PAGE (gradient circle) */
+.pagination-page--active {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(180deg, #D5A277 0%, #573100 100%);
+}

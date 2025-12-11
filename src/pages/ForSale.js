@@ -3,36 +3,32 @@ import React, { useState } from "react";
 import "./ForSale.css";
 
 import FilterIcon from "../assets/filter-icon.svg";
+import HeartLogo from "../assets/heart.svg";
+import ArrowIcon from "../assets/icon-arrow.svg";
 
-/* 🆕 NEW: contoh import image artwork
-   Ganti nama file & jumlahnya sesuai asset kamu.
-   Kalau ekstensi bukan .img, sesuaikan (mis. .jpg / .png) */
-import Artwork1 from "../assets/images/1.png"; // 🆕 NEW
-import Artwork2 from "../assets/images/3.png"; // 🆕 NEW
-import Artwork3 from "../assets/images/6.jpg"; // 🆕 NEW
-import Artwork4 from "../assets/images/7.png"; // 🆕 NEW
-import Artwork5 from "../assets/images/11.png"; // 🆕 NEW
-import Artwork6 from "../assets/images/12.png"; // 🆕 NEW
-import Artwork7 from "../assets/images/13.png"; // 🆕 NEW
-import Artwork8 from "../assets/images/14.png"; // 🆕 NEW
-import Artwork9 from "../assets/images/16.png"; // 🆕 NEW
+import Artwork1 from "../assets/images/1.png"; 
+import Artwork2 from "../assets/images/3.png"; 
+import Artwork3 from "../assets/images/6.jpg"; 
+import Artwork4 from "../assets/images/7.png"; 
+import Artwork5 from "../assets/images/11.png"; 
+import Artwork6 from "../assets/images/12.png"; 
+import Artwork7 from "../assets/images/13.png"; 
+import Artwork8 from "../assets/images/14.png"; 
+import Artwork9 from "../assets/images/16.png"; 
 
 const STYLE_OPTIONS = ["Realistic", "Abstract", "Surrealist", "Geometric", "Illustrative"];
 const PRICE_OPTIONS = ["Any", "Under 40 cm", "40 - 80 cm", "80 - 120 cm", "120+ cm"];
 const HEIGHT_OPTIONS = ["Any", "Under 40 cm", "40 - 80 cm", "80 - 120 cm", "120+ cm"];
 const WIDTH_OPTIONS = ["Any", "Under 40 cm", "40 - 80 cm", "80 - 120 cm", "120+ cm"];
 
-/* 🆕 NEW: data artwork untuk grid (dummy, bisa kamu ganti)
-   - image: pakai import di atas
-   - title, dimensions, frameDetails, price, artist: bebas kamu ubah
-*/
+const TOTAL_PAGES = 5;
+
 const ARTWORKS = [ // 🆕 NEW
   {
     id: 1,
     image: Artwork1,
     title: "Le Désespéré",
-    dimensions: "60 x 120 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 60 x 120 cm",
     price: "Rp. 8.500.000",
     artist: "Gustave Courbet",
   },
@@ -40,8 +36,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 2,
     image: Artwork2,
     title: "Umbra Fenestre",
-    dimensions: "60 x 90 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 60 cm x 90 cm",
     price: "Rp. 2.500.000",
     artist: "Studio Artist",
   },
@@ -49,8 +44,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 3,
     image: Artwork3,
     title: "White Symphony",
-    dimensions: "80 x 120 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 80 x 120 cm",
     price: "Rp. 8.200.000",
     artist: "Ballet Artwork",
   },
@@ -58,8 +52,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 4,
     image: Artwork4,
     title: "Mona Lisa",
-    dimensions: "70 x 100 cm",
-    frameDetails: "Premium frame",
+    dimensions: "Dimension: 70 x 100 cm",
     price: "Rp. 4.000.000",
     artist: "Leonardo da Vinci",
   },
@@ -67,8 +60,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 5,
     image: Artwork5,
     title: "Oculus Profundus",
-    dimensions: "80 x 120 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 80 x 120 cm",
     price: "Rp. 8.000.000",
     artist: "Surreal Studio",
   },
@@ -76,8 +68,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 6,
     image: Artwork6,
     title: "Harmonia Mundi",
-    dimensions: "70 x 110 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 70 x 110 cm",
     price: "Rp. 3.500.000",
     artist: "Urban Theme",
   },
@@ -85,8 +76,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 7,
     image: Artwork7,
     title: "The Persistence",
-    dimensions: "60 x 90 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 60 x 90 cm",
     price: "Rp. 3.400.000",
     artist: "Salvador Dalí",
   },
@@ -94,8 +84,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 8,
     image: Artwork8,
     title: "White Symphony",
-    dimensions: "80 x 120 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 80 x 120 cm",
     price: "Rp. 8.200.000",
     artist: "Ballet Artwork",
   },
@@ -103,8 +92,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 9,
     image: Artwork9,
     title: "Mona Lisa",
-    dimensions: "70 x 100 cm",
-    frameDetails: "Premium frame",
+    dimensions: "Dimension: 70 x 100 cm",
     price: "Rp. 4.000.000",
     artist: "Leonardo da Vinci",
   },
@@ -112,8 +100,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 10,
     image: Artwork1,
     title: "The Starry Night",
-    dimensions: "70 x 110 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 70 x 110 cm",
     price: "Rp. 3.800.000",
     artist: "Vincent van Gogh",
   },
@@ -121,8 +108,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 11,
     image: Artwork3,
     title: "Umbra Fenestre",
-    dimensions: "60 x 90 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 60 x 90 cm",
     price: "Rp. 2.500.000",
     artist: "Studio Artist",
   },
@@ -130,8 +116,7 @@ const ARTWORKS = [ // 🆕 NEW
     id: 12,
     image: Artwork5,
     title: "Le Désespéré",
-    dimensions: "60 x 120 cm",
-    frameDetails: "Outer frame included",
+    dimensions: "Dimension: 60 x 120 cm",
     price: "Rp. 8.500.000",
     artist: "Gustave Courbet",
   },
@@ -202,6 +187,8 @@ const ForSale = () => {
     width: null,
   });
 
+const [currentPage, setCurrentPage] = useState(1);
+
   const handleToggleFilter = (filterKey) => {
     setOpenFilter((current) => (current === filterKey ? null : filterKey));
   };
@@ -215,6 +202,27 @@ const ForSale = () => {
     console.log("Filters:", selectedFilters);
     // TODO: nanti bisa dipakai untuk filter ARTWORKS di step berikutnya
   };
+
+   // 🆕 NEW: ganti halaman saat nomor/arrow diklik
+  const handleChangePage = (page) => {
+    if (page < 1 || page > TOTAL_PAGES) return;
+    setCurrentPage(page);
+
+    // optional: scroll ke atas grid
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // 🆕 NEW: "acak" urutan artwork berdasarkan halaman (rotasi array)
+  const getPageArtworks = () => {
+    if (ARTWORKS.length === 0) return [];
+    const offset = ((currentPage - 1) * 3) % ARTWORKS.length; // geser 3 item per halaman
+    return [
+      ...ARTWORKS.slice(offset),
+      ...ARTWORKS.slice(0, offset),
+    ];
+  };
+
+  const pageArtworks = getPageArtworks(); // 🆕 NEW
 
   return (
     <main className="for-sale-page">
@@ -268,9 +276,9 @@ const ForSale = () => {
           </div>
 
           <button
-            className="for-sale-filter-bar__apply" // 🔁 EDITED (tambahkan onClick)
-            type="button" // 🆕 NEW (lebih eksplisit)
-            onClick={handleApplyFilters} // 🆕 NEW
+            className="for-sale-filter-bar__apply" 
+            type="button" 
+            onClick={handleApplyFilters} 
           >
             <img
               src={FilterIcon}
@@ -284,9 +292,9 @@ const ForSale = () => {
         {/* ========================= */}
         {/* ARTWORK GRID              */}
         {/* ========================= */}
-        <section className="for-sale-artworks"> {/* 🆕 NEW */}
+        <section className="for-sale-artworks"> 
           <div className="for-sale-artworks__grid">
-            {ARTWORKS.map((artwork) => (
+            {pageArtworks.map((artwork) => (
               <article key={artwork.id} className="artwork-card">
                 <div className="artwork-card__image-wrapper">
                   <img
@@ -294,6 +302,13 @@ const ForSale = () => {
                     alt={artwork.title}
                     className="artwork-card__image"
                   />
+                  <div className="artwork-card__overlay">
+                    <img
+                      src={HeartLogo}  // svg yang kamu bilang sudah punya
+                      alt="HeArt Logo"
+                      className="artwork-card__overlay-logo"
+                    />
+                  </div>
                 </div>
 
                 <div className="artwork-card__header">
@@ -325,7 +340,56 @@ const ForSale = () => {
               </article>
             ))}
           </div>
-        </section> {/* 🆕 NEW END */}
+        </section> 
+
+        {/* ========================= */}
+        {/* PAGINATION                */}
+        {/* ========================= */}
+        <section className="for-sale-pagination"> {/* 🆕 NEW */}
+          <button
+            type="button"
+            className="pagination-arrow"
+            onClick={() => handleChangePage(currentPage - 1)} // 🆕 NEW
+            disabled={currentPage === 1} // 🆕 NEW
+          >
+            <img
+              src={ArrowIcon}
+              alt="Previous page"
+              className="pagination-arrow__icon pagination-arrow__icon--left"
+            />
+          </button>
+
+          <div className="pagination-pages">
+            {Array.from({ length: TOTAL_PAGES }, (_, index) => {
+              const pageNum = index + 1;
+              return (
+                <button
+                  key={pageNum}
+                  type="button"
+                  className={`pagination-page ${
+                    pageNum === currentPage ? "pagination-page--active" : ""
+                  }`}
+                  onClick={() => handleChangePage(pageNum)} // 🆕 NEW
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            className="pagination-arrow"
+            onClick={() => handleChangePage(currentPage + 1)} // 🆕 NEW
+            disabled={currentPage === TOTAL_PAGES} // 🆕 NEW
+          >
+            <img
+              src={ArrowIcon}
+              alt="Next page"
+              className="pagination-arrow__icon pagination-arrow__icon--right"
+            />
+          </button>
+        </section>
 
       </div>
     </main>
