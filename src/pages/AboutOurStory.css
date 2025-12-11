@@ -53,7 +53,6 @@
 .story-hero-image {
   width: 100%;
   max-width: 620px;
-  border-radius: 12px;
   box-shadow: 10px 9px 7px #00000040;
   display: block;
 }
@@ -105,7 +104,6 @@
 .story-split-img img {
   width: 100%;
   max-width: 540px;
-  border-radius: 12px;
   box-shadow: 10px 9px 7px #00000040;
   display: block;
 }
@@ -159,7 +157,6 @@
 .story-purpose-img img {
   width: 100%;
   max-width: 540px;
-  border-radius: 12px;
   box-shadow: 10px 9px 7px #00000040;
   display: block;
 }

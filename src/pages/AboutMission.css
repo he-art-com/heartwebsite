@@ -43,7 +43,6 @@
 .mission-hero-img {
   width: 100%;
   max-width: 600px;
-  border-radius: 12px;
   box-shadow: 10px 9px 7px #00000040;
 }
 
@@ -79,7 +78,6 @@
   width: 100%;
   max-width: 500px;
   height: auto;
-  border-radius: 12px;
   box-shadow: 10px 9px 7px #00000040;
   object-fit: cover;
   display: block;
