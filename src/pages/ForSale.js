@@ -291,7 +291,7 @@ const ForSale = () => {
     width: null,
   });
 
-  // 🆕 appliedFilters: benar-benar dipakai untuk filter grid
+  // appliedFilters: benar-benar dipakai untuk filter grid
   const [appliedFilters, setAppliedFilters] = useState({
     style: null,
     price: null,
@@ -498,7 +498,7 @@ const pageArtworks = getPageArtworks();
                 </p>
 
                 <p className="artwork-card__price">
-                  {artwork.priceLabel}
+                  {artwork.price}
                 </p>
 
                 <p className="artwork-card__artist">
