@@ -19,17 +19,18 @@
 
 .for-sale-filter-bar {
   display: flex;
-  align-items: center;
+  align-items: center;         /* sejajarkan baseline */
   justify-content: space-between;
   gap: 32px;
-  margin-top: 24px;
-  margin-bottom: -200px;
+  margin-top: 40px;            /* jarak dari navbar/search */
+  margin-bottom: 56px;         /* jarak ke awal grid artworks */
 }
+
 
 .for-sale-filter-bar__filters {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 85px;
   flex-wrap: nowrap;
 }
 
@@ -95,6 +96,7 @@
 /* ========================= */
 
 .filter-dropdown__menu {
+  position: absolute;
   top: calc(100% + 8px); 
   left: 0;
   min-width: 210px; 
@@ -186,7 +188,7 @@
   /* agar hover smooth & pseudo-element ikut radius */
   overflow: hidden; 
   transition: color 0.25s ease, background-color 0.25s ease;
-  margin-top: -235px;
+  margin-top: 0;
 }
 
 /* BORDER GRADIENT — pakai pseudo-element */
@@ -269,7 +271,7 @@
 
 /* Wrapper section untuk seluruh grid */
 .for-sale-artworks { 
-  margin-top: 64px; 
+  margin-top: 0px; 
 }
 
 /* Grid 4 kolom seperti di Figma */
@@ -279,6 +281,18 @@
   column-gap: 40px;  
   row-gap: 80px;     
 }
+
+/* empty state kalau tidak ada hasil filter */
+.for-sale-artworks__empty {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 150%;
+  color: #5a5450;
+  text-align: center;
+}
+
 
 /* CARD ARTWORK */
 .artwork-card { 
@@ -528,112 +542,109 @@
 /* ========================= */
 /* Responsive Layout        */
 /* ========================= */
-
-@media (max-width: 1024px), (max-width: 768px), (max-width: 480px) {
+/* ≤ 992px: kecilkan gap, grid jadi 3 kolom */
+@media (max-width: 992px) {
   .for-sale-page__container {
-    padding: 24px 20px 48px;
+    padding: 32px 24px 64px;
   }
 
-/* ========================= */
-/* FILTER BAR              */
-/* ========================= */
+  .for-sale-filter-bar {
+    gap: 24px;
+    margin-top: 32px;
+    margin-bottom: 40px;
+  }
 
-  /* Membuat filter bar lebih rapi di layar kecil */
+  .for-sale-filter-bar__filters {
+    gap: 48px;
+  }
+
+  .for-sale-artworks__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 32px;
+    row-gap: 64px;
+  }
+
+  .artwork-card__image-wrapper {
+    height: 320px;
+  }
+}
+
+/* ≤ 768px: filter bar jadi stack, grid 2 kolom */
+@media (max-width: 768px) {
   .for-sale-filter-bar {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px !important; 
-    
+    gap: 16px;
+    margin-top: 24px;
+    margin-bottom: 24px;
   }
 
-  /* Dropdown filter menjadi lebih fleksibel, muat 2 kolom */
   .for-sale-filter-bar__filters {
     width: 100%;
     flex-wrap: wrap;
-    gap: 12px 16px;
+    gap: 14px 24px;
   }
 
-  /* Setiap trigger filter menjadi lebar fleksibel */
   .filter-dropdown__trigger {
-    width: calc(50% - 10px);
+    width: calc(50% - 14px);
     min-width: 130px;
   }
 
-  /* Tombol APPLY jadi tampil di bawah filter */
   .for-sale-filter-bar__apply {
     width: 100%;
     justify-content: center;
-    margin-top: 0 !important;
-    margin-bottom: 8px;
+    margin-top: 0;
   }
 
-/* ========================= */
-/* ARTWORK GRID            */
-/* ========================= */
   .for-sale-artworks__grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 24px;
     row-gap: 48px;
   }
 
-  /* Tinggi slot gambar menyesuaikan layar agar tidak terlalu tinggi */
   .artwork-card__image-wrapper {
     height: 300px;
   }
 
-/* ========================= */
-/* PAGINATION              */
-/* ========================= */
   .for-sale-pagination {
     gap: 24px;
-    margin-top: 40px;
   }
 
-  /* Jarak antar nomor mengecil */
   .pagination-pages {
     gap: 20px;
   }
+}
 
-  /* Sedikit mengecilkan font nomor halaman */
+/* ≤ 480px: filter & grid 1 kolom penuh */
+@media (max-width: 480px) {
+  .for-sale-page__container {
+    padding: 24px 16px 48px;
+  }
+
+  .filter-dropdown__trigger {
+    width: 100%;
+  }
+
+  .for-sale-artworks__grid {
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+  }
+
+  .artwork-card__image-wrapper {
+    height: 260px;
+  }
+
+  .pagination-pages {
+    gap: 14px;
+  }
+
   .pagination-page {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .pagination-page--active {
-    width: 36px;
-    height: 36px;
-    font-size: 20px;
-  }
-
-/* ========================= */
-/* MOBILE LAYOUT           */
-/* ========================= */
-  @media (max-width: 480px) {
-
-    /* Filter dropdown 1 kolom penuh */
-    .filter-dropdown__trigger {
-      width: 100%;
-    }
-
-    /* Artwork gambar lebih pendek di mobile */
-    .artwork-card__image-wrapper {
-      height: 250px;
-    }
-
-    /* Pagination lebih kecil */
-    .pagination-pages {
-      gap: 14px;
-    }
-
-    .pagination-page {
-      font-size: 18px;
-    }
-
-    .pagination-page--active {
-      width: 32px;
-      height: 32px;
-      font-size: 18px;
-    }
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
   }
 }
