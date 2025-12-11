@@ -3,12 +3,12 @@
 /* ========================= */
 
 .for-sale-page {
-  background-color: #ffffff; /* TODO: sesuaikan dengan Figma */
+  background-color: #ffffff; 
   min-height: 100vh;
 }
 
 .for-sale-page__container {
-  max-width: 1200px;      /* TODO: sesuaikan dengan grid Figma (mis. 1120 / 1200) */
+  max-width: 1200px;     
   margin: 0 auto;
   padding: 40px 40px 80px;
 }
@@ -24,14 +24,12 @@
   gap: 32px;
   margin-top: 24px;
   margin-bottom: -200px;
-  /* TODO: atur jarak ke grid cards sesuai Figma */
 }
 
 .for-sale-filter-bar__filters {
   display: flex;
   align-items: center;
   gap: 20px;
-  /* TODO: sesuaikan jarak antar filter (STYLE, PRICE, dst) */
   flex-wrap: nowrap;
 }
 
@@ -45,20 +43,17 @@
 }
 
 .filter-dropdown__trigger {
-  width: 150px;              /* TODO: atur panjang garis/area filter */
+  width: 150px;              
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   padding-top: 2px;
-  padding-bottom: 6px;       /* jarak teks ke garis */
+  padding-bottom: 6px;      
   background: transparent;
-  border: none;              /* HILANGKAN BORDER BAWAH LAMA */
+  border: none;             
   cursor: pointer;
-
-  border-bottom: 1px solid #000; /* TODO: panjang garis mengikuti width */
-  
-  /* TYPOGRAPHY */
+  border-bottom: 1px solid #000; 
   font-family: "ClashDisplayMedium";
   font-size: 11px;
   letter-spacing: 0.10em;
@@ -66,15 +61,11 @@
 }
 
 .filter-dropdown__trigger--open {
-  /* optional: ubah warna saat active */
-  border-bottom-color: #c4874b; /* TODO: warna accent di Figma */
+  border-bottom-color: #c4874b; 
 }
 
-/* Garis bawah custom */
-
-
 .filter-dropdown__trigger--open::after {
-  background-color: #c4874b; /* TODO: warna accent saat aktif */
+  background-color: #c4874b; 
 }
 
 .filter-dropdown__label {
@@ -104,17 +95,14 @@
 /* ========================= */
 
 .filter-dropdown__menu {
-  top: calc(100% + 8px); /* lebih dekat ke label, mirip screenshot */
+  top: calc(100% + 8px); 
   left: 0;
-
-  min-width: 210px; /* sedikit lebih lebar agar lega */
+  min-width: 210px; 
   padding: 10px 10px 12px;
-
   background-color: #ffffff;
-  border-radius: 16px;      /* sudut rounded seperti Figma */
-  border: 1px solid #e7dccb; /* garis halus coklat muda / krem */
+  border-radius: 16px;      
+  border: 1px solid #e7dccb; 
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
-
   opacity: 0;
   transform: translateY(6px);
   visibility: hidden;
@@ -148,16 +136,13 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-
   padding: 10px 14px;
-  margin: 2px 0; /* jarak tipis antar row */
-
+  margin: 2px 0; 
   font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
   font-size: 16px;
   line-height: 20px;
   letter-spacing: 0.01em;
-
-  color: #2a2623; /* agak coklat gelap seperti di screenshot */
+  color: #2a2623; 
 }
 
 .filter-dropdown__option:hover {
@@ -166,10 +151,10 @@
 }
 
 .filter-dropdown__option--selected {
-  background-color: #f7eee6; /* krem lembut */
+  background-color: #f7eee6; 
   border-radius: 10px;
-  border: 1px solid #c4874b; /* outline coklat accent */
-  padding: 9px 13px;         /* sedikit dikurangi karena ada border */
+  border: 1px solid #c4874b; 
+  padding: 9px 13px;         
   margin: 2px 0;
   font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
 }
@@ -177,7 +162,7 @@
 .filter-dropdown__check {
   font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
   font-size: 14px;
-  color: #c4874b; /* warna sama dengan outline */
+  color: #c4874b; 
 }
 
 /* ========================= */
@@ -185,24 +170,21 @@
 /* ========================= */
 
 .for-sale-filter-bar__apply {
-  position: relative; /* diperlukan untuk pseudo-element */
+  position: relative; 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-
   padding: 6px 28px;
-
-  border: none;                  /* RESET */
-  border-radius: 999px;          /* pill shape */
+  border: none;                 
+  border-radius: 999px;          
   background-color: #ffffff;
   cursor: pointer;
-
   font-family: "ClashDisplayMedium", system-ui, -apple-system, sans-serif;
   font-size: 14px;
 
   /* agar hover smooth & pseudo-element ikut radius */
-  overflow: hidden; /* ✅ supaya ::before/::after tidak keluar radius */
+  overflow: hidden; 
   transition: color 0.25s ease, background-color 0.25s ease;
   margin-top: -235px;
 }
@@ -213,17 +195,14 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-
-  padding: 2px; /* tebal border */
-
+  padding: 2px;
   background: linear-gradient(90deg, #573100 0%, #d5a277 100%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
-
-  opacity: 1; /* gradient terlihat di normal state */
+  opacity: 1; 
   transition: opacity 0.25s ease;
 }
 
@@ -233,17 +212,14 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-
   padding: 2px;
-
   background: #573100;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
-
-  opacity: 0; /* default tidak terlihat */
+  opacity: 0; 
   transition: opacity 0.25s ease;
 }
 
@@ -252,7 +228,7 @@
   width: 18px;
   height: 18px;
   object-fit: contain;
-  z-index: 2; /* di atas border gradient */
+  z-index: 2; 
   display: block;
   pointer-events: none;
 }
@@ -264,7 +240,6 @@
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-
   letter-spacing: 0.03em;
   z-index: 2;
   transition: all 0.25s ease;
@@ -274,16 +249,14 @@
 /* HOVER STATE               */
 /* ========================= */
 
-/* border: gradient fade out → solid #573100 fade in */
 .for-sale-filter-bar__apply:hover::before {
-  opacity: 0; /* gradient pelan2 hilang */
+  opacity: 0;
 }
 
 .for-sale-filter-bar__apply:hover::after {
-  opacity: 1; /* solid #573100 pelan2 muncul */
+  opacity: 1; 
 }
 
-/* teks berubah solid #573100 */
 .for-sale-filter-bar__apply:hover .for-sale-filter-bar__apply-text {
   background: none;
   color: #573100;
@@ -295,20 +268,20 @@
 /* ========================= */
 
 /* Wrapper section untuk seluruh grid */
-.for-sale-artworks { /* 🆕 NEW */
-  margin-top: 64px; /* jarak dari filter bar, bisa disesuaikan dengan Figma */
+.for-sale-artworks { 
+  margin-top: 64px; 
 }
 
 /* Grid 4 kolom seperti di Figma */
-.for-sale-artworks__grid { /* 🆕 NEW */
+.for-sale-artworks__grid { 
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 40px;  /* jarak horizontal antar card */
-  row-gap: 80px;     /* jarak vertikal antar baris */
+  column-gap: 40px;  
+  row-gap: 80px;     
 }
 
 /* CARD ARTWORK */
-.artwork-card { /* 🆕 NEW */
+.artwork-card { 
   display: block;
 }
 
@@ -316,38 +289,28 @@
 .artwork-card__image-wrapper { 
   width: 100%;
   margin-bottom: 18px;
-
-  /* semua card punya tinggi area gambar yang sama */
-  height: 360px;              /* silakan tweak 340–380 sesuai rasa Figma */
-
+  height: 360px;              
   display: flex;
-  align-items: center;        /* center vertikal */
-  justify-content: center;    /* center horizontal */
-
-  /* tidak ada shadow di slot (biar tidak jadi kotak putih) */
+  align-items: center;       
+  justify-content: center;    
   box-shadow: none;
   background-color: transparent;
-  overflow: visible;          /* supaya shadow di image tidak ter-cut */
+  overflow: visible;          
 }
-
 
 /* Gambar artwork */
 .artwork-card__image {
   display: block;
-
-  /* gambar pakai ukuran natural, tidak dipaksa isi slot */
   max-width: 100%;
   max-height: 100%;
   width: auto;
   height: auto;
-
-  /* SHADOW FIGMA NEMPEL DI GAMBAR */
   box-shadow: 10px 9px 7px 0px #00000040;
   border-radius: 0;
 }
 
 /* Header: title (kiri) + wishlist heart (kanan) */
-.artwork-card__header { /* 🆕 NEW */
+.artwork-card__header { 
   width: 100%;
   display: flex;
   align-items: flex-start;
@@ -356,7 +319,7 @@
 }
 
 /* Title artwork */
-.artwork-card__title { /* 🆕 NEW */
+.artwork-card__title { 
   font-family: "ClashDisplayMedium", sans-serif;
   font-size: 18px;
   line-height: 150%;
@@ -366,31 +329,31 @@
 }
 
 /* Tombol wishlist (heart) */
-.artwork-card__wishlist { /* 🆕 NEW */
+.artwork-card__wishlist { 
   border: none;
   background: transparent;
   cursor: pointer;
   padding: 4px;
-  margin: -4px; /* supaya optik lebih rapat ke kanan */
+  margin: -4px; 
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.artwork-card__wishlist-icon { /* 🆕 NEW */
+.artwork-card__wishlist-icon { 
   font-size: 18px;
   line-height: 1;
-  color: #8e8a84; /* abu-abu halus */
+  color: #8e8a84; 
   transition: transform 0.18s ease, color 0.18s ease;
 }
 
-.artwork-card__wishlist:hover .artwork-card__wishlist-icon { /* 🆕 NEW */
+.artwork-card__wishlist:hover .artwork-card__wishlist-icon { 
   transform: scale(1.1);
-  color: #c4874b; /* accent coklat, konsisten dengan filter */
+  color: #c4874b; 
 }
 
 /* Dimensions (60 x 90 cm) */
-.artwork-card__dimensions { /* 🆕 NEW */
+.artwork-card__dimensions { 
   margin: 0;
   margin-bottom: 2px;
   font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
@@ -400,7 +363,7 @@
 }
 
 /* Frame / detail kecil di bawah dimensions */
-.artwork-card__frame { /* 🆕 NEW */
+.artwork-card__frame { 
   margin: 0;
   margin-bottom: 12px;
   font-family: "ClashDisplayVariable", sans-serif;
@@ -410,7 +373,7 @@
 }
 
 /* Harga (Rp...) */
-.artwork-card__price { /* 🆕 NEW */
+.artwork-card__price { 
   margin: 0;
   margin-bottom: 4px;
   font-family: "NexaHeavy", system-ui, -apple-system, sans-serif;
@@ -421,7 +384,7 @@
 }
 
 /* Nama artist */
-.artwork-card__artist { /* 🆕 NEW */
+.artwork-card__artist { 
   margin: 0;
   font-family: "NexaRegular", system-ui, -apple-system, sans-serif;
   font-size: 12px;
@@ -434,7 +397,7 @@
 /* ========================= */
 
 .artwork-card__image-wrapper {
-  position: relative; /* penting untuk overlay */
+  position: relative; 
   cursor: pointer;
 }
 
@@ -442,19 +405,19 @@
 .artwork-card__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.6); /* putih lembut seperti screenshot */
+  background: rgba(255, 255, 255, 0.6); 
   opacity: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: opacity 0.35s ease;
-  pointer-events: none; /* agar image tetap klik-able */
+  pointer-events: none; 
   backdrop-filter: blur(1px);
 }
 
 /* logo svg */
 .artwork-card__overlay-logo {
-  width: 55%;               /* tweak sesuai estetika */
+  width: 55%;               
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 0.35s ease, transform 0.35s ease;
@@ -473,7 +436,7 @@
 
 /* gambar fade-out sedikit */
 .artwork-card__image-wrapper:hover .artwork-card__image {
-  opacity: 0.35; /* seperti screenshot */
+  opacity: 0.35; 
   transition: opacity 0.35s ease;
 }
 
@@ -491,7 +454,6 @@
 }
 
 /* ARROW BUTTONS */
-/* 🔁 EDITED: tidak pakai border/lingkaran di CSS, hanya image SVG */
 .pagination-arrow {
   background: transparent;
   border: none;
@@ -504,7 +466,7 @@
 }
 
 .pagination-arrow__icon {
-  width: 40px;  /* sesuaikan dengan ukuran SVG */
+  width: 40px;  
   height: 40px;
 }
 
@@ -561,4 +523,117 @@
   justify-content: center;
 
   background: linear-gradient(180deg, #D5A277 0%, #573100 100%);
+}
+
+/* ========================= */
+/* Responsive Layout        */
+/* ========================= */
+
+@media (max-width: 1024px), (max-width: 768px), (max-width: 480px) {
+  .for-sale-page__container {
+    padding: 24px 20px 48px;
+  }
+
+/* ========================= */
+/* FILTER BAR              */
+/* ========================= */
+
+  /* Membuat filter bar lebih rapi di layar kecil */
+  .for-sale-filter-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px !important; 
+    
+  }
+
+  /* Dropdown filter menjadi lebih fleksibel, muat 2 kolom */
+  .for-sale-filter-bar__filters {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+
+  /* Setiap trigger filter menjadi lebar fleksibel */
+  .filter-dropdown__trigger {
+    width: calc(50% - 10px);
+    min-width: 130px;
+  }
+
+  /* Tombol APPLY jadi tampil di bawah filter */
+  .for-sale-filter-bar__apply {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0 !important;
+    margin-bottom: 8px;
+  }
+
+/* ========================= */
+/* ARTWORK GRID            */
+/* ========================= */
+  .for-sale-artworks__grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    column-gap: 24px;
+    row-gap: 48px;
+  }
+
+  /* Tinggi slot gambar menyesuaikan layar agar tidak terlalu tinggi */
+  .artwork-card__image-wrapper {
+    height: 300px;
+  }
+
+/* ========================= */
+/* PAGINATION              */
+/* ========================= */
+  .for-sale-pagination {
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  /* Jarak antar nomor mengecil */
+  .pagination-pages {
+    gap: 20px;
+  }
+
+  /* Sedikit mengecilkan font nomor halaman */
+  .pagination-page {
+    font-size: 20px;
+  }
+
+  .pagination-page--active {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+/* ========================= */
+/* MOBILE LAYOUT           */
+/* ========================= */
+  @media (max-width: 480px) {
+
+    /* Filter dropdown 1 kolom penuh */
+    .filter-dropdown__trigger {
+      width: 100%;
+    }
+
+    /* Artwork gambar lebih pendek di mobile */
+    .artwork-card__image-wrapper {
+      height: 250px;
+    }
+
+    /* Pagination lebih kecil */
+    .pagination-pages {
+      gap: 14px;
+    }
+
+    .pagination-page {
+      font-size: 18px;
+    }
+
+    .pagination-page--active {
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+    }
+  }
 }

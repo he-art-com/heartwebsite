@@ -23,7 +23,7 @@ const WIDTH_OPTIONS = ["Any", "Under 40 cm", "40 - 80 cm", "80 - 120 cm", "120+ 
 
 const TOTAL_PAGES = 5;
 
-const ARTWORKS = [ // 🆕 NEW
+const ARTWORKS = [ 
   {
     id: 1,
     image: Artwork1,
@@ -200,10 +200,9 @@ const [currentPage, setCurrentPage] = useState(1);
 
   const handleApplyFilters = () => {
     console.log("Filters:", selectedFilters);
-    // TODO: nanti bisa dipakai untuk filter ARTWORKS di step berikutnya
   };
 
-   // 🆕 NEW: ganti halaman saat nomor/arrow diklik
+   // ganti halaman saat nomor/arrow diklik
   const handleChangePage = (page) => {
     if (page < 1 || page > TOTAL_PAGES) return;
     setCurrentPage(page);
@@ -212,7 +211,7 @@ const [currentPage, setCurrentPage] = useState(1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // 🆕 NEW: "acak" urutan artwork berdasarkan halaman (rotasi array)
+  // "acak" urutan artwork berdasarkan halaman (rotasi array)
   const getPageArtworks = () => {
     if (ARTWORKS.length === 0) return [];
     const offset = ((currentPage - 1) * 3) % ARTWORKS.length; // geser 3 item per halaman
@@ -222,7 +221,7 @@ const [currentPage, setCurrentPage] = useState(1);
     ];
   };
 
-  const pageArtworks = getPageArtworks(); // 🆕 NEW
+  const pageArtworks = getPageArtworks();
 
   return (
     <main className="for-sale-page">
@@ -304,7 +303,7 @@ const [currentPage, setCurrentPage] = useState(1);
                   />
                   <div className="artwork-card__overlay">
                     <img
-                      src={HeartLogo}  // svg yang kamu bilang sudah punya
+                      src={HeartLogo}
                       alt="HeArt Logo"
                       className="artwork-card__overlay-logo"
                     />
@@ -318,7 +317,6 @@ const [currentPage, setCurrentPage] = useState(1);
                     className="artwork-card__wishlist"
                     aria-label={`Add ${artwork.title} to wishlist`}
                   >
-                    {/* Bisa diganti SVG icon heart kalau sudah siap */}
                     <span className="artwork-card__wishlist-icon">♡</span>
                   </button>
                 </div>
@@ -345,12 +343,12 @@ const [currentPage, setCurrentPage] = useState(1);
         {/* ========================= */}
         {/* PAGINATION                */}
         {/* ========================= */}
-        <section className="for-sale-pagination"> {/* 🆕 NEW */}
+        <section className="for-sale-pagination">
           <button
             type="button"
             className="pagination-arrow"
-            onClick={() => handleChangePage(currentPage - 1)} // 🆕 NEW
-            disabled={currentPage === 1} // 🆕 NEW
+            onClick={() => handleChangePage(currentPage - 1)} 
+            disabled={currentPage === 1} 
           >
             <img
               src={ArrowIcon}
@@ -369,7 +367,7 @@ const [currentPage, setCurrentPage] = useState(1);
                   className={`pagination-page ${
                     pageNum === currentPage ? "pagination-page--active" : ""
                   }`}
-                  onClick={() => handleChangePage(pageNum)} // 🆕 NEW
+                  onClick={() => handleChangePage(pageNum)} 
                 >
                   {pageNum}
                 </button>
@@ -380,8 +378,8 @@ const [currentPage, setCurrentPage] = useState(1);
           <button
             type="button"
             className="pagination-arrow"
-            onClick={() => handleChangePage(currentPage + 1)} // 🆕 NEW
-            disabled={currentPage === TOTAL_PAGES} // 🆕 NEW
+            onClick={() => handleChangePage(currentPage + 1)} 
+            disabled={currentPage === TOTAL_PAGES} 
           >
             <img
               src={ArrowIcon}
