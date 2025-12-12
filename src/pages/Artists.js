@@ -1,136 +1,16 @@
 // src/pages/Artists.js
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import "./Artists.css";
-import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { useStore } from "../context/StoreContext";
+import { useNavigate } from "react-router-dom";
 
-// ==== IMPORT GAMBAR ====
-import imgGustave from "../assets/images/11.png"; // old man colorful
-import imgElara from "../assets/images/12.png"; // swan
-import imgLeonardo from "../assets/images/3.png"; // mona lisa
+const API_BASE_URL = "http://localhost:5000";
 
-import imgElias from "../assets/images/1.png"; // harmonia mundi
-import imgSeraphina from "../assets/images/18.png"; // surreal face
-import imgDali from "../assets/images/14.png"; // man in suit
-
-import imgGeorge from "../assets/images/16.png"; // little girl
-import imgCassian from "../assets/images/7.png"; // starry night
-import imgMatsumi from "../assets/images/4.png"; // red-black abstract
-
-// ===== DATA ARTISTS (grid & detail) =====
-const ARTISTS = [
-  {
-    id: 1,
-    name: "Gustave Courbet",
-    meta: "French, 1819–1877",
-    image: imgGustave,
-    followers: "22k Followers",
-  },
-  {
-    id: 2,
-    name: "Elara Vancroft",
-    meta: "Still don’t know",
-    image: imgElara,
-    followers: "18k Followers",
-  },
-  {
-    id: 3,
-    name: "Leonardo da Vinci",
-    meta: "Italy, 1452–1519",
-    image: imgLeonardo,
-    followers: "23k Followers",
-  },
-  {
-    id: 4,
-    name: "Elias Thorne",
-    meta: "born.",
-    image: imgElias,
-    followers: "9.2k Followers",
-  },
-  {
-    id: 5,
-    name: "Seraphina Renard",
-    meta: "born.",
-    image: imgSeraphina,
-    followers: "11k Followers",
-  },
-  {
-    id: 6,
-    name: "Salvador Dalí",
-    meta: "Spain, 1904–1989",
-    image: imgDali,
-    followers: "30k Followers",
-  },
-  {
-    id: 7,
-    name: "George Romney",
-    meta: "British, 1734–1802",
-    image: imgGeorge,
-    followers: "14k Followers",
-  },
-  {
-    id: 8,
-    name: "Cassian Alistair",
-    meta: "born.",
-    image: imgCassian,
-    followers: "7.8k Followers",
-  },
-  {
-    id: 9,
-    name: "Matsumi Kanemitsu",
-    meta: "American, 1922–1992",
-    image: imgMatsumi,
-    followers: "12k Followers",
-  },
-];
-
-// total halaman: 1 (featured) + 9 detail (page 2–10)
-const TOTAL_PAGES = 10;
-
-// ===== ARTWORKS DUMMY UNTUK DETAIL =====
-const DEFAULT_ARTWORKS = [
-  {
-    id: 1,
-    title: "Grotesque Head of an Old Woman",
-    meta: "Dimension: 64.0 cm x 51.0 cm",
-    price: "Rp. 5.000.000",
-  },
-  {
-    id: 2,
-    title: "Ginevra de’ Benci [obverse]",
-    meta: "Dimension: 38.1 cm x 37 cm",
-    price: "Rp. 10.000.000",
-  },
-  {
-    id: 3,
-    title: "Mona Lisa",
-    meta: "Dimension: 38.1 cm x 37 cm",
-    price: "Rp. 4.000.000",
-  },
-  {
-    id: 4,
-    title: "Portrait of a Young Lady",
-    meta: "Dimension: 47.0 cm x 34 cm",
-    price: "Rp. 7.000.000",
-  },
-  {
-    id: 5,
-    title: "An Angel in Green with a Vielle",
-    meta: "Dimension: 27.0 cm x 60 cm",
-    price: "Rp. 8.000.000",
-  },
-  {
-    id: 6,
-    title: "The Virgin of the Rocks",
-    meta: "Dimension: 48.1 cm x 94 cm",
-    price: "Rp. 6.000.000",
-  },
-];
-
-// deskripsi singkat artist detail
+// ====== HELPER DESKRIPSI ARTIST ======
 const getArtistDescription = (artist) => {
   if (!artist) return "";
-  if (artist.name === "Leonardo da Vinci") {
+
+  if (artist.name && artist.name.toLowerCase().includes("leonardo")) {
     return (
       "Leonardo da Vinci (1452–1519) was one of the most influential artists " +
       "of the Western world, renowned for masterpieces such as the Mona Lisa and The Last Supper. " +
@@ -139,13 +19,13 @@ const getArtistDescription = (artist) => {
   }
 
   return (
-    artist.name +
+    (artist.name || "This artist") +
     " is one of the highlighted artists in our collection. Explore their creative journey, " +
     "signature style, and the stories behind each artwork."
   );
 };
 
-// ====== KOMPONEN PAGINATION ======
+// ====== PAGINATION (GAYA SAMA KAYAK GALLERY) ======
 const Pagination = ({ currentPage, totalPages, onChange }) => {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -192,28 +72,108 @@ const Pagination = ({ currentPage, totalPages, onChange }) => {
 };
 
 const Artists = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
 
-  // === SORT STATE (featured grid, page 1) ===
+  // ===== VIEW STATE =====
+  const [artistPage, setArtistPage] = useState(1); // pagination untuk LIST ARTIST
+  const [selectedArtist, setSelectedArtist] = useState(null); // null = list, ada = detail
+
+  // data artists dari backend
+  const [artists, setArtists] = useState([]);
+  const [artistsLoading, setArtistsLoading] = useState(false);
+  const [artistsError, setArtistsError] = useState("");
+
+  // artworks untuk 1 artist (halaman detail)
+  const [artworks, setArtworks] = useState([]);
+  const [artworksLoading, setArtworksLoading] = useState(false);
+  const [artworksError, setArtworksError] = useState("");
+  const [artworkFilter, setArtworkFilter] = useState("all"); // all | gallery | for_sale
+  const [artworkPage, setArtworkPage] = useState(1); // pagination karya artist
+
+  // LIGHTBOX
+  const [lightboxArtwork, setLightboxArtwork] = useState(null);
+
+  // SORT state (untuk page list)
   const [sortOpen, setSortOpen] = useState(false);
   const [sortOption, setSortOption] = useState("default");
 
-  const {
-    toggleFollowArtist,
-    isArtistFollowed,
-    toggleFavourite,
-    toggleCart,
-    isFavourite,
-    isInCart,
-  } = useStore();
+  const { toggleFollowArtist, isArtistFollowed } = useStore();
 
-  // halaman 2–10 map ke detail artist.
-  const detailIndex = currentPage - 2;
-  const currentArtist =
-    detailIndex >= 0 && detailIndex < ARTISTS.length
-      ? ARTISTS[detailIndex]
-      : null;
+  const ARTISTS_PER_PAGE = 9;
+  const ARTWORKS_PER_PAGE = 6;
 
+  // ====== FETCH ARTISTS (list) ======
+  useEffect(() => {
+    const fetchArtists = async () => {
+      try {
+        setArtistsLoading(true);
+        setArtistsError("");
+
+        const res = await fetch(`${API_BASE_URL}/api/artists`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          setArtistsError(data.message || "Failed to load artists.");
+          return;
+        }
+
+        const formatted = (data.artists || []).map((a) => ({
+          ...a,
+          name: a.nickname || a.full_name || "Unnamed Artist",
+        }));
+
+        setArtists(formatted);
+      } catch (err) {
+        console.error("Error fetch artists:", err);
+        setArtistsError("Terjadi kesalahan saat mengambil data artists.");
+      } finally {
+        setArtistsLoading(false);
+      }
+    };
+
+    fetchArtists();
+  }, []);
+
+  // ====== FETCH ARTWORKS UNTUK 1 ARTIST ======
+  const fetchArtworks = useCallback(async (artistId, filter) => {
+    if (!artistId) return;
+
+    try {
+      setArtworksLoading(true);
+      setArtworksError("");
+      setArtworks([]);
+
+      const query = filter && filter !== "all" ? `?source=${filter}` : "";
+      const res = await fetch(
+        `${API_BASE_URL}/api/artists/${artistId}/artworks${query}`
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setArtworksError(
+          data.message || "Failed to load artworks for this artist."
+        );
+        return;
+      }
+
+      setArtworks(data.artworks || []);
+    } catch (err) {
+      console.error("Error fetch artist artworks:", err);
+      setArtworksError("Terjadi kesalahan saat mengambil karya artist ini.");
+    } finally {
+      setArtworksLoading(false);
+    }
+  }, []);
+
+  // kalau ganti artist atau filter → reload karya & reset page
+  useEffect(() => {
+    if (!selectedArtist) return;
+    setArtworkPage(1);
+    fetchArtworks(selectedArtist.id, artworkFilter);
+  }, [selectedArtist, artworkFilter, fetchArtworks]);
+
+  // ===== HERO =====
   const handleHeroExplore = () => {
     const section = document.getElementById("featured-artists");
     if (section) {
@@ -221,39 +181,115 @@ const Artists = () => {
     }
   };
 
-  const openDetailFromGrid = (index) => {
-    setCurrentPage(index + 2);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  // === HITUNG ARTIST YANG SUDAH DI-SORT (untuk page 1) ===
+  // ===== SORTING (untuk list) =====
   const sortedArtists = useMemo(() => {
-    const arr = [...ARTISTS];
+    const arr = [...artists];
 
     if (sortOption === "name-asc") {
-      arr.sort((a, b) => a.name.localeCompare(b.name));
+      arr.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
     } else if (sortOption === "name-desc") {
-      arr.sort((a, b) => b.name.localeCompare(a.name));
+      arr.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
     } else if (sortOption === "followers-desc") {
       arr.sort((a, b) => {
-        const fa = parseInt(String(a.followers || "").replace(/[^\d]/g, ""), 10) || 0;
-        const fb = parseInt(String(b.followers || "").replace(/[^\d]/g, ""), 10) || 0;
+        const fa = a.follower_count || 0;
+        const fb = b.follower_count || 0;
         return fb - fa;
       });
     }
-    // "default" -> urutan asli
     return arr;
-  }, [sortOption]);
+  }, [artists, sortOption]);
 
   const handleSortSelect = (value) => {
     setSortOption(value);
     setSortOpen(false);
   };
 
+  // ===== PAGINATION LIST ARTIST =====
+  const totalArtistPages = Math.max(
+    1,
+    Math.ceil(sortedArtists.length / ARTISTS_PER_PAGE)
+  );
+  const startArtistIndex = (artistPage - 1) * ARTISTS_PER_PAGE;
+  const paginatedArtists = sortedArtists.slice(
+    startArtistIndex,
+    startArtistIndex + ARTISTS_PER_PAGE
+  );
+
+  // helper format tanggal
+  const formatDatePretty = (dateString) => {
+    if (!dateString) return "-";
+    try {
+      const d = new Date(dateString);
+      return d.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
+  // teks alamat singkat
+  const shortAddress = (addr) => {
+    if (!addr) return "-";
+    return addr.length > 40 ? addr.slice(0, 40) + "…" : addr;
+  };
+
+  // buka detail artist
+  const openDetailFromGrid = (artist) => {
+    setSelectedArtist(artist);
+    setArtworkFilter("all");
+    setArtworkPage(1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const backToArtists = () => {
+    setSelectedArtist(null);
+    setArtworks([]);
+    setArtworkFilter("all");
+    setArtworkPage(1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // ===== LIGHTBOX (sama seperti Gallery) =====
+  const handleDownload = (art) => {
+    if (!art || !art.id) return;
+
+    const downloadUrl = `${API_BASE_URL}/api/artworks/${art.id}/download`;
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", "");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // helper format Rupiah
+  const formatRp = (value) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return value;
+    return n.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+  };
+
+  // pagination karya artist
+  const totalArtworkPages = Math.max(
+    1,
+    Math.ceil(artworks.length / ARTWORKS_PER_PAGE)
+  );
+  const startArtworkIndex = (artworkPage - 1) * ARTWORKS_PER_PAGE;
+  const paginatedArtworks = artworks.slice(
+    startArtworkIndex,
+    startArtworkIndex + ARTWORKS_PER_PAGE
+  );
+
+  const currentArtist = selectedArtist;
+
   return (
     <div className="artists-page">
-      {/* ================= HERO – hanya di PAGE 1 ================= */}
-      {currentPage === 1 && (
+      {/* ================= HERO – hanya di LIST ================= */}
+      {!currentArtist && (
         <section className="hero-section">
           <div className="hero-bg" />
           <div className="hero-overlay">
@@ -283,18 +319,18 @@ const Artists = () => {
         </section>
       )}
 
-      {/* =========== PAGE 1: FEATURED ARTIST GRID =========== */}
-      {currentPage === 1 && (
+      {/* ================= LIST ARTISTS ================= */}
+      {!currentArtist && (
         <section className="artists-featured container" id="featured-artists">
           <header className="artists-featured-header">
             <div>
               <h2 className="artists-featured-title">Featured Artist</h2>
               <p className="artists-featured-subtitle">
-                Browse over 50.000 artist
+                Browse all artists who already upload their works
               </p>
             </div>
 
-            {/* SORT BY dengan icon custom + dropdown */}
+            {/* SORT BY */}
             <div className="artists-sort">
               <span className="artists-sort-label">SORT BY</span>
 
@@ -352,209 +388,345 @@ const Artists = () => {
             </div>
           </header>
 
-          {/* GRID 3x3 – pakai sortedArtists */}
-          <div className="artists-grid">
-            {sortedArtists.map((artist, index) => {
-              const followed = isArtistFollowed(artist.id);
+          {artistsError && (
+            <p style={{ color: "#d11a2a", fontSize: 13 }}>{artistsError}</p>
+          )}
+          {artistsLoading && <p>Loading artists...</p>}
 
-              return (
-                <article
-                  key={artist.id}
-                  className="artists-card"
-                  onClick={() => openDetailFromGrid(index)}
-                >
-                  <div className="artists-card-image">
-                    <img src={artist.image} alt={artist.name} />
-                    <div className="artists-card-hover">
-                      <span className="artists-card-logo">HeArt</span>
-                    </div>
-                  </div>
+          {!artistsLoading && artists.length === 0 && !artistsError && (
+            <p style={{ fontSize: 13, color: "#777" }}>
+              Belum ada artist yang mengupload karya.
+            </p>
+          )}
 
-                  <div className="artists-card-info">
-                    <div className="artists-card-text">
-                      <h3>{artist.name}</h3>
-                      <p>{artist.meta}</p>
-                    </div>
+          {!artistsLoading && artists.length > 0 && (
+            <>
+              <div className="artists-grid">
+                {paginatedArtists.map((artist) => {
+                  const followed = isArtistFollowed(artist.id);
 
-                    <button
-                      type="button"
-                      className={`artists-follow-btn ${
-                        followed ? "is-following" : ""
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFollowArtist(artist.id);
-                      }}
+                  return (
+                    <article
+                      key={artist.id}
+                      className="artists-card"
+                      onClick={() => openDetailFromGrid(artist)}
                     >
-                      {followed ? "Following" : "Follow"}
-                    </button>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+                      <div className="artists-card-image">
+                        {artist.avatar_url ? (
+                          <img
+                            src={artist.avatar_url}
+                            alt={artist.name || "Artist"}
+                          />
+                        ) : (
+                          <img
+                            src="https://via.placeholder.com/400x500?text=Artist"
+                            alt={artist.name || "Artist"}
+                          />
+                        )}
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={TOTAL_PAGES}
-            onChange={setCurrentPage}
-          />
+                        <div className="artists-card-hover">
+                          <span className="artists-card-logo">HeArt</span>
+                        </div>
+                      </div>
+
+                      <div className="artists-card-info">
+                        <div className="artists-card-text">
+                          <h3>{artist.name || "Unnamed Artist"}</h3>
+                          <p>{shortAddress(artist.address)}</p>
+                          <p>{formatDatePretty(artist.birth_date)}</p>
+                        </div>
+
+                        <button
+                          type="button"
+                          className={`artists-follow-btn ${
+                            followed ? "is-following" : ""
+                          }`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFollowArtist(artist.id);
+                          }}
+                        >
+                          {followed ? "Following" : "Follow"}
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <Pagination
+                currentPage={artistPage}
+                totalPages={totalArtistPages}
+                onChange={setArtistPage}
+              />
+            </>
+          )}
         </section>
       )}
 
-      {/* =========== PAGE 2–10: ARTIST DETAIL LAYOUT =========== */}
-      {currentPage !== 1 && (
+      {/* ================= DETAIL ARTIST ================= */}
+      {currentArtist && (
         <section className="artist-detail container">
           {/* breadcrumb */}
           <div className="artist-breadcrumb">
             <button
               type="button"
               className="artist-breadcrumb-link"
-              onClick={() => setCurrentPage(1)}
+              onClick={backToArtists}
             >
               Artists
             </button>{" "}
-            /{" "}
-            <span>
-              {currentArtist ? currentArtist.name : "New Artist Coming Soon"}
-            </span>
+            / <span>{currentArtist.name}</span>
           </div>
 
-          {/* HEADER: image kiri, info kanan */}
+          {/* HEADER */}
           <div className="artist-header">
             <div className="artist-main-image">
-              {currentArtist && (
-                <img src={currentArtist.image} alt={currentArtist.name} />
+              {currentArtist.avatar_url ? (
+                <img src={currentArtist.avatar_url} alt={currentArtist.name} />
+              ) : (
+                <img
+                  src="https://via.placeholder.com/400x500?text=Artist"
+                  alt={currentArtist.name || "Artist"}
+                />
               )}
             </div>
 
             <div className="artist-main-info">
-              <h1 className="artist-main-name">
-                {currentArtist ? currentArtist.name : "New Artist Coming Soon"}
-              </h1>
+              <h1 className="artist-main-name">{currentArtist.name}</h1>
               <p className="artist-main-meta">
-                {currentArtist ? currentArtist.meta : "Stay tuned."}
+                {shortAddress(currentArtist.address)}
+              </p>
+              <p className="artist-main-meta">
+                {formatDatePretty(currentArtist.birth_date)}
               </p>
 
               <div className="artist-main-follow-row">
-                {currentArtist && (
-                  <button
-                    className={`artist-main-follow ${
-                      isArtistFollowed(currentArtist.id) ? "is-following" : ""
-                    }`}
-                    type="button"
-                    onClick={() => toggleFollowArtist(currentArtist.id)}
-                  >
-                    {isArtistFollowed(currentArtist.id)
-                      ? "Following"
-                      : "Follow"}
-                  </button>
-                )}
+                <button
+                  className={`artist-main-follow ${
+                    isArtistFollowed(currentArtist.id) ? "is-following" : ""
+                  }`}
+                  type="button"
+                  onClick={() => toggleFollowArtist(currentArtist.id)}
+                >
+                  {isArtistFollowed(currentArtist.id) ? "Following" : "Follow"}
+                </button>
+
                 <span className="artist-main-followers">
-                  {currentArtist?.followers || "23k Followers"}
+                  Followers: {currentArtist.follower_count || 0}
                 </span>
               </div>
 
               <p className="artist-main-description">
-                {getArtistDescription(currentArtist)}
+                {currentArtist.bio
+                  ? currentArtist.bio
+                  : getArtistDescription(currentArtist)}
               </p>
             </div>
           </div>
 
-          {/* ===== ARTWORKS SECTION (grid 3 kolom) ===== */}
+          {/* ===== FILTER KARYA ===== */}
           <section className="artist-artworks">
             <div className="artist-artworks-header">
               <div className="artist-artworks-title-wrapper">
                 <h2 className="artist-artworks-title">
-                  {currentArtist
-                    ? `${currentArtist.name} Artworks`
-                    : "Artworks"}
+                  {currentArtist.name} Artworks
                 </h2>
-                <p className="artist-artworks-subtitle">Display 1–6 of 20</p>
+                <p className="artist-artworks-subtitle">
+                  Filter:
+                  <button
+                    type="button"
+                    style={{
+                      marginLeft: 8,
+                      fontSize: 11,
+                      padding: "3px 10px",
+                      borderRadius: 999,
+                      border:
+                        artworkFilter === "all"
+                          ? "1px solid #573101"
+                          : "1px solid #ccc",
+                      background: artworkFilter === "all" ? "#573101" : "#fff",
+                      color: artworkFilter === "all" ? "#fff" : "#000",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setArtworkFilter("all")}
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    style={{
+                      marginLeft: 6,
+                      fontSize: 11,
+                      padding: "3px 10px",
+                      borderRadius: 999,
+                      border:
+                        artworkFilter === "gallery"
+                          ? "1px solid #573101"
+                          : "1px solid #ccc",
+                      background:
+                        artworkFilter === "gallery" ? "#573101" : "#fff",
+                      color: artworkFilter === "gallery" ? "#fff" : "#000",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setArtworkFilter("gallery")}
+                  >
+                    Gallery
+                  </button>
+                  <button
+                    type="button"
+                    style={{
+                      marginLeft: 6,
+                      fontSize: 11,
+                      padding: "3px 10px",
+                      borderRadius: 999,
+                      border:
+                        artworkFilter === "for_sale"
+                          ? "1px solid #573101"
+                          : "1px solid #ccc",
+                      background:
+                        artworkFilter === "for_sale" ? "#573101" : "#fff",
+                      color: artworkFilter === "for_sale" ? "#fff" : "#000",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setArtworkFilter("for_sale")}
+                  >
+                    For Sale
+                  </button>
+                </p>
               </div>
             </div>
 
-            <div className="artist-artworks-grid">
-              {DEFAULT_ARTWORKS.map((art) => {
-                if (!currentArtist) return null;
+            {artworksError && (
+              <p style={{ color: "#d11a2a", fontSize: 13 }}>{artworksError}</p>
+            )}
+            {artworksLoading && <p>Loading artworks...</p>}
 
-                const fav = isFavourite(currentArtist.id, art.id);
-                const inCart = isInCart(currentArtist.id, art.id);
+            {!artworksLoading && artworks.length === 0 && !artworksError && (
+              <p style={{ fontSize: 13, color: "#777" }}>
+                Artist ini belum memiliki karya pada filter yang dipilih.
+              </p>
+            )}
 
-                const artworkPayload = {
-                  artistName: currentArtist.name,
-                  title: art.title,
-                  price: art.price,
-                  image: currentArtist.image,
-                  meta: art.meta,
-                  dimension: art.meta,
-                };
+            {!artworksLoading && artworks.length > 0 && (
+              <>
+                <div className="artist-artworks-grid">
+                  {paginatedArtworks.map((art) => (
+                    <article key={art.id} className="artist-artwork-card">
+                      <button
+                        type="button"
+                        className="artist-artwork-image-wrapper"
+                        onClick={() => {
+                          // ✅ FIX: for_sale -> arahkan ke detail for sale
+                          if (art.mode === "for_sale") {
+                            navigate(`/for-sale/${art.id}`);
+                            return;
+                          }
 
-                return (
-                  <article key={art.id} className="artist-artwork-card">
-                    <div className="artist-artwork-image-wrapper">
-                      <img
-                        src={currentArtist.image}
-                        alt={art.title}
-                        className="artist-artwork-image"
-                      />
-                    </div>
+                          // ✅ gallery -> lightbox
+                          setLightboxArtwork({
+                            ...art,
+                            nickname: currentArtist.nickname,
+                            full_name:
+                              currentArtist.full_name || currentArtist.name,
+                          });
+                        }}
+                      >
+                        <img
+                          src={art.image_url}
+                          alt={art.title}
+                          className="artist-artwork-image"
+                        />
+                      </button>
 
-                    <div className="artist-artwork-text">
-                      <div className="artist-artwork-row-top">
-                        <div className="artist-artwork-title">{art.title}</div>
+                      <div className="artist-artwork-text">
+                        <div className="artist-artwork-row-top">
+                          <div className="artist-artwork-title">
+                            {art.title || "Untitled"}
+                          </div>
+                        </div>
 
-                        <div className="artist-artwork-icons">
-                          <button
-                            className={`artist-artwork-icon-btn ${
-                              fav ? "is-active" : ""
-                            }`}
-                            aria-label="Add to favourites"
-                            type="button"
-                            onClick={() =>
-                              toggleFavourite(
-                                currentArtist.id,
-                                art.id,
-                                artworkPayload
-                              )
-                            }
-                          >
-                            <FiHeart className="artist-artwork-icon" />
-                          </button>
-                          <button
-                            className={`artist-artwork-icon-btn ${
-                              inCart ? "is-active" : ""
-                            }`}
-                            aria-label="Add to cart"
-                            type="button"
-                            onClick={() =>
-                              toggleCart(
-                                currentArtist.id,
-                                art.id,
-                                artworkPayload
-                              )
-                            }
-                          >
-                            <FiShoppingCart className="artist-artwork-icon" />
-                          </button>
+                        <div className="artist-artwork-meta">
+                          {art.style || ""}
+                        </div>
+
+                        <div className="artist-artwork-price">
+                          {art.mode === "for_sale"
+                            ? formatRp(art.price || 0)
+                            : "Not for sale"}
                         </div>
                       </div>
+                    </article>
+                  ))}
+                </div>
 
-                      <div className="artist-artwork-meta">{art.meta}</div>
-                      <div className="artist-artwork-price">{art.price}</div>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
+                <Pagination
+                  currentPage={artworkPage}
+                  totalPages={totalArtworkPages}
+                  onChange={setArtworkPage}
+                />
+              </>
+            )}
           </section>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={TOTAL_PAGES}
-            onChange={setCurrentPage}
-          />
         </section>
+      )}
+
+      {/* ================== LIGHTBOX ================== */}
+      {lightboxArtwork && (
+        <div
+          className="lightbox-overlay"
+          onClick={() => setLightboxArtwork(null)}
+        >
+          <div className="lightbox-inner" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="lightbox-close"
+              onClick={() => setLightboxArtwork(null)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+
+            <div className="lightbox-image-wrapper">
+              <img
+                src={lightboxArtwork.image_url}
+                alt={lightboxArtwork.title || "Artwork"}
+                className="lightbox-image"
+              />
+            </div>
+
+            <div className="lightbox-caption">
+              <div className="lightbox-caption-main">
+                <div>
+                  <h3>{lightboxArtwork.title || "Untitled"}</h3>
+                  {(lightboxArtwork.nickname || lightboxArtwork.full_name) && (
+                    <p className="lightbox-artist">
+                      {lightboxArtwork.nickname || lightboxArtwork.full_name}
+                    </p>
+                  )}
+                  {lightboxArtwork.style && (
+                    <p className="lightbox-style">
+                      Style: {lightboxArtwork.style}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  className="download-btn"
+                  onClick={() => handleDownload(lightboxArtwork)}
+                >
+                  Download
+                </button>
+              </div>
+
+              {lightboxArtwork.description && (
+                <p className="lightbox-description">
+                  {lightboxArtwork.description}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

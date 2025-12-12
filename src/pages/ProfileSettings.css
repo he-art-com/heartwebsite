@@ -1,24 +1,26 @@
-/* ===== WRAPPER HALAMAN PROFILE ===== */
+/* ===== PAGE WRAPPER ===== */
 
 .profile-page {
   max-width: 1120px;
-  margin: 40px auto;
-  padding: 0 20px 40px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #000;
 }
 
 /* HEADER: BACK + TITLE */
+
 .profile-page-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
 }
 
 .back-btn {
   border: none;
   background: #f3f3f3;
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 6px 16px;
   font-size: 13px;
   cursor: pointer;
 }
@@ -32,199 +34,555 @@
   font-weight: 700;
 }
 
-/* ===== TAB MENU ===== */
-
-.profile-tabs {
-  display: inline-flex;
-  gap: 8px;
-  margin: 12px 0 18px;
-  background: #f5f5f5;
-  border-radius: 999px;
-  padding: 4px;
+.account-header-divider {
+  margin-top: 18px;
+  border-bottom: 1px solid #e4e4e4;
 }
 
-.tab-btn {
+/* ===== LAYOUT: SIDEBAR + MAIN ===== */
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 48px;
+  margin-top: 26px;
+}
+
+/* SIDEBAR KIRI */
+
+.account-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.account-nav-item {
+  padding: 6px 0;
   border: none;
   background: transparent;
-  padding: 6px 16px;
-  border-radius: 999px;
-  font-size: 13px;
+  text-align: left;
   cursor: pointer;
-  color: #555;
+  color: #777;
 }
 
-.tab-btn.active {
-  background: #000;
-  color: #fff;
+.account-nav-item.active {
+  color: #c68034;
+  font-weight: 600;
 }
 
-/* LAYOUT GRID: KIRI (PROFILE) + KANAN (ARTWORK) */
+/* MAIN AREA */
 
-.profile-layout {
-  display: grid;
-  grid-template-columns: 2fr 1.5fr;
-  gap: 24px;
+.account-main {
+  width: 100%;
 }
 
-/* layout untuk tab Upload/Jual: 1 kolom */
-.profile-layout.single-column {
-  grid-template-columns: 1fr;
+/* =========================================================
+   ACCOUNT INFORMATION TAB
+   ========================================================= */
+
+.account-info-section {
+  padding-top: 6px;
 }
 
-/* ===== CARD / SECTION ===== */
-
-.profile-section {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 18px 20px 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+.account-info-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   margin-bottom: 18px;
 }
 
-.profile-section h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.section-subtitle {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 16px;
-}
-
-/* ===== FORM UMUM ===== */
-
-.profile-form {
+.account-info-user {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.form-group label {
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.form-group input,
-.profile-form textarea,
-.profile-form select {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #dddddd;
-  font-size: 14px;
-  outline: none;
-}
-
-.form-group input:focus,
-.profile-form textarea:focus,
-.profile-form select:focus {
-  border-color: #b87a35;
-}
-
-.input-disabled {
-  background: #f5f5f5;
-  color: #888;
-}
-
-/* ROW 2 KOLOM */
-
-.form-row {
-  display: flex;
-  gap: 12px;
-}
-
-.form-group-half {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* ===== BUTTON ===== */
-
-.btn {
-  border-radius: 999px;
-  padding: 8px 16px;
-  font-size: 14px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  margin-top: 4px;
-}
-
-.btn.primary {
-  background: #000000;
-  color: #ffffff;
-}
-
-.btn.primary:hover {
-  background: #222222;
-}
-
-.btn.secondary {
-  background: #ffffff;
-  color: #000;
-  border-color: #000;
-}
-
-.btn.secondary:hover {
-  background: #f3f3f3;
-}
-
-/* ===== AVATAR ===== */
-
-.avatar-row {
-  display: flex;
-  gap: 16px;
   align-items: center;
+  gap: 16px;
 }
 
-.avatar-preview {
-  width: 80px;
-  height: 80px;
+.account-info-avatar {
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
   overflow: hidden;
-  border: 1px solid #ddd;
   background: #f5f5f5;
+  border: 1px solid #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 
-.avatar-preview img {
+.account-info-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.avatar-placeholder {
+.avatar-circle-placeholder {
   font-size: 11px;
   color: #888;
-  text-align: center;
-  padding: 4px;
 }
 
-.avatar-actions {
+.account-info-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.account-info-subtitle {
+  font-size: 13px;
+  color: #666;
+}
+
+.btn-outline-red {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid #ff4b4b;
+  background: #fff;
+  color: #ff4b4b;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-outline-red:hover {
+  background: #ffe5e5;
+}
+
+/* GRID INFORMASI */
+
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 80px;
+  row-gap: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #eee;
+  margin-bottom: 26px;
+}
+
+.account-info-item-label {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 3px;
+}
+
+.account-info-item-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* DELETE ACCOUNT */
+
+.account-delete-section {
+  border-top: 1px solid #eee;
+  padding-top: 18px;
+}
+
+.account-delete-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.account-delete-text {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.btn-delete-account {
+  border-radius: 999px;
+  padding: 8px 20px;
+  border: none;
+  background: #e53935;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-delete-account:hover {
+  background: #c62828;
+}
+
+/* =========================================================
+   EDIT PROFILE TAB
+   ========================================================= */
+
+.edit-profile-wrapper {
+  padding-top: 6px;
+}
+
+.edit-profile-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
-.avatar-actions input[type="file"] {
+/* HEADER */
+
+.edit-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.edit-profile-header-left h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.edit-profile-header-left p {
+  font-size: 13px;
+  color: #666;
+}
+
+.edit-profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-ghost {
+  border-radius: 999px;
+  padding: 8px 18px;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-ghost:hover {
+  background: #f5f5f5;
+}
+
+/* Save Changes gradient: #573100 → #D5A277 */
+
+.btn-save-gradient {
+  border-radius: 999px;
+  padding: 8px 22px;
+  border: none;
+  background-image: linear-gradient(90deg, #573100, #d5a277);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-save-gradient:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.edit-profile-divider {
+  border-bottom: 1px solid #ececec;
+  margin: 18px 0 16px;
+}
+
+/* YOUR PHOTO ROW (dengan garis di bawah) */
+
+.edit-photo-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  gap: 36px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #ececec;
+  margin-bottom: 26px;
+}
+
+.edit-photo-left-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.edit-photo-left-caption {
   font-size: 12px;
+  color: #666;
 }
 
-/* ===== PREVIEW GAMBAR KARYA ===== */
+.edit-photo-avatar-preview {
+  margin-top: 16px;
+}
+
+.avatar-circle-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-circle-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* UPLOAD BOX ala desain */
+
+.photo-upload-box {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid #d0d0d0;
+  background: #ffffff;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 6px;
+  box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.28);
+  min-height: 120px;
+}
+
+.photo-upload-icon {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.photo-upload-text-main {
+  font-size: 13px;
+  font-weight: 500;
+  color: #b47432;
+}
+
+.photo-upload-text-sub {
+  font-size: 13px;
+  color: #000;
+}
+
+.photo-upload-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.btn-primary-black {
+  margin-top: 10px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-primary-black:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* =========================================================
+   FORM FIELDS (FULL NAME, BIRTHDATE, DLL)
+   ========================================================= */
+
+.edit-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 40px;
+  row-gap: 18px;
+  margin-bottom: 20px;
+}
+
+.edit-profile-grid-full {
+  margin-bottom: 20px;
+}
+
+.form-field-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+/* input tanpa warna background */
+
+.form-input {
+  width: 100%;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #000;
+  font-size: 13px;
+  outline: none;
+  background: transparent;
+}
+
+.form-input::placeholder {
+  color: #b8b8b8;
+}
+
+/* birthdate: ada icon di kanan */
+
+.birthdate-wrapper {
+  position: relative;
+}
+
+.birthdate-input {
+  padding-right: 36px;
+}
+
+.birthdate-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+}
+
+/* textarea bio */
+
+.form-textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  border: 1px solid #000;
+  font-size: 13px;
+  outline: none;
+  background: transparent;
+  resize: vertical;
+}
+
+.form-textarea::placeholder {
+  color: #b8b8b8;
+}
+
+.bio-helper-text {
+  font-size: 11px;
+  color: #777;
+  margin-top: 4px;
+}
+
+/* GENDER PILL: putih + stroke, active hitam */
+
+.gender-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.gender-pill {
+  min-width: 90px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gender-pill.active {
+  background: #000;
+  color: #fff;
+}
+
+/* =========================================================
+   PASSWORD SECTION
+   ========================================================= */
+
+.change-password-row {
+  margin-top: 10px;
+}
+
+.btn-change-password {
+  border-radius: 999px;
+  padding: 8px 18px;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-change-password:hover {
+  background: #f5f5f5;
+}
+
+/* =========================================================
+   GENERIC FORM + MESSAGES
+   ========================================================= */
+
+.form-error {
+  font-size: 13px;
+  color: #d11a2a;
+}
+
+.form-success {
+  font-size: 13px;
+  color: #1f8a3b;
+}
+
+/* =========================================================
+   UPLOAD / SELL ARTWORKS
+   ========================================================= */
+
+.profile-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  margin-bottom: 18px;
+}
+
+.profile-card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.profile-card-subtitle {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 14px;
+}
+
+/* FORM di dalam card (upload & sell) */
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-form label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.profile-form input,
+.profile-form textarea,
+.profile-form select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #dddddd;
+  font-size: 13px;
+  outline: none;
+}
+
+.profile-form textarea {
+  resize: vertical;
+}
+
+.profile-form input:focus,
+.profile-form textarea:focus,
+.profile-form select:focus {
+  border-color: #b87a35;
+}
+
+/* preview upload */
 
 .artwork-preview-wrapper {
-  margin-top: 6px;
+  margin-top: 8px;
   width: 100%;
   max-width: 260px;
   border-radius: 12px;
@@ -240,180 +598,7 @@
   object-fit: cover;
 }
 
-/* ===== MESSAGES ===== */
-
-.form-error {
-  font-size: 13px;
-  color: #d11a2a;
-  margin: 4px 0;
-}
-
-.form-success {
-  font-size: 13px;
-  color: #1f8a3b;
-  margin: 4px 0;
-}
-
-.form-error.small,
-.form-success.small {
-  font-size: 12px;
-}
-
-/* RIGHT COLUMN FULL HEIGHT */
-
-.profile-right .profile-section {
-  height: auto;
-}
-
-/* ===== ARTWORK LIST TABLE ===== */
-
-.artworks-list {
-  margin-top: 20px;
-}
-
-.artworks-list-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.artworks-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.artworks-table thead tr {
-  background: #f5f5f5;
-}
-
-.artworks-table th,
-.artworks-table td {
-  padding: 8px 10px;
-  border-bottom: 1px solid #eeeeee;
-  text-align: left;
-  vertical-align: top;
-}
-
-.art-thumb {
-  width: 64px;
-  height: 64px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #f5f5f5;
-  border: 1px solid #dddddd;
-}
-
-.art-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.art-title-cell {
-  font-weight: 500;
-  margin-bottom: 2px;
-}
-
-.art-desc-cell {
-  font-size: 12px;
-  color: #777777;
-}
-
-.btn-table {
-  border-radius: 999px;
-  border: 1px solid #000000;
-  background: #ffffff;
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
-  margin-right: 6px;
-}
-
-.btn-table:hover {
-  background: #f3f3f3;
-}
-
-.btn-table-danger {
-  border-color: #d11a2a;
-  color: #d11a2a;
-}
-
-.btn-table-danger:hover {
-  background: #ffe5e8;
-}
-
-.art-empty {
-  font-size: 13px;
-  color: #777777;
-  margin-top: 6px;
-}
-
-/* ===== RESPONSIVE ===== */
-
-@media (max-width: 900px) {
-  .profile-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-layout.single-column {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-page {
-    margin-top: 24px;
-  }
-
-  .profile-tabs {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-}
-
-@media (max-width: 600px) {
-  .avatar-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .form-row {
-    flex-direction: column;
-  }
-
-  .artworks-table th:nth-child(4),
-  .artworks-table td:nth-child(4) {
-    display: none; /* kolom tanggal bisa disembunyiin di HP */
-  }
-}
-/* ===== PREVIEW KARYA (UPLOAD) ===== */
-
-.artwork-preview-wrapper {
-  margin-top: 8px;
-}
-
-.artwork-preview-label {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-.artwork-preview-box {
-  border-radius: 12px;
-  border: 1px solid #e5e5e5;
-  padding: 8px;
-  background: #fafafa;
-  max-width: 420px;
-}
-
-.artwork-preview-img {
-  width: 100%;
-  max-height: 320px;
-  object-fit: contain;
-  display: block;
-}
-
-/* ===== TABEL KARYAKU DI GALLERY ===== */
+/* table */
 
 .artwork-table-wrapper {
   width: 100%;
@@ -439,10 +624,6 @@
   vertical-align: top;
 }
 
-.artwork-table th {
-  font-weight: 600;
-}
-
 .artwork-thumb {
   width: 72px;
   height: 72px;
@@ -464,33 +645,85 @@
   overflow: hidden;
 }
 
-/* ===== BUTTON KECIL DI TABEL ===== */
-
-.btn.small {
-  padding: 4px 10px;
-  font-size: 12px;
-  margin-top: 0;
-}
-
 .table-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }
 
-.btn.danger {
-  background: #d11a2a;
-  color: #fff;
+.btn-small {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-small-danger {
   border-color: #d11a2a;
+  color: #d11a2a;
 }
 
-.btn.danger:hover {
-  background: #b01422;
+.btn-small-danger:hover {
+  background: #ffe5e8;
 }
 
-/* ===== RESPONSIVE TABEL ===== */
+/* form row (sell) */
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-group-half {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .account-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .edit-photo-row {
+    grid-template-columns: 1fr;
+  }
+
+  .account-info-grid {
+    column-gap: 40px;
+  }
+}
 
 @media (max-width: 600px) {
+  .account-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .edit-profile-actions {
+    align-self: stretch;
+  }
+
+  .edit-profile-grid {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
   .artwork-table th,
   .artwork-table td {
     font-size: 12px;

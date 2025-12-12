@@ -33,37 +33,57 @@ import Register from "./pages/Register";
 import Favorites from "./pages/Favorites";
 import Cart from "./pages/Cart";
 import ProfileSettings from "./pages/ProfileSettings";
+import AdminDashboard from "./pages/AdminDashboard";
 
 import { StoreProvider } from "./context/StoreContext";
 
 function AppContent() {
   const location = useLocation();
 
-  // Halaman yang TIDAK pakai navbar/footer
-  const authPaths = ["/login", "/register","/profile"];
-  const isAuthPage = authPaths.includes(location.pathname);
+  // Halaman yang TIDAK memakai navbar/footer
+  const noChromePaths = ["/login", "/register", "/profile", "/admin"];
+  const isNoChromePage = noChromePaths.some((p) =>
+    location.pathname.startsWith(p)
+  );
+
+  // Ambil user dari localStorage (SAFE parse)
+  let user = null;
+  try {
+    const storedUser = localStorage.getItem("heart_user");
+    user = storedUser ? JSON.parse(storedUser) : null;
+  } catch (e) {
+    console.warn("Invalid heart_user in localStorage. Clearing it...");
+    localStorage.removeItem("heart_user");
+    user = null;
+  }
 
   return (
     <>
-      {!isAuthPage && <Navbar />}
+      {!isNoChromePage && <Navbar />}
 
       <Routes>
-        {/* default: ke /login dulu */}
+        {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* PROFILE SETTINGS (no navbar/footer) */}
         <Route path="/profile" element={<ProfileSettings />} />
+
         {/* MAIN PAGES */}
         <Route path="/home" element={<Home />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/gallery/overview" element={<Overview />} />
+
         <Route path="/for-sale" element={<ForSale />} />
         <Route path="/for-sale/:id" element={<ForSaleDetail />} />
+
         <Route path="/event" element={<Event />} />
         <Route path="/event/:id" element={<EventDetail />} />
         <Route path="/event/:id/buy" element={<BuyTicket />} />
+
         <Route path="/artists" element={<Artists />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/mission-vision-values" element={<AboutMission />} />
@@ -73,13 +93,27 @@ function AppContent() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/help" element={<HelpCenter />} />
 
-        {/* BARU */}
+        {/* FAVORITES & CART */}
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/cart" element={<Cart />} />
 
+        {/* ADMIN DASHBOARD */}
+        <Route
+          path="/admin"
+          element={
+            user && user.role === "admin" ? (
+              <AdminDashboard />
+            ) : (
+              <Navigate to="/home" replace />
+            )
+          }
+        />
+
+        {/* FALLBACK 404 -> arahkan ke home */}
+        <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
 
-      {!isAuthPage && <Footer />}
+      {!isNoChromePage && <Footer />}
     </>
   );
 }

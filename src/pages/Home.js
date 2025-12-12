@@ -1,68 +1,187 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
-/* IMPORT IMAGES */
-import img1 from "../assets/images/1.png";
-import img2 from "../assets/images/2.png";
-import img3 from "../assets/images/3.png";
-import img4 from "../assets/images/4.png";
-import img5 from "../assets/images/5.png";
-import img6 from "../assets/images/6.jpg";
-import img7 from "../assets/images/7.png";
+/* fallback images (kalau backend kosong / image_url null) */
 import img8 from "../assets/images/8.jpg";
-import img9 from "../assets/images/9.png";
 import img10 from "../assets/images/10.jpg";
+import fallbackArt from "../assets/images/1.png";
+import fallbackEvent from "../assets/images/9.png";
+import fallbackArtist from "../assets/images/6.jpg";
+
+const API_BASE_URL = "http://localhost:5000";
 
 function Home() {
   const navigate = useNavigate();
 
-  // daftar artwork yang akan diputar
-  const artworks = [
-    { img: img3, title: "Leonardo da Vinci, Mona Lisa, 1503" },
-    { img: img1, title: "Elias Tinoco, Harmonia Mundi, 1703" },
-    { img: img7, title: "Cassian Alistair, The Starry Night, 1803" },
-    { img: img2, title: "Art Exhibition Poster, 2024" },
-    { img: img4, title: "Matsumi Kanemitsu, Untitled, 1965" },
-    { img: img5, title: "IB-AP Art Exhibition Poster, 2025" },
-    { img: img6, title: "George Romney, Portrait Study" },
-    { img: img8, title: "Baroque Musicians, 17th c." },
-    { img: img9, title: "Art Exhibition Day #5 Poster" },
-    { img: img10, title: "Discover our Artworks Banner" },
-  ];
+  // ====== STATE: ARTWORKS (Favorites) ======
+  const [allArtworks, setAllArtworks] = useState([]);
+  const [artLoading, setArtLoading] = useState(false);
+  const [artError, setArtError] = useState("");
 
-  const TOTAL_PAGES = 10; // biar sesuai desain: 1 of 10
+  // ====== STATE: EVENTS (Upcoming) ======
+  const [events, setEvents] = useState([]);
+  const [evLoading, setEvLoading] = useState(false);
+  const [evError, setEvError] = useState("");
+
+  // ====== STATE: ARTISTS (Featured) ======
+  const [artists, setArtists] = useState([]);
+  const [artistLoading, setArtistLoading] = useState(false);
+  const [artistError, setArtistError] = useState("");
+
+  // ====== FAVORITES PAGINATION (3 items per page) ======
+  const PER_FAV = 3;
   const [currentPage, setCurrentPage] = useState(1);
 
+  const totalFavPages = useMemo(() => {
+    return Math.max(1, Math.ceil(allArtworks.length / PER_FAV));
+  }, [allArtworks.length]);
+
+  useEffect(() => {
+    if (currentPage > totalFavPages) setCurrentPage(totalFavPages);
+  }, [totalFavPages, currentPage]);
+
   const handlePrev = () => {
-    setCurrentPage((prev) => (prev === 1 ? TOTAL_PAGES : prev - 1));
+    setCurrentPage((prev) => (prev === 1 ? totalFavPages : prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentPage((prev) => (prev === TOTAL_PAGES ? 1 : prev + 1));
+    setCurrentPage((prev) => (prev === totalFavPages ? 1 : prev + 1));
   };
 
-  // hitung 3 artwork yang ditampilkan di page sekarang
-  const startIndex = (currentPage - 1) % artworks.length;
-  const currentArtworks = [
-    artworks[startIndex],
-    artworks[(startIndex + 1) % artworks.length],
-    artworks[(startIndex + 2) % artworks.length],
-  ];
+  const currentFavArtworks = useMemo(() => {
+    if (allArtworks.length === 0) return [];
+    const start = (currentPage - 1) * PER_FAV;
+    return allArtworks.slice(start, start + PER_FAV);
+  }, [allArtworks, currentPage]);
 
-  // klik Explore => scroll ke favorites
+  // ====== FETCH ARTWORKS ======
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        setArtLoading(true);
+        setArtError("");
+
+        const res = await fetch(`${API_BASE_URL}/api/artworks`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Gagal memuat artworks.");
+
+        setAllArtworks((data.artworks || []).filter(Boolean));
+      } catch (err) {
+        console.error("fetchArtworks Home error:", err);
+        setArtError(err.message || "Terjadi kesalahan saat memuat artworks.");
+      } finally {
+        setArtLoading(false);
+      }
+    };
+
+    fetchArtworks();
+  }, []);
+
+  // ====== FETCH EVENTS ======
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setEvLoading(true);
+        setEvError("");
+
+        const res = await fetch(`${API_BASE_URL}/api/events`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Gagal memuat events.");
+
+        setEvents((data.events || []).filter(Boolean));
+      } catch (err) {
+        console.error("fetchEvents Home error:", err);
+        setEvError(err.message || "Terjadi kesalahan saat memuat events.");
+      } finally {
+        setEvLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // ====== FETCH ARTISTS ======
+  useEffect(() => {
+    const fetchArtists = async () => {
+      try {
+        setArtistLoading(true);
+        setArtistError("");
+
+        const res = await fetch(`${API_BASE_URL}/api/artists`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Gagal memuat artists.");
+
+        const formatted = (data.artists || []).map((a) => ({
+          ...a,
+          name: a.nickname || a.full_name || "Unnamed Artist",
+        }));
+
+        setArtists(formatted);
+      } catch (err) {
+        console.error("fetchArtists Home error:", err);
+        setArtistError(err.message || "Terjadi kesalahan saat memuat artists.");
+      } finally {
+        setArtistLoading(false);
+      }
+    };
+
+    fetchArtists();
+  }, []);
+
+  // ====== TOP 3 ARTISTS ======
+  const top3Artists = useMemo(() => {
+    const arr = [...artists];
+    const hasFollowers = arr.some((a) => typeof a.follower_count === "number");
+    if (hasFollowers) {
+      arr.sort((a, b) => (b.follower_count || 0) - (a.follower_count || 0));
+    }
+    return arr.slice(0, 3);
+  }, [artists]);
+
+  // ====== klik Explore => scroll ke favorites ======
   const handleExploreClick = () => {
     const section = document.getElementById("favorites-section");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // ====== format tanggal event (simple) ======
+  const formatDateRange = (start, end) => {
+    if (!start && !end) return "-";
+    try {
+      const s = start ? new Date(start) : null;
+      const e = end ? new Date(end) : null;
+
+      const opt = { day: "2-digit", month: "long", year: "numeric" };
+      if (s && e) {
+        const sText = s.toLocaleDateString("id-ID", opt);
+        const eText = e.toLocaleDateString("id-ID", opt);
+        return sText === eText ? sText : `${sText} – ${eText}`;
+      }
+
+      const only = (s || e).toLocaleDateString("id-ID", opt);
+      return only;
+    } catch {
+      return start || end || "-";
     }
   };
+
+  /**
+   * ✅ LOOP PALING AMAN:
+   * Track = base + base + base
+   * animasi geser -33.333% (1/3 track) -> balik mulus tanpa “kosong”
+   */
+  const eventSlides = useMemo(() => {
+    const base = (events || []).filter(Boolean);
+    if (base.length === 0) return [];
+    return [...base, ...base, ...base];
+  }, [events]);
 
   return (
     <div className="home">
       {/* ====================== HERO ========================== */}
       <section className="hero">
-        <img className="hero-bg" src={img8} alt="Hero" />
+        <img className="hero-bg" src={img8} alt="HeArt hero banner" />
 
         <div className="hero-text">
           <h1>Discover and Buy Art That Moves You</h1>
@@ -78,52 +197,74 @@ function Home() {
       <section className="favorites" id="favorites-section">
         <h2>A few of our favorites</h2>
 
-        <div className="fav-grid">
-          {currentArtworks.map((art, idx) => (
-            <div className="fav-card" key={idx}>
-              <img src={art.img} alt={`Artwork ${idx + 1}`} />
-              <p className="title">{art.title}</p>
+        {artLoading && (
+          <p style={{ color: "#777", fontSize: 13 }}>Loading artworks...</p>
+        )}
+        {artError && (
+          <p style={{ color: "#d11a2a", fontSize: 13 }}>{artError}</p>
+        )}
+
+        {!artLoading && !artError && allArtworks.length === 0 && (
+          <p style={{ color: "#777", fontSize: 13 }}>
+            Belum ada karya yang di-upload. Upload dulu dari Profile Settings.
+          </p>
+        )}
+
+        {!artLoading && !artError && allArtworks.length > 0 && (
+          <>
+            <div className="fav-grid">
+              {currentFavArtworks.map((art) => (
+                <div className="fav-card" key={art.id}>
+                  <img
+                    src={art.image_url || fallbackArt}
+                    alt={art.title ? `Karya: ${art.title}` : "Karya"}
+                    onClick={() => navigate("/gallery")}
+                    style={{ cursor: "pointer" }}
+                  />
+                  <p className="title">
+                    {art.title || "Untitled"}
+                    {(art.nickname || art.full_name)
+                      ? ` — ${art.nickname || art.full_name}`
+                      : ""}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* ================== GARIS + PAGINATION ================== */}
-        <div className="fav-pagination">
-          <div className="fav-line" />
+            <div className="fav-pagination">
+              <div className="fav-line" />
 
-          <div className="fav-page-inline">
-            <button
-              className="fav-arrow-inline"
-              type="button"
-              onClick={handlePrev}
-              aria-label="Previous artworks"
-            >
-              &lt;
-            </button>
+              <div className="fav-page-inline">
+                <button
+                  className="fav-arrow-inline"
+                  type="button"
+                  onClick={handlePrev}
+                  aria-label="Previous artworks"
+                >
+                  &lt;
+                </button>
 
-            <span className="fav-page-text-inline">
-              {currentPage} of {TOTAL_PAGES}
-            </span>
+                <span className="fav-page-text-inline">
+                  {currentPage} of {totalFavPages}
+                </span>
 
-            <button
-              className="fav-arrow-inline"
-              type="button"
-              onClick={handleNext}
-              aria-label="Next artworks"
-            >
-              &gt;
-            </button>
-          </div>
-        </div>
+                <button
+                  className="fav-arrow-inline"
+                  type="button"
+                  onClick={handleNext}
+                  aria-label="Next artworks"
+                >
+                  &gt;
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </section>
 
       {/* ====================== DISCOVER ARTWORKS ========================== */}
       <section className="discover">
-        <img
-          src={img10}
-          alt="Discover Artworks Banner"
-          className="discover-bg"
-        />
+        <img src={img10} alt="Discover banner" className="discover-bg" />
 
         <div className="discover-text">
           <h2>Discover our Artworks.</h2>
@@ -145,35 +286,67 @@ function Home() {
         </div>
       </section>
 
-      {/* ====================== UPCOMING EVENTS ========================== */}
+      {/* ====================== UPCOMING EVENTS (LOOP SLIDER) ========================== */}
       <section className="events">
-        <h2>Upcoming Events</h2>
+        <div className="events-header-row">
+          <h2>Upcoming Events</h2>
 
-        <div className="event-grid">
-          <div className="event-card">
-            <img src={img9} alt="Event 1" />
-            <p className="title">Art Exhibition Day #5</p>
-            <p className="subtitle">19 August – 24 August 2025</p>
-            <p className="location">GOR Senayan Jakarta</p>
-          </div>
-
-          <div className="event-card">
-            <img src={img2} alt="Event 2" />
-            <p className="title">Art Exhibition Day #4</p>
-            <p className="subtitle">29 July – 24 July 2025</p>
-            <p className="location">Tennis Indoor Senayan</p>
-          </div>
-
-          <div className="event-card">
-            <img src={img5} alt="Event 3" />
-            <p className="title">Art Exhibition Day #2</p>
-            <p className="subtitle">18 – 24 April 2025</p>
-            <p className="location">Gelora Bung Karno Stadium</p>
-          </div>
+          <button
+            className="events-see-all"
+            type="button"
+            onClick={() => navigate("/event")}
+          >
+            See All Events
+          </button>
         </div>
+
+        {evLoading && (
+          <p style={{ color: "#777", fontSize: 13 }}>Loading events...</p>
+        )}
+        {evError && (
+          <p style={{ color: "#d11a2a", fontSize: 13 }}>{evError}</p>
+        )}
+
+        {!evLoading && !evError && events.length === 0 && (
+          <p style={{ color: "#777", fontSize: 13 }}>
+            Belum ada event. Tambahkan event dari Admin.
+          </p>
+        )}
+
+        {!evLoading && !evError && eventSlides.length > 0 && (
+          <div className="home-events-carousel" aria-label="Upcoming events">
+            <div className="home-events-track home-events-track-animate">
+              {eventSlides.map((ev, idx) => {
+                const poster = ev.poster_url || fallbackEvent;
+                const dateText = formatDateRange(
+                  ev.start_datetime,
+                  ev.end_datetime
+                );
+
+                return (
+                  <button
+                    type="button"
+                    key={`${ev.id}-${idx}`}
+                    className="home-event-card"
+                    onClick={() => navigate(`/event/${ev.id}`)}
+                  >
+                    <img
+                      src={poster}
+                      alt={ev.title ? `Poster ${ev.title}` : "Poster event"}
+                      className="home-event-img"
+                    />
+                    <p className="title">{ev.title || "Untitled Event"}</p>
+                    <p className="subtitle">{dateText}</p>
+                    <p className="location">{ev.location || "-"}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </section>
 
-            {/* ====================== FEATURED ARTIST ========================== */}
+      {/* ====================== FEATURED ARTIST ========================== */}
       <section className="artists">
         <div className="artists-header">
           <h2>Featured Artist</h2>
@@ -187,46 +360,40 @@ function Home() {
           </button>
         </div>
 
-        <div className="artist-grid">
-          <div className="artist-card">
-            <img src={img6} alt="Artist 1" />
-            <p className="name">George Romney</p>
-            <p className="subtitle">British, 1734-1802</p>
-            <button
-              className="view-btn"
-              type="button"
-              onClick={() => navigate("/artists")}
-            >
-              View Profile
-            </button>
-          </div>
+        {artistLoading && (
+          <p style={{ color: "#777", fontSize: 13 }}>Loading artists...</p>
+        )}
+        {artistError && (
+          <p style={{ color: "#d11a2a", fontSize: 13 }}>{artistError}</p>
+        )}
 
-          <div className="artist-card">
-            <img src={img7} alt="Artist 2" />
-            <p className="name">Cassian Alistair</p>
-            <p className="subtitle">born.</p>
-            <button
-              className="view-btn"
-              type="button"
-              onClick={() => navigate("/artists")}
-            >
-              View Profile
-            </button>
-          </div>
+        {!artistLoading && !artistError && top3Artists.length === 0 && (
+          <p style={{ color: "#777", fontSize: 13 }}>
+            Belum ada artist terdaftar.
+          </p>
+        )}
 
-          <div className="artist-card">
-            <img src={img4} alt="Artist 3" />
-            <p className="name">Matsumi Kanemitsu</p>
-            <p className="subtitle">American, 1922-1992</p>
-            <button
-              className="view-btn"
-              type="button"
-              onClick={() => navigate("/artists")}
-            >
-              View Profile
-            </button>
+        {!artistLoading && !artistError && top3Artists.length > 0 && (
+          <div className="artist-grid">
+            {top3Artists.map((a) => (
+              <div className="artist-card" key={a.id}>
+                <img
+                  src={a.avatar_url || fallbackArtist}
+                  alt={a.name || "Artist"}
+                />
+                <p className="name">{a.name || "Unnamed Artist"}</p>
+                <p className="subtitle">{a.address ? a.address : "—"}</p>
+                <button
+                  className="view-btn"
+                  type="button"
+                  onClick={() => navigate("/artists")}
+                >
+                  View Profile
+                </button>
+              </div>
+            ))}
           </div>
-        </div>
+        )}
       </section>
     </div>
   );

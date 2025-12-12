@@ -47,12 +47,17 @@ const Login = () => {
         return;
       }
 
-      // simpan token & user di localStorage
-      localStorage.setItem("heart_token", data.token);
-      localStorage.setItem("heart_user", JSON.stringify(data.user));
+// simpan token & user di localStorage
+localStorage.setItem("heart_token", data.token);
+localStorage.setItem("heart_user", JSON.stringify(data.user));
 
-      // pindah ke HOME
-      navigate("/home");
+// redirect berdasarkan role
+  if (data.user.role === "admin") {
+  navigate("/admin"); // halaman admin
+  } else {
+    navigate("/home"); // user biasa masuk homepage
+  }
+
     } catch (err) {
       console.error("Login error:", err);
       setErrorMsg("Terjadi kesalahan pada server. Coba lagi nanti.");

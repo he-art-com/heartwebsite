@@ -495,8 +495,8 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border: none;          /* <--- ini penting */
-  border-radius: 0;      /* <--- ini menghilangkan efek circle */
+  border: none;
+  border-radius: 0;
 }
 
 /* dropdown menu */

@@ -3,9 +3,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import "./ProfileSettings.css";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = "http://localhost:5000"; // samakan dengan backend-mu
+const API_BASE_URL = "http://localhost:5000";
 
-// Style untuk gallery (nyambung ke Gallery.js filter)
 const STYLE_OPTIONS = [
   "Realistic",
   "Surrealist",
@@ -19,22 +18,30 @@ const ProfileSettings = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("heart_token");
 
-  // ===== PROFILE STATE =====
+  // ========= PROFILE STATE =========
   const [profile, setProfile] = useState({
     email: "",
     full_name: "",
-    nickname: "",
     whatsapp_number: "",
+    gender: "",
+    birth_date: "",
+    address: "",
+    bio: "",
     avatar_url: "",
   });
 
-  const [activeTab, setActiveTab] = useState("profile"); // "profile" | "upload" | "sell"
+  const [activeTab, setActiveTab] = useState("info");
 
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileMessage, setProfileMessage] = useState("");
   const [profileError, setProfileError] = useState("");
 
-  // ===== PASSWORD STATE =====
+  // ========= AVATAR =========
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+
+  // ========= PASSWORD =========
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     newPassword: "",
@@ -44,33 +51,27 @@ const ProfileSettings = () => {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  // ===== AVATAR STATE =====
-  const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(null);
-  const [avatarLoading, setAvatarLoading] = useState(false);
-  const [avatarMessage, setAvatarMessage] = useState("");
-  const [avatarError, setAvatarError] = useState("");
-
-  // ===== ARTWORK FORM STATE (UPLOAD & SELL) =====
+  // ========= ARTWORK UPLOAD / SELL =========
   const [artworkForm, setArtworkForm] = useState({
     title: "",
     description: "",
-    style: "Others", // untuk gallery
+    style: "Others",
     price: "",
     category: "",
+    height_cm: "",
+    width_cm: "",
   });
   const [artworkFile, setArtworkFile] = useState(null);
-  const [artworkPreview, setArtworkPreview] = useState(null); // preview besar
+  const [artworkPreview, setArtworkPreview] = useState(null);
   const [artworkLoading, setArtworkLoading] = useState(false);
   const [artworkMessage, setArtworkMessage] = useState("");
   const [artworkError, setArtworkError] = useState("");
 
-  // ===== MY ARTWORKS (TABLE) =====
+  // ========= MY ARTWORKS (GALLERY) =========
   const [myArtworks, setMyArtworks] = useState([]);
   const [myArtworksLoading, setMyArtworksLoading] = useState(false);
   const [myArtworksError, setMyArtworksError] = useState("");
 
-  // ===== EDIT STATE UNTUK TABEL =====
   const [editingArtworkId, setEditingArtworkId] = useState(null);
   const [editForm, setEditForm] = useState({
     title: "",
@@ -78,9 +79,23 @@ const ProfileSettings = () => {
     style: "Others",
   });
 
-  // =========================================================
-  // 1. FETCH PROFILE
-  // =========================================================
+  // ========= MY FOR SALE =========
+  const [myForSale, setMyForSale] = useState([]);
+  const [myForSaleLoading, setMyForSaleLoading] = useState(false);
+  const [myForSaleError, setMyForSaleError] = useState("");
+
+  const [editingForSaleId, setEditingForSaleId] = useState(null);
+  const [editForSaleForm, setEditForSaleForm] = useState({
+    title: "",
+    description: "",
+    style: "Others",
+    price: "",
+    category: "",
+    height_cm: "",
+    width_cm: "",
+  });
+
+  // ========= FETCH PROFILE =========
   useEffect(() => {
     const fetchProfile = async () => {
       if (!token) return;
@@ -104,17 +119,26 @@ const ProfileSettings = () => {
           return;
         }
 
+        const birthDate =
+          data.birth_date && typeof data.birth_date === "string"
+            ? data.birth_date.split("T")[0]
+            : "";
+
         const newProfile = {
           email: data.email || "",
           full_name: data.full_name || "",
-          nickname: data.nickname || "",
           whatsapp_number: data.whatsapp_number || "",
+          gender: data.gender || "",
+          birth_date: birthDate,
+          address: data.address || "",
+          bio: data.bio || "",
           avatar_url: data.avatar_url || "",
         };
 
         setProfile(newProfile);
+        setAvatarFile(null);
+        setAvatarPreview(null);
 
-        // simpan juga ke localStorage supaya Navbar bisa baca
         localStorage.setItem("heart_user", JSON.stringify(newProfile));
         window.dispatchEvent(new Event("heart_user_updated"));
       } catch (err) {
@@ -128,9 +152,7 @@ const ProfileSettings = () => {
     fetchProfile();
   }, [token]);
 
-  // =========================================================
-  // 2. FETCH MY ARTWORKS (dipakai tabel + refresh setelah CRUD)
-  // =========================================================
+  // ========= FETCH MY ARTWORKS (GALLERY) =========
   const fetchMyArtworks = useCallback(async () => {
     if (!token) return;
 
@@ -139,51 +161,94 @@ const ProfileSettings = () => {
       setMyArtworksError("");
 
       const res = await fetch(`${API_BASE_URL}/api/my-artworks`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setMyArtworksError(
-          data.message || "Gagal mengambil daftar karya yang kamu upload."
-        );
+        setMyArtworksError(data.message || "Gagal mengambil daftar karya gallery.");
         return;
       }
 
       setMyArtworks(data.artworks || []);
     } catch (err) {
       console.error("Error fetch my artworks:", err);
-      setMyArtworksError("Terjadi kesalahan saat mengambil data karya.");
+      setMyArtworksError("Terjadi kesalahan saat mengambil data karya gallery.");
     } finally {
       setMyArtworksLoading(false);
     }
   }, [token]);
 
   useEffect(() => {
-    // load daftar karya begitu page kebuka (kalau user sudah login)
     if (!token) return;
     fetchMyArtworks();
   }, [token, fetchMyArtworks]);
 
-  // =========================================================
-  // HANDLER: PROFILE FORM
-  // =========================================================
-  const handleProfileChange = (e) => {
+  // ========= FETCH MY FOR SALE =========
+  const fetchMyForSale = useCallback(async () => {
+    if (!token) return;
+
+    try {
+      setMyForSaleLoading(true);
+      setMyForSaleError("");
+
+      const res = await fetch(`${API_BASE_URL}/api/my-for-sale`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMyForSaleError(data.message || "Gagal mengambil daftar karya for sale.");
+        return;
+      }
+
+      setMyForSale(data.artworks || []);
+    } catch (err) {
+      console.error("Error fetch my for sale:", err);
+      setMyForSaleError("Terjadi kesalahan saat mengambil data karya for sale.");
+    } finally {
+      setMyForSaleLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) return;
+    fetchMyForSale();
+  }, [token, fetchMyForSale]);
+
+  // ========= HANDLER PROFILE FORM =========
+  const handleProfileFieldChange = (e) => {
     const { name, value } = e.target;
-    setProfile((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setProfile((prev) => ({ ...prev, [name]: value }));
     setProfileError("");
     setProfileMessage("");
   };
 
-  const handleProfileSubmit = async (e) => {
-    e.preventDefault();
+  const handleGenderClick = (value) => {
+    setProfile((prev) => ({ ...prev, gender: value }));
+    setProfileError("");
+    setProfileMessage("");
+  };
 
+  // ========= AVATAR HANDLER =========
+  const handlePhotoFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setAvatarFile(null);
+      setAvatarPreview(null);
+      return;
+    }
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+    setProfileError("");
+    setProfileMessage("");
+  };
+
+  // ========= SAVE PROFILE =========
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
     if (!profile.full_name.trim()) {
       setProfileError("Nama lengkap wajib diisi.");
       return;
@@ -194,6 +259,28 @@ const ProfileSettings = () => {
       setProfileError("");
       setProfileMessage("");
 
+      let latestAvatarUrl = profile.avatar_url;
+
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append("avatar", avatarFile);
+
+        const resAvatar = await fetch(`${API_BASE_URL}/api/profile/avatar`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+
+        const dataAvatar = await resAvatar.json();
+
+        if (!resAvatar.ok) {
+          setProfileError(dataAvatar.message || "Gagal upload foto profil.");
+          return;
+        }
+
+        latestAvatarUrl = dataAvatar.avatar_url || latestAvatarUrl;
+      }
+
       const res = await fetch(`${API_BASE_URL}/api/profile`, {
         method: "PUT",
         headers: {
@@ -202,8 +289,11 @@ const ProfileSettings = () => {
         },
         body: JSON.stringify({
           full_name: profile.full_name,
-          nickname: profile.nickname,
           whatsapp_number: profile.whatsapp_number,
+          gender: profile.gender || null,
+          birth_date: profile.birth_date || null,
+          address: profile.address || "",
+          bio: profile.bio || "",
         }),
       });
 
@@ -214,20 +304,30 @@ const ProfileSettings = () => {
         return;
       }
 
-      setProfileMessage("Profil berhasil diperbarui.");
+      const updatedBirthDate =
+        data.user?.birth_date && typeof data.user.birth_date === "string"
+          ? data.user.birth_date.split("T")[0]
+          : profile.birth_date;
 
       const updatedProfile = {
-        email: profile.email,
-        full_name: data.user.full_name || "",
-        nickname: data.user.nickname || "",
-        whatsapp_number: data.user.whatsapp_number || "",
-        avatar_url: profile.avatar_url,
+        email: data.user?.email || profile.email,
+        full_name: data.user?.full_name || "",
+        whatsapp_number: data.user?.whatsapp_number || "",
+        gender: data.user?.gender || profile.gender || "",
+        birth_date: updatedBirthDate,
+        address: data.user?.address || profile.address || "",
+        bio: data.user?.bio || profile.bio || "",
+        avatar_url: latestAvatarUrl,
       };
 
       setProfile(updatedProfile);
+      setAvatarFile(null);
+      setAvatarPreview(null);
 
       localStorage.setItem("heart_user", JSON.stringify(updatedProfile));
       window.dispatchEvent(new Event("heart_user_updated"));
+
+      setProfileMessage("Profil berhasil diperbarui.");
     } catch (err) {
       console.error("Error update profile:", err);
       setProfileError("Terjadi kesalahan saat update profil.");
@@ -236,15 +336,10 @@ const ProfileSettings = () => {
     }
   };
 
-  // =========================================================
-  // HANDLER: PASSWORD FORM
-  // =========================================================
+  // ========= PASSWORD =========
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setPasswordForm((prev) => ({ ...prev, [name]: value }));
     setPasswordError("");
     setPasswordMessage("");
   };
@@ -272,7 +367,6 @@ const ProfileSettings = () => {
       setPasswordError("");
       setPasswordMessage("");
 
-      // Endpoint ini belum kamu buat di backend, ini placeholder
       const res = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
         method: "PUT",
         headers: {
@@ -298,6 +392,7 @@ const ProfileSettings = () => {
         newPassword: "",
         confirmNewPassword: "",
       });
+      setShowPasswordForm(false);
     } catch (err) {
       console.error("Error change password:", err);
       setPasswordError("Terjadi kesalahan saat mengubah password.");
@@ -306,80 +401,10 @@ const ProfileSettings = () => {
     }
   };
 
-  // =========================================================
-  // HANDLER: AVATAR
-  // =========================================================
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    setAvatarFile(file);
-    setAvatarError("");
-    setAvatarMessage("");
-
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setAvatarPreview(previewUrl);
-    } else {
-      setAvatarPreview(null);
-    }
-  };
-
-  const handleAvatarUpload = async () => {
-    if (!avatarFile) {
-      setAvatarError("Pilih file foto profil terlebih dahulu.");
-      return;
-    }
-
-    try {
-      setAvatarLoading(true);
-      setAvatarError("");
-      setAvatarMessage("");
-
-      const formData = new FormData();
-      formData.append("avatar", avatarFile);
-
-      const res = await fetch(`${API_BASE_URL}/api/profile/avatar`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setAvatarError(data.message || "Gagal meng-upload foto profil.");
-        return;
-      }
-
-      setAvatarMessage("Foto profil berhasil diupload.");
-
-      const updatedProfile = {
-        ...profile,
-        avatar_url: data.avatar_url || profile.avatar_url,
-      };
-
-      setProfile(updatedProfile);
-
-      localStorage.setItem("heart_user", JSON.stringify(updatedProfile));
-      window.dispatchEvent(new Event("heart_user_updated"));
-    } catch (err) {
-      console.error("Error upload avatar:", err);
-      setAvatarError("Terjadi kesalahan saat upload foto profil.");
-    } finally {
-      setAvatarLoading(false);
-    }
-  };
-
-  // =========================================================
-  // HANDLER: ARTWORK FORM (UPLOAD & JUAL)
-  // =========================================================
+  // ========= ARTWORK FORM HANDLERS =========
   const handleArtworkChange = (e) => {
     const { name, value } = e.target;
-    setArtworkForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setArtworkForm((prev) => ({ ...prev, [name]: value }));
     setArtworkError("");
     setArtworkMessage("");
   };
@@ -390,14 +415,11 @@ const ProfileSettings = () => {
     setArtworkError("");
     setArtworkMessage("");
 
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setArtworkPreview(previewUrl);
-    } else {
-      setArtworkPreview(null);
-    }
+    if (file) setArtworkPreview(URL.createObjectURL(file));
+    else setArtworkPreview(null);
   };
 
+  // ========= UPLOAD ARTWORK (gallery / for_sale) =========
   const handleArtworkSubmit = async (e) => {
     e.preventDefault();
 
@@ -422,20 +444,19 @@ const ProfileSettings = () => {
       formData.append("description", artworkForm.description);
       formData.append("style", artworkForm.style || "Others");
 
-      // beda mode: upload gallery (free) vs jual karya
       const mode = activeTab === "upload" ? "gallery" : "for_sale";
       formData.append("mode", mode);
 
       if (mode === "for_sale") {
         formData.append("price", artworkForm.price || "");
         formData.append("category", artworkForm.category || "");
+        formData.append("height_cm", artworkForm.height_cm || "");
+        formData.append("width_cm", artworkForm.width_cm || "");
       }
 
       const res = await fetch(`${API_BASE_URL}/api/artworks`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
@@ -446,28 +467,26 @@ const ProfileSettings = () => {
         return;
       }
 
-      const actionLabel =
+      setArtworkMessage(
         mode === "gallery"
           ? "Karya berhasil di-upload ke Gallery."
-          : "Karya berhasil di-upload (mode for_sale akan di-handle di tabel lain nanti).";
+          : "Karya berhasil di-upload untuk dijual (For Sale)."
+      );
 
-      setArtworkMessage(actionLabel);
-
-      // reset form
       setArtworkForm({
         title: "",
         description: "",
         style: "Others",
         price: "",
         category: "",
+        height_cm: "",
+        width_cm: "",
       });
       setArtworkFile(null);
       setArtworkPreview(null);
 
-      // refresh tabel karya user kalau mode gallery
-      if (mode === "gallery") {
-        fetchMyArtworks();
-      }
+      if (mode === "gallery") fetchMyArtworks();
+      if (mode === "for_sale") fetchMyForSale();
     } catch (err) {
       console.error("Error upload artwork:", err);
       setArtworkError("Terjadi kesalahan saat upload karya.");
@@ -476,9 +495,7 @@ const ProfileSettings = () => {
     }
   };
 
-  // =========================================================
-  // HANDLER: TABEL CRUD MY ARTWORKS
-  // =========================================================
+  // ========= EDIT/DELETE GALLERY =========
   const handleStartEdit = (artwork) => {
     setEditingArtworkId(artwork.id);
     setEditForm({
@@ -490,19 +507,12 @@ const ProfileSettings = () => {
 
   const handleCancelEdit = () => {
     setEditingArtworkId(null);
-    setEditForm({
-      title: "",
-      description: "",
-      style: "Others",
-    });
+    setEditForm({ title: "", description: "", style: "Others" });
   };
 
   const handleEditFormChange = (e) => {
     const { name, value } = e.target;
-    setEditForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSaveEdit = async (artworkId) => {
@@ -532,7 +542,6 @@ const ProfileSettings = () => {
         return;
       }
 
-      // refresh data
       fetchMyArtworks();
       handleCancelEdit();
     } catch (err) {
@@ -547,9 +556,7 @@ const ProfileSettings = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/artworks/${artworkId}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       const data = await res.json();
@@ -566,232 +573,492 @@ const ProfileSettings = () => {
     }
   };
 
-  // =========================================================
-  // RENDER
-  // =========================================================
+  // ========= EDIT/DELETE FOR SALE =========
+  const handleStartEditForSale = (art) => {
+    setEditingForSaleId(art.id);
+    setEditForSaleForm({
+      title: art.title || "",
+      description: art.description || "",
+      style: art.style || "Others",
+      price: art.price ?? "",
+      category: art.category || "",
+      height_cm: art.height_cm ?? "",
+      width_cm: art.width_cm ?? "",
+    });
+  };
+
+  const handleCancelEditForSale = () => {
+    setEditingForSaleId(null);
+    setEditForSaleForm({
+      title: "",
+      description: "",
+      style: "Others",
+      price: "",
+      category: "",
+      height_cm: "",
+      width_cm: "",
+    });
+  };
+
+  const handleEditForSaleChange = (e) => {
+    const { name, value } = e.target;
+    setEditForSaleForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveEditForSale = async (artworkId) => {
+    if (!editForSaleForm.title.trim()) {
+      alert("Judul karya wajib diisi.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/for-sale/${artworkId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: editForSaleForm.title,
+          description: editForSaleForm.description,
+          style: editForSaleForm.style,
+          price: editForSaleForm.price === "" ? null : Number(editForSaleForm.price),
+          category: editForSaleForm.category,
+          height_cm: editForSaleForm.height_cm === "" ? null : Number(editForSaleForm.height_cm),
+          width_cm: editForSaleForm.width_cm === "" ? null : Number(editForSaleForm.width_cm),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Gagal update karya for sale.");
+        return;
+      }
+
+      fetchMyForSale();
+      handleCancelEditForSale();
+    } catch (err) {
+      console.error("Error update for sale:", err);
+      alert("Terjadi kesalahan saat update karya for sale.");
+    }
+  };
+
+  const handleDeleteForSale = async (artworkId) => {
+    if (!window.confirm("Yakin ingin menghapus karya for sale ini?")) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/for-sale/${artworkId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Gagal menghapus karya for sale.");
+        return;
+      }
+
+      fetchMyForSale();
+    } catch (err) {
+      console.error("Error delete for sale:", err);
+      alert("Terjadi kesalahan saat menghapus karya for sale.");
+    }
+  };
+
+  // ========= LOGOUT & DELETE ACCOUNT =========
+  const handleLogout = () => {
+    localStorage.removeItem("heart_token");
+    localStorage.removeItem("heart_user");
+    navigate("/login");
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Yakin ingin menghapus akun? Tindakan ini tidak dapat dibatalkan.")) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/profile`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.message || "Gagal menghapus akun.");
+        return;
+      }
+
+      localStorage.removeItem("heart_token");
+      localStorage.removeItem("heart_user");
+      navigate("/login");
+    } catch (err) {
+      console.error("Error delete account:", err);
+      alert("Terjadi kesalahan saat menghapus akun.");
+    }
+  };
+
+  // ========= RENDER =========
   return (
     <div className="profile-page">
-      {/* HEADER DENGAN BACK BUTTON */}
       <div className="profile-page-header">
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate("/home")}
-        >
+        <button type="button" className="back-btn" onClick={() => navigate("/home")}>
           ← Back
         </button>
-        <h1 className="profile-page-title">Profile Settings</h1>
+        <h1 className="profile-page-title">Account</h1>
       </div>
+      <div className="account-header-divider" />
 
-      {/* TAB MENU */}
-      <div className="profile-tabs">
-        <button
-          type="button"
-          className={`tab-btn ${activeTab === "profile" ? "active" : ""}`.trim()}
-          onClick={() => setActiveTab("profile")}
-        >
-          Edit Profile
-        </button>
-        <button
-          type="button"
-          className={`tab-btn ${activeTab === "upload" ? "active" : ""}`.trim()}
-          onClick={() => setActiveTab("upload")}
-        >
-          Upload Karya (Gallery)
-        </button>
-        <button
-          type="button"
-          className={`tab-btn ${activeTab === "sell" ? "active" : ""}`.trim()}
-          onClick={() => setActiveTab("sell")}
-        >
-          Jual Karya (For Sale)
-        </button>
-      </div>
+      <div className="account-layout">
+        <aside className="account-sidebar">
+          <button
+            type="button"
+            className={`account-nav-item ${activeTab === "info" ? "active" : ""}`.trim()}
+            onClick={() => setActiveTab("info")}
+          >
+            Account Information
+          </button>
 
-      {/* ===== TAB: EDIT PROFILE ===== */}
-      {activeTab === "profile" && (
-        <div className="profile-layout">
-          <div className="profile-left">
-            {/* ---- FOTO PROFIL ---- */}
-            <section className="profile-section">
-              <h2>Foto Profil</h2>
-              <p className="section-subtitle">
-                Tambahkan foto profil agar kolektor dan seniman lain mudah
-                mengenali Anda.
-              </p>
+          <button
+            type="button"
+            className={`account-nav-item ${activeTab === "profile" ? "active" : ""}`.trim()}
+            onClick={() => setActiveTab("profile")}
+          >
+            Edit Profile
+          </button>
 
-              <div className="avatar-row">
-                <div className="avatar-preview">
-                  {avatarPreview ? (
-                    <img src={avatarPreview} alt="Preview avatar" />
-                  ) : profile.avatar_url ? (
-                    <img src={profile.avatar_url} alt="Avatar" />
-                  ) : (
-                    <div className="avatar-placeholder">No Image</div>
-                  )}
+          <button
+            type="button"
+            className={`account-nav-item ${activeTab === "upload" ? "active" : ""}`.trim()}
+            onClick={() => setActiveTab("upload")}
+          >
+            Upload Karya (Gallery)
+          </button>
+
+          <button
+            type="button"
+            className={`account-nav-item ${activeTab === "sell" ? "active" : ""}`.trim()}
+            onClick={() => setActiveTab("sell")}
+          >
+            Jual Karya (For Sale)
+          </button>
+        </aside>
+
+        <main className="account-main">
+          {/* ===== TAB INFO ===== */}
+          {activeTab === "info" && (
+            <section className="account-info-section">
+              <div className="account-info-header-row">
+                <div className="account-info-user">
+                  <div className="account-info-avatar">
+                    {profile.avatar_url ? (
+                      <img src={profile.avatar_url} alt="Avatar" />
+                    ) : (
+                      <span className="avatar-circle-placeholder">No Image</span>
+                    )}
+                  </div>
+                  <div>
+                    <h2 className="account-info-title">Account Information</h2>
+                    <p className="account-info-subtitle">Your HeArt account information is here</p>
+                  </div>
                 </div>
 
-                <div className="avatar-actions">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarChange}
-                  />
-                  <button
-                    type="button"
-                    className="btn primary"
-                    onClick={handleAvatarUpload}
-                    disabled={avatarLoading}
-                  >
-                    {avatarLoading ? "Mengupload..." : "Upload Foto"}
-                  </button>
-                  {avatarError && (
-                    <p className="form-error small">{avatarError}</p>
-                  )}
-                  {avatarMessage && (
-                    <p className="form-success small">{avatarMessage}</p>
-                  )}
+                <button type="button" className="btn-outline-red" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+
+              <div className="account-info-grid">
+                <div>
+                  <p className="account-info-item-label">Email Address</p>
+                  <p className="account-info-item-value">{profile.email || "-"}</p>
+                </div>
+
+                <div>
+                  <p className="account-info-item-label">Gender</p>
+                  <p className="account-info-item-value">{profile.gender || "-"}</p>
+                </div>
+
+                <div>
+                  <p className="account-info-item-label">Full Name</p>
+                  <p className="account-info-item-value">{profile.full_name || "-"}</p>
+                </div>
+
+                <div>
+                  <p className="account-info-item-label">Birth Date</p>
+                  <p className="account-info-item-value">
+                    {profile.birth_date
+                      ? new Date(profile.birth_date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      : "-"}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="account-info-item-label">Phone Number (WhatsApp)</p>
+                  <p className="account-info-item-value">{profile.whatsapp_number || "-"}</p>
+                </div>
+
+                <div>
+                  <p className="account-info-item-label">Address</p>
+                  <p className="account-info-item-value">{profile.address || "-"}</p>
+                </div>
+
+                <div>
+                  <p className="account-info-item-label">Bio</p>
+                  <p className="account-info-item-value">{profile.bio || "-"}</p>
                 </div>
               </div>
-            </section>
 
-            {/* ---- DATA PROFIL ---- */}
-            <section className="profile-section">
-              <h2>Informasi Akun</h2>
-
-              {profileError && <p className="form-error">{profileError}</p>}
-              {profileMessage && (
-                <p className="form-success">{profileMessage}</p>
-              )}
-
-              <form onSubmit={handleProfileSubmit} className="profile-form">
-                <div className="form-group">
-                  <label>Email (tidak dapat diubah)</label>
-                  <input
-                    type="email"
-                    value={profile.email}
-                    disabled
-                    className="input-disabled"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Nama Lengkap</label>
-                  <input
-                    type="text"
-                    name="full_name"
-                    placeholder="Masukkan nama lengkap"
-                    value={profile.full_name}
-                    onChange={handleProfileChange}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Nickname</label>
-                  <input
-                    type="text"
-                    name="nickname"
-                    placeholder="Nama panggilan / nama seniman"
-                    value={profile.nickname}
-                    onChange={handleProfileChange}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Nomor WhatsApp</label>
-                  <input
-                    type="text"
-                    name="whatsapp_number"
-                    placeholder="Contoh: 081234567890"
-                    value={profile.whatsapp_number}
-                    onChange={handleProfileChange}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn primary"
-                  disabled={profileLoading}
-                >
-                  {profileLoading ? "Menyimpan..." : "Simpan Perubahan"}
+              <div className="account-delete-section">
+                <h3 className="account-delete-title">Delete Account</h3>
+                <p className="account-delete-text">
+                  If you no longer wish to use HeArt, you can permanently delete your account.
+                </p>
+                <button type="button" className="btn-delete-account" onClick={handleDeleteAccount}>
+                  Delete My Account
                 </button>
+              </div>
+            </section>
+          )}
+
+          {/* ===== TAB EDIT PROFILE ===== */}
+          {activeTab === "profile" && (
+            <section className="edit-profile-wrapper">
+              <form className="edit-profile-form" onSubmit={handleSaveProfile}>
+                <div className="edit-profile-header">
+                  <div className="edit-profile-header-left">
+                    <h2>Edit Profile</h2>
+                    <p>Update your photos and personal details here.</p>
+                  </div>
+
+                  <div className="edit-profile-actions">
+                    <button type="button" className="btn-ghost" onClick={() => window.location.reload()}>
+                      Cancel
+                    </button>
+
+                    <button type="submit" className="btn-save-gradient" disabled={profileLoading}>
+                      {profileLoading ? "Saving..." : "Save Changes"}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="edit-profile-divider" />
+
+                {profileError && <p className="form-error" style={{ marginBottom: 8 }}>{profileError}</p>}
+                {profileMessage && <p className="form-success" style={{ marginBottom: 8 }}>{profileMessage}</p>}
+
+                <div className="edit-photo-row">
+                  <div>
+                    <p className="edit-photo-left-title">Your Photo</p>
+                    <p className="edit-photo-left-caption">This will be displayed on your profile</p>
+
+                    <div className="edit-photo-avatar-preview">
+                      <div className="avatar-circle-lg">
+                        {avatarPreview ? (
+                          <img src={avatarPreview} alt="Preview avatar" />
+                        ) : profile.avatar_url ? (
+                          <img src={profile.avatar_url} alt="Avatar" />
+                        ) : (
+                          <span className="avatar-circle-placeholder">No Image</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="photo-upload-box">
+                      <div className="photo-upload-icon">🖼️</div>
+                      <div>
+                        <span className="photo-upload-text-main">Click to upload</span>{" "}
+                        <span className="photo-upload-text-sub">or drag and drop</span>
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="photo-upload-input"
+                        onChange={handlePhotoFileChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="edit-profile-grid">
+                  <div>
+                    <label className="form-field-label">Full Name</label>
+                    <input
+                      type="text"
+                      name="full_name"
+                      className="form-input"
+                      placeholder="Input Your First Name"
+                      value={profile.full_name}
+                      onChange={handleProfileFieldChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-field-label">Birth Date</label>
+                    <div className="birthdate-wrapper">
+                      <input
+                        type="date"
+                        name="birth_date"
+                        className="form-input birthdate-input"
+                        value={profile.birth_date || ""}
+                        onChange={handleProfileFieldChange}
+                      />
+                      <span className="birthdate-icon">📅</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="form-field-label">Phone Number (WhatsApp)</label>
+                    <input
+                      type="text"
+                      name="whatsapp_number"
+                      className="form-input"
+                      placeholder="Contoh: 08123456789"
+                      value={profile.whatsapp_number}
+                      onChange={handleProfileFieldChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="form-field-label">Address</label>
+                    <input
+                      type="text"
+                      name="address"
+                      className="form-input"
+                      placeholder="Input Your Address"
+                      value={profile.address}
+                      onChange={handleProfileFieldChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="edit-profile-grid-full">
+                  <label className="form-field-label">Gender</label>
+                  <div className="gender-options">
+                    <button
+                      type="button"
+                      className={`gender-pill ${profile.gender === "Male" ? "active" : ""}`}
+                      onClick={() => handleGenderClick("Male")}
+                    >
+                      Male
+                    </button>
+                    <button
+                      type="button"
+                      className={`gender-pill ${profile.gender === "Female" ? "active" : ""}`}
+                      onClick={() => handleGenderClick("Female")}
+                    >
+                      Female
+                    </button>
+                  </div>
+                </div>
+
+                <div className="edit-profile-grid-full">
+                  <label className="form-field-label">Bio</label>
+                  <textarea
+                    name="bio"
+                    className="form-textarea"
+                    rows={4}
+                    placeholder="Tell others about yourself..."
+                    value={profile.bio}
+                    onChange={handleProfileFieldChange}
+                  />
+                  <p className="bio-helper-text">
+                    Contoh: “Digital artist based in Jakarta, focusing on surreal illustration and visual storytelling.”
+                  </p>
+                </div>
+
+                <div className="change-password-row">
+                  {!showPasswordForm && (
+                    <button type="button" className="btn-change-password" onClick={() => setShowPasswordForm(true)}>
+                      Change Password
+                    </button>
+                  )}
+
+                  {showPasswordForm && (
+                    <div style={{ marginTop: 12, maxWidth: 420, display: "flex", flexDirection: "column", gap: 8 }}>
+                      {passwordError && <p className="form-error">{passwordError}</p>}
+                      {passwordMessage && <p className="form-success">{passwordMessage}</p>}
+
+                      <form onSubmit={handlePasswordSubmit}>
+                        <div style={{ marginBottom: 8 }}>
+                          <label className="form-field-label">Current Password</label>
+                          <input
+                            type="password"
+                            name="currentPassword"
+                            className="form-input"
+                            value={passwordForm.currentPassword}
+                            onChange={handlePasswordChange}
+                          />
+                        </div>
+
+                        <div style={{ marginBottom: 8 }}>
+                          <label className="form-field-label">New Password</label>
+                          <input
+                            type="password"
+                            name="newPassword"
+                            className="form-input"
+                            value={passwordForm.newPassword}
+                            onChange={handlePasswordChange}
+                          />
+                        </div>
+
+                        <div style={{ marginBottom: 12 }}>
+                          <label className="form-field-label">Confirm New Password</label>
+                          <input
+                            type="password"
+                            name="confirmNewPassword"
+                            className="form-input"
+                            value={passwordForm.confirmNewPassword}
+                            onChange={handlePasswordChange}
+                          />
+                        </div>
+
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button type="submit" className="btn-primary-black" disabled={passwordLoading}>
+                            {passwordLoading ? "Changing..." : "Save New Password"}
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn-ghost"
+                            onClick={() => {
+                              setShowPasswordForm(false);
+                              setPasswordForm({
+                                currentPassword: "",
+                                newPassword: "",
+                                confirmNewPassword: "",
+                              });
+                              setPasswordError("");
+                              setPasswordMessage("");
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  )}
+                </div>
               </form>
             </section>
+          )}
 
-            {/* ---- UBAH PASSWORD ---- */}
-            <section className="profile-section">
-              <h2>Ubah Password</h2>
-              <p className="section-subtitle">
-                Jaga keamanan akun dengan rutin mengganti kata sandi.
-              </p>
-
-              {passwordError && <p className="form-error">{passwordError}</p>}
-              {passwordMessage && (
-                <p className="form-success">{passwordMessage}</p>
-              )}
-
-              <form onSubmit={handlePasswordSubmit} className="profile-form">
-                <div className="form-group">
-                  <label>Password Saat Ini</label>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    placeholder="Masukkan password saat ini"
-                    value={passwordForm.currentPassword}
-                    onChange={handlePasswordChange}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Password Baru</label>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    placeholder="Masukkan password baru"
-                    value={passwordForm.newPassword}
-                    onChange={handlePasswordChange}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Konfirmasi Password Baru</label>
-                  <input
-                    type="password"
-                    name="confirmNewPassword"
-                    placeholder="Ulangi password baru"
-                    value={passwordForm.confirmNewPassword}
-                    onChange={handlePasswordChange}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn secondary"
-                  disabled={passwordLoading}
-                >
-                  {passwordLoading ? "Mengubah..." : "Ubah Password"}
-                </button>
-              </form>
-            </section>
-          </div>
-        </div>
-      )}
-
-      {/* ===== TAB: UPLOAD KARYA (GALLERY, FREE) ===== */}
-      {activeTab === "upload" && (
-        <div className="profile-layout single-column">
-          <div className="profile-right">
-            <section className="profile-section">
+          {/* ===== TAB UPLOAD (GALLERY) ===== */}
+          {activeTab === "upload" && (
+            <section className="profile-card">
               <h2>Upload Karya ke Gallery</h2>
-              <p className="section-subtitle">
-                Unggah karya yang ingin kamu tampilkan untuk inspirasi di
-                Gallery HeArt. Karya di sini bersifat free / non-komersial.
+              <p className="profile-card-subtitle">
+                Unggah karya yang ingin kamu tampilkan untuk inspirasi di Gallery HeArt. Karya di sini bersifat free / non-komersial.
               </p>
 
               {artworkError && <p className="form-error">{artworkError}</p>}
-              {artworkMessage && (
-                <p className="form-success">{artworkMessage}</p>
-              )}
+              {artworkMessage && <p className="form-success">{artworkMessage}</p>}
 
               <form onSubmit={handleArtworkSubmit} className="profile-form">
                 <div className="form-group">
@@ -818,69 +1085,41 @@ const ProfileSettings = () => {
 
                 <div className="form-group">
                   <label>Style</label>
-                  <select
-                    name="style"
-                    value={artworkForm.style}
-                    onChange={handleArtworkChange}
-                  >
+                  <select name="style" value={artworkForm.style} onChange={handleArtworkChange}>
                     {STYLE_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
+                      <option key={opt} value={opt}>{opt}</option>
                     ))}
                   </select>
                 </div>
 
                 <div className="form-group">
                   <label>File Karya (Gambar)</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleArtworkFileChange}
-                  />
+                  <input type="file" accept="image/*" onChange={handleArtworkFileChange} />
                 </div>
 
-                {/* PREVIEW BESAR */}
                 {artworkPreview && (
                   <div className="artwork-preview-wrapper">
-                    <p className="artwork-preview-label">Preview Karya:</p>
-                    <div className="artwork-preview-box">
-                      <img
-                        src={artworkPreview}
-                        alt="Preview karya"
-                        className="artwork-preview-img"
-                      />
-                    </div>
+                    <img src={artworkPreview} alt="Preview karya" className="artwork-preview-img" />
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  className="btn primary"
-                  disabled={artworkLoading}
-                >
+                <button type="submit" className="btn-primary-black" disabled={artworkLoading}>
                   {artworkLoading ? "Mengupload..." : "Upload ke Gallery"}
                 </button>
               </form>
-            </section>
 
-            {/* ===== TABEL KARYAKU DI GALLERY ===== */}
-            <section className="profile-section">
+              <hr style={{ margin: "24px 0", borderColor: "#eee" }} />
+
               <h2>Karyaku di Gallery</h2>
-              <p className="section-subtitle">
-                Daftar karya yang sudah kamu upload ke Gallery. Kamu bisa edit
-                atau hapus (soft delete).
+              <p className="profile-card-subtitle">
+                Daftar karya yang sudah kamu upload ke Gallery. Kamu bisa edit atau hapus.
               </p>
 
-              {myArtworksError && (
-                <p className="form-error">{myArtworksError}</p>
-              )}
+              {myArtworksError && <p className="form-error">{myArtworksError}</p>}
               {myArtworksLoading && <p>Memuat data karya...</p>}
 
               {!myArtworksLoading && myArtworks.length === 0 && (
-                <p className="section-subtitle">
-                  Kamu belum mengupload karya apa pun ke Gallery.
-                </p>
+                <p className="profile-card-subtitle">Kamu belum mengupload karya apa pun ke Gallery.</p>
               )}
 
               {!myArtworksLoading && myArtworks.length > 0 && (
@@ -903,25 +1142,18 @@ const ProfileSettings = () => {
                           <tr key={art.id}>
                             <td>
                               <div className="artwork-thumb">
-                                <img
-                                  src={art.image_url}
-                                  alt={art.title}
-                                  className="artwork-thumb-img"
-                                />
+                                <img src={art.image_url} alt={art.title} className="artwork-thumb-img" />
                               </div>
                             </td>
+
                             <td>
                               {isEditing ? (
-                                <input
-                                  type="text"
-                                  name="title"
-                                  value={editForm.title}
-                                  onChange={handleEditFormChange}
-                                />
+                                <input type="text" name="title" value={editForm.title} onChange={handleEditFormChange} />
                               ) : (
                                 art.title
                               )}
                             </td>
+
                             <td>
                               {isEditing ? (
                                 <textarea
@@ -931,66 +1163,43 @@ const ProfileSettings = () => {
                                   onChange={handleEditFormChange}
                                 />
                               ) : (
-                                <span className="artwork-desc">
-                                  {art.description || "-"}
-                                </span>
+                                <span className="artwork-desc">{art.description || "-"}</span>
                               )}
                             </td>
+
                             <td>
                               {isEditing ? (
-                                <select
-                                  name="style"
-                                  value={editForm.style}
-                                  onChange={handleEditFormChange}
-                                >
+                                <select name="style" value={editForm.style} onChange={handleEditFormChange}>
                                   {STYLE_OPTIONS.map((opt) => (
-                                    <option key={opt} value={opt}>
-                                      {opt}
-                                    </option>
+                                    <option key={opt} value={opt}>{opt}</option>
                                   ))}
                                 </select>
                               ) : (
                                 art.style || "-"
                               )}
                             </td>
-                            <td>
-                              {new Date(art.created_at).toLocaleDateString(
-                                "id-ID"
-                              )}
-                            </td>
+
+                            <td>{new Date(art.created_at).toLocaleDateString("id-ID")}</td>
+
                             <td>
                               {isEditing ? (
                                 <div className="table-actions">
-                                  <button
-                                    type="button"
-                                    className="btn small primary"
-                                    onClick={() => handleSaveEdit(art.id)}
-                                  >
+                                  <button type="button" className="btn-small" onClick={() => handleSaveEdit(art.id)}>
                                     Simpan
                                   </button>
-                                  <button
-                                    type="button"
-                                    className="btn small secondary"
-                                    onClick={handleCancelEdit}
-                                  >
+                                  <button type="button" className="btn-small" onClick={handleCancelEdit}>
                                     Batal
                                   </button>
                                 </div>
                               ) : (
                                 <div className="table-actions">
-                                  <button
-                                    type="button"
-                                    className="btn small secondary"
-                                    onClick={() => handleStartEdit(art)}
-                                  >
+                                  <button type="button" className="btn-small" onClick={() => handleStartEdit(art)}>
                                     Edit
                                   </button>
                                   <button
                                     type="button"
-                                    className="btn small danger"
-                                    onClick={() =>
-                                      handleDeleteArtwork(art.id)
-                                    }
+                                    className="btn-small btn-small-danger"
+                                    onClick={() => handleDeleteArtwork(art.id)}
                                   >
                                     Hapus
                                   </button>
@@ -1005,26 +1214,18 @@ const ProfileSettings = () => {
                 </div>
               )}
             </section>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* ===== TAB: JUAL KARYA (FOR SALE) ===== */}
-      {activeTab === "sell" && (
-        <div className="profile-layout single-column">
-          <div className="profile-right">
-            <section className="profile-section">
-              <h2>Jual Karya</h2>
-              <p className="section-subtitle">
-                Lengkapi detail karya yang ingin kamu jual di halaman For Sale.
-                (Untuk saat ini, backend-nya baru menyimpan ke tabel artworks
-                dengan mode &quot;for_sale&quot; sebagai placeholder.)
+          {/* ===== TAB SELL (FOR SALE) ===== */}
+          {activeTab === "sell" && (
+            <section className="profile-card">
+              <h2>Jual Karya (For Sale)</h2>
+              <p className="profile-card-subtitle">
+                Upload karya untuk dijual. Tombol Make an Offer di detail akan mengarah ke WhatsApp kamu (nomor WA dari profil).
               </p>
 
               {artworkError && <p className="form-error">{artworkError}</p>}
-              {artworkMessage && (
-                <p className="form-success">{artworkMessage}</p>
-              )}
+              {artworkMessage && <p className="form-success">{artworkMessage}</p>}
 
               <form onSubmit={handleArtworkSubmit} className="profile-form">
                 <div className="form-group">
@@ -1049,17 +1250,27 @@ const ProfileSettings = () => {
                   />
                 </div>
 
-                <div className="form-group form-row">
+                <div className="form-group">
+                  <label>Style</label>
+                  <select name="style" value={artworkForm.style} onChange={handleArtworkChange}>
+                    {STYLE_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-row">
                   <div className="form-group-half">
                     <label>Harga (IDR)</label>
                     <input
                       type="number"
                       name="price"
-                      placeholder="Contoh: 250000"
+                      placeholder="Contoh: 2500000"
                       value={artworkForm.price}
                       onChange={handleArtworkChange}
                     />
                   </div>
+
                   <div className="form-group-half">
                     <label>Kategori</label>
                     <input
@@ -1072,41 +1283,217 @@ const ProfileSettings = () => {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label>File Karya (Gambar)</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleArtworkFileChange}
-                  />
+                <div className="form-row">
+                  <div className="form-group-half">
+                    <label>Height (cm)</label>
+                    <input
+                      type="number"
+                      name="height_cm"
+                      placeholder="Contoh: 60"
+                      value={artworkForm.height_cm}
+                      onChange={handleArtworkChange}
+                    />
+                  </div>
+
+                  <div className="form-group-half">
+                    <label>Width (cm)</label>
+                    <input
+                      type="number"
+                      name="width_cm"
+                      placeholder="Contoh: 90"
+                      value={artworkForm.width_cm}
+                      onChange={handleArtworkChange}
+                    />
+                  </div>
                 </div>
 
-                {/* PREVIEW BESAR */}
+                <div className="form-group">
+                  <label>File Karya (Gambar)</label>
+                  <input type="file" accept="image/*" onChange={handleArtworkFileChange} />
+                </div>
+
                 {artworkPreview && (
                   <div className="artwork-preview-wrapper">
-                    <p className="artwork-preview-label">Preview Karya:</p>
-                    <div className="artwork-preview-box">
-                      <img
-                        src={artworkPreview}
-                        alt="Preview karya"
-                        className="artwork-preview-img"
-                      />
-                    </div>
+                    <img src={artworkPreview} alt="Preview karya" className="artwork-preview-img" />
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  className="btn primary"
-                  disabled={artworkLoading}
-                >
+                <button type="submit" className="btn-primary-black" disabled={artworkLoading}>
                   {artworkLoading ? "Mengupload..." : "Upload & Jual Karya"}
                 </button>
               </form>
+
+              <hr style={{ margin: "24px 0", borderColor: "#eee" }} />
+
+              <h2>Karyaku di For Sale</h2>
+              <p className="profile-card-subtitle">
+                Ini daftar karya yang kamu jual. Bisa edit/hapus.
+              </p>
+
+              {myForSaleError && <p className="form-error">{myForSaleError}</p>}
+              {myForSaleLoading && <p>Memuat data for sale...</p>}
+
+              {!myForSaleLoading && myForSale.length === 0 && (
+                <p className="profile-card-subtitle">Kamu belum mengupload karya untuk dijual.</p>
+              )}
+
+              {!myForSaleLoading && myForSale.length > 0 && (
+                <div className="artwork-table-wrapper">
+                  <table className="artwork-table">
+                    <thead>
+                      <tr>
+                        <th>Preview</th>
+                        <th>Judul</th>
+                        <th>Harga</th>
+                        <th>Ukuran</th>
+                        <th>Style</th>
+                        <th>Kategori</th>
+                        <th>Dibuat</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {myForSale.map((art) => {
+                        const isEditing = editingForSaleId === art.id;
+
+                        return (
+                          <tr key={art.id}>
+                            <td>
+                              <div className="artwork-thumb">
+                                <img src={art.image_url} alt={art.title} className="artwork-thumb-img" />
+                              </div>
+                            </td>
+
+                            <td style={{ minWidth: 180 }}>
+                              {isEditing ? (
+                                <>
+                                  <input
+                                    type="text"
+                                    name="title"
+                                    value={editForSaleForm.title}
+                                    onChange={handleEditForSaleChange}
+                                    style={{ marginBottom: 6, width: "100%" }}
+                                  />
+                                  <textarea
+                                    name="description"
+                                    rows={2}
+                                    value={editForSaleForm.description}
+                                    onChange={handleEditForSaleChange}
+                                    style={{ width: "100%" }}
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <div style={{ fontWeight: 600 }}>{art.title}</div>
+                                  <div className="artwork-desc">{art.description || "-"}</div>
+                                </>
+                              )}
+                            </td>
+
+                            <td style={{ minWidth: 120 }}>
+                              {isEditing ? (
+                                <input
+                                  type="number"
+                                  name="price"
+                                  value={editForSaleForm.price}
+                                  onChange={handleEditForSaleChange}
+                                />
+                              ) : (
+                                <span>{art.price ? `Rp ${Number(art.price).toLocaleString("id-ID")}` : "-"}</span>
+                              )}
+                            </td>
+
+                            <td style={{ minWidth: 140 }}>
+                              {isEditing ? (
+                                <div style={{ display: "flex", gap: 6 }}>
+                                  <input
+                                    type="number"
+                                    name="height_cm"
+                                    value={editForSaleForm.height_cm}
+                                    onChange={handleEditForSaleChange}
+                                    placeholder="H"
+                                    style={{ width: 70 }}
+                                  />
+                                  <input
+                                    type="number"
+                                    name="width_cm"
+                                    value={editForSaleForm.width_cm}
+                                    onChange={handleEditForSaleChange}
+                                    placeholder="W"
+                                    style={{ width: 70 }}
+                                  />
+                                </div>
+                              ) : (
+                                <span>
+                                  {(art.height_cm ?? "-")} x {(art.width_cm ?? "-")} cm
+                                </span>
+                              )}
+                            </td>
+
+                            <td style={{ minWidth: 120 }}>
+                              {isEditing ? (
+                                <select name="style" value={editForSaleForm.style} onChange={handleEditForSaleChange}>
+                                  {STYLE_OPTIONS.map((opt) => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                  ))}
+                                </select>
+                              ) : (
+                                art.style || "-"
+                              )}
+                            </td>
+
+                            <td style={{ minWidth: 160 }}>
+                              {isEditing ? (
+                                <input
+                                  type="text"
+                                  name="category"
+                                  value={editForSaleForm.category}
+                                  onChange={handleEditForSaleChange}
+                                />
+                              ) : (
+                                art.category || "-"
+                              )}
+                            </td>
+
+                            <td>{new Date(art.created_at).toLocaleDateString("id-ID")}</td>
+
+                            <td>
+                              {isEditing ? (
+                                <div className="table-actions">
+                                  <button type="button" className="btn-small" onClick={() => handleSaveEditForSale(art.id)}>
+                                    Simpan
+                                  </button>
+                                  <button type="button" className="btn-small" onClick={handleCancelEditForSale}>
+                                    Batal
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="table-actions">
+                                  <button type="button" className="btn-small" onClick={() => handleStartEditForSale(art)}>
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn-small btn-small-danger"
+                                    onClick={() => handleDeleteForSale(art.id)}
+                                  >
+                                    Hapus
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </section>
-          </div>
-        </div>
-      )}
+          )}
+        </main>
+      </div>
     </div>
   );
 };
