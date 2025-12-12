@@ -15,6 +15,21 @@ const getAuthJsonHeaders = () => {
   };
 };
 
+// ✅ NEW: aman untuk parse response JSON (kalau server balikin HTML, kita kasih error yang jelas)
+async function readJsonResponse(res) {
+  const ct = res.headers.get("content-type") || "";
+  if (ct.includes("application/json")) {
+    return await res.json();
+  }
+  const text = await res.text(); // biasanya berisi <!DOCTYPE html>...
+  throw new Error(
+    `Server mengembalikan non-JSON (status ${res.status}). Response awal: ${text.slice(
+      0,
+      180
+    )}`
+  );
+}
+
 const toDateInputValue = (value) => {
   if (!value) return "";
   try {
@@ -182,7 +197,7 @@ const AdminDashboard = () => {
       const res = await fetch(`${API_BASE_URL}/api/admin/users`, {
         headers: getAuthJsonHeaders(),
       });
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal memuat users.");
       setUsers(data.users || []);
     } catch (err) {
@@ -193,7 +208,7 @@ const AdminDashboard = () => {
     }
   }, []);
 
-  // ✅ gallery only (kalau backend kamu sudah filter, bagus. kalau belum, kita filter di FE)
+  // ✅ gallery only
   const loadArtworks = useCallback(async () => {
     try {
       setArtworksLoading(true);
@@ -201,12 +216,11 @@ const AdminDashboard = () => {
       const res = await fetch(`${API_BASE_URL}/api/admin/artworks`, {
         headers: getAuthJsonHeaders(),
       });
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal memuat artworks.");
 
-      // filter mode=gallery kalau ada field mode
       const list = (data.artworks || []).filter((a) => {
-        if (!a.mode) return true; // kalau backend tidak punya field mode, biarin.
+        if (!a.mode) return true;
         return String(a.mode).toLowerCase() !== "for_sale";
       });
 
@@ -229,7 +243,7 @@ const AdminDashboard = () => {
         headers: getAuthJsonHeaders(),
       });
 
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal memuat for sale.");
 
       setForSaleList(data.artworks || data.items || []);
@@ -248,7 +262,7 @@ const AdminDashboard = () => {
       const res = await fetch(`${API_BASE_URL}/api/admin/events`, {
         headers: getAuthJsonHeaders(),
       });
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal memuat events.");
       setEvents(data.events || []);
     } catch (err) {
@@ -277,7 +291,7 @@ const AdminDashboard = () => {
         headers: getAuthJsonHeaders(),
         body: JSON.stringify({ is_banned: !user.is_banned }),
       });
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal update status ban user.");
       await loadUsers();
     } catch (err) {
@@ -296,7 +310,7 @@ const AdminDashboard = () => {
         method: "DELETE",
         headers: getAuthJsonHeaders(),
       });
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal menghapus karya.");
       await loadArtworks();
     } catch (err) {
@@ -319,7 +333,7 @@ const AdminDashboard = () => {
         headers: getAuthJsonHeaders(),
       });
 
-      const data = await res.json().catch(() => ({}));
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal menghapus for sale.");
 
       await loadForSale();
@@ -337,10 +351,8 @@ const AdminDashboard = () => {
     );
   };
 
-  const addTicketRow = () =>
-    setTicketRows((prev) => [...prev, { type: "", price: "", quota: "" }]);
-  const removeTicketRow = (index) =>
-    setTicketRows((prev) => prev.filter((_, i) => i !== index));
+  const addTicketRow = () => setTicketRows((prev) => [...prev, { type: "", price: "", quota: "" }]);
+  const removeTicketRow = (index) => setTicketRows((prev) => prev.filter((_, i) => i !== index));
 
   // ==================== EVENTS ====================
 
@@ -381,10 +393,7 @@ const AdminDashboard = () => {
     try {
       setGlobalError("");
 
-      const locationCombined = joinLocation(
-        newEvent.location_main,
-        newEvent.location_detail
-      );
+      const locationCombined = joinLocation(newEvent.location_main, newEvent.location_detail);
 
       if (!newEvent.title || !locationCombined || !newEvent.start_date || !newEvent.start_time) {
         setGlobalError("Title, lokasi (main/detail), dan start date/time wajib diisi.");
@@ -396,17 +405,13 @@ const AdminDashboard = () => {
         if (!qrisFile) return setGlobalError("QRIS image wajib diupload.");
       }
 
-      const ticketsPayload = ticketRows.filter(
-        (t) => t.type.trim() !== "" && t.price.trim() !== ""
-      );
+      const ticketsPayload = ticketRows.filter((t) => t.type.trim() !== "" && t.price.trim() !== "");
       if (ticketsPayload.length === 0) {
         setGlobalError("Minimal harus ada 1 jenis tiket.");
         return;
       }
 
-      const startIso = new Date(
-        `${newEvent.start_date}T${newEvent.start_time}:00`
-      ).toISOString();
+      const startIso = new Date(`${newEvent.start_date}T${newEvent.start_time}:00`).toISOString();
 
       let endIso = null;
       if (newEvent.end_date && newEvent.end_time) {
@@ -416,7 +421,7 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append("title", newEvent.title);
 
-      // kirim gabungan + terpisah (biar backend apapun aman)
+      // kirim gabungan + terpisah
       formData.append("location", locationCombined);
       formData.append("location_main", (newEvent.location_main || "").trim());
       formData.append("location_detail", (newEvent.location_detail || "").trim());
@@ -449,14 +454,7 @@ const AdminDashboard = () => {
         body: formData,
       });
 
-      const contentType = res.headers.get("content-type") || "";
-      if (!contentType.includes("application/json")) {
-        const text = await res.text();
-        console.error("Non-JSON response:", text);
-        throw new Error("Server mengembalikan respon non-JSON. Cek log backend.");
-      }
-
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal menyimpan event.");
 
       resetEventForm();
@@ -526,7 +524,7 @@ const AdminDashboard = () => {
         method: "DELETE",
         headers: getAuthJsonHeaders(),
       });
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal menghapus event.");
 
       await loadEvents();
@@ -551,7 +549,7 @@ const AdminDashboard = () => {
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/events/${id}`);
-      const data = await res.json();
+      const data = await readJsonResponse(res);
       if (!res.ok) throw new Error(data.message || "Gagal memuat detail event.");
 
       setEventDetail({
@@ -892,7 +890,9 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   value={newEvent.location_main}
-                  onChange={(e) => setNewEvent((p) => ({ ...p, location_main: e.target.value }))}
+                  onChange={(e) =>
+                    setNewEvent((p) => ({ ...p, location_main: e.target.value }))
+                  }
                   placeholder="Misal: Grand City Mall"
                   required
                 />
@@ -905,7 +905,9 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   value={newEvent.location_detail}
-                  onChange={(e) => setNewEvent((p) => ({ ...p, location_detail: e.target.value }))}
+                  onChange={(e) =>
+                    setNewEvent((p) => ({ ...p, location_detail: e.target.value }))
+                  }
                   placeholder="Misal: Jl. Kusuma Bangsa No.1, Surabaya"
                 />
               </label>
@@ -917,7 +919,9 @@ const AdminDashboard = () => {
                 <input
                   type="date"
                   value={newEvent.start_date}
-                  onChange={(e) => setNewEvent((p) => ({ ...p, start_date: e.target.value }))}
+                  onChange={(e) =>
+                    setNewEvent((p) => ({ ...p, start_date: e.target.value }))
+                  }
                   required
                 />
               </label>
@@ -926,7 +930,9 @@ const AdminDashboard = () => {
                 <input
                   type="time"
                   value={newEvent.start_time}
-                  onChange={(e) => setNewEvent((p) => ({ ...p, start_time: e.target.value }))}
+                  onChange={(e) =>
+                    setNewEvent((p) => ({ ...p, start_time: e.target.value }))
+                  }
                   required
                 />
               </label>
@@ -957,7 +963,9 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   value={newEvent.organizer_name}
-                  onChange={(e) => setNewEvent((p) => ({ ...p, organizer_name: e.target.value }))}
+                  onChange={(e) =>
+                    setNewEvent((p) => ({ ...p, organizer_name: e.target.value }))
+                  }
                 />
               </label>
               <label>
@@ -989,7 +997,12 @@ const AdminDashboard = () => {
                   <img
                     src={posterPreview}
                     alt={newEvent.title ? `Poster ${newEvent.title}` : "Poster event"}
-                    style={{ display: "block", marginTop: 8, maxWidth: 200, height: "auto" }}
+                    style={{
+                      display: "block",
+                      marginTop: 8,
+                      maxWidth: 200,
+                      height: "auto",
+                    }}
                   />
                 )}
               </label>
@@ -1009,7 +1022,12 @@ const AdminDashboard = () => {
                   <img
                     src={qrisPreview}
                     alt={newEvent.title ? `QRIS ${newEvent.title}` : "QRIS"}
-                    style={{ display: "block", marginTop: 8, maxWidth: 200, height: "auto" }}
+                    style={{
+                      display: "block",
+                      marginTop: 8,
+                      maxWidth: 200,
+                      height: "auto",
+                    }}
                   />
                 )}
               </label>
@@ -1030,7 +1048,11 @@ const AdminDashboard = () => {
                 {organizerLogoPreview && (
                   <img
                     src={organizerLogoPreview}
-                    alt={newEvent.organizer_name ? `Logo ${newEvent.organizer_name}` : "Logo organizer"}
+                    alt={
+                      newEvent.organizer_name
+                        ? `Logo ${newEvent.organizer_name}`
+                        : "Logo organizer"
+                    }
                     style={{
                       display: "block",
                       marginTop: 8,
@@ -1053,7 +1075,14 @@ const AdminDashboard = () => {
                   multiple
                   onChange={(e) => onPickEventPhotos(e.target.files)}
                 />
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 10,
+                    flexWrap: "wrap",
+                    marginTop: 10,
+                  }}
+                >
                   {eventPhotoPreviews.map((url, idx) => (
                     <div key={idx} style={{ position: "relative" }}>
                       <img
@@ -1063,7 +1092,12 @@ const AdminDashboard = () => {
                             ? `Dokumentasi ${newEvent.title} #${idx + 1}`
                             : `Dokumentasi #${idx + 1}`
                         }
-                        style={{ width: 120, height: 90, objectFit: "cover", borderRadius: 6 }}
+                        style={{
+                          width: 120,
+                          height: 90,
+                          objectFit: "cover",
+                          borderRadius: 6,
+                        }}
                       />
                       <button
                         type="button"
@@ -1310,7 +1344,12 @@ const AdminDashboard = () => {
                                   ? `Dokumentasi ${detailData.title} #${idx + 1}`
                                   : `Dokumentasi #${idx + 1}`
                               }
-                              style={{ width: 140, height: 100, objectFit: "cover", borderRadius: 6 }}
+                              style={{
+                                width: 140,
+                                height: 100,
+                                objectFit: "cover",
+                                borderRadius: 6,
+                              }}
                             />
                           ))}
                         </div>
@@ -1372,8 +1411,17 @@ const AdminDashboard = () => {
                       {detailData.organizer_logo_url ? (
                         <img
                           src={detailData.organizer_logo_url}
-                          alt={detailData.organizer_name ? `Logo ${detailData.organizer_name}` : "Logo organizer"}
-                          style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover" }}
+                          alt={
+                            detailData.organizer_name
+                              ? `Logo ${detailData.organizer_name}`
+                              : "Logo organizer"
+                          }
+                          style={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
                         />
                       ) : (
                         <span>-</span>

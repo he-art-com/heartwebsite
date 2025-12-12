@@ -1275,24 +1275,23 @@ app.get("/api/artists/:id/artworks", async (req, res) => {
     }
 
     const artworksResult = await pool.query(
-  `
-  SELECT 
-    id, title, description, style, image_url,
-    mode, price, category, height_cm, width_cm, frame_details,
-    status, created_at, updated_at
-  FROM public.artworks
-  WHERE user_id = $1
-    AND status = 'active'
-    AND (
-      mode IS NULL
-      OR mode = 'gallery'
-      OR mode = 'for_sale'
-    )
-  ORDER BY created_at DESC
-  `,
-  [artistId]
-);
-
+      `
+      SELECT 
+        id, title, description, style, image_url,
+        mode, price, category, height_cm, width_cm, frame_details,
+        status, created_at, updated_at
+      FROM public.artworks
+      WHERE user_id = $1
+        AND status = 'active'
+        AND (
+          mode IS NULL
+          OR mode = 'gallery'
+          OR mode = 'for_sale'
+        )
+      ORDER BY created_at DESC
+      `,
+      [artistId]
+    );
 
     return res.json({ artworks: artworksResult.rows });
   } catch (err) {
@@ -1491,7 +1490,6 @@ app.delete(
     }
   }
 );
-
 
 // ===================================================================
 // ========================= ADMIN: USERS ============================
@@ -2010,6 +2008,39 @@ app.put(
   }
 );
 
+// ✅✅ FIX UTAMA: ADMIN DELETE EVENT (sekarang pasti ke-register & aman FK)
+app.delete(
+  "/api/admin/events/:id",
+  authMiddleware,
+  adminMiddleware,
+  async (req, res) => {
+    try {
+      const eventId = Number(req.params.id);
+      if (!eventId) return res.status(400).json({ message: "ID tidak valid." });
+
+      const check = await pool.query("SELECT id FROM public.events WHERE id = $1", [eventId]);
+      if (check.rows.length === 0) {
+        return res.status(404).json({ message: "Event tidak ditemukan." });
+      }
+
+      // penting: hapus dulu tabel-tabel yang punya FK ke events
+      // (kalau kamu punya event_orders, ini mencegah error FK)
+      await pool.query("DELETE FROM public.event_orders WHERE event_id = $1", [eventId]);
+
+      // hapus tickets dulu
+      await pool.query("DELETE FROM public.event_tickets WHERE event_id = $1", [eventId]);
+
+      // lalu hapus event
+      await pool.query("DELETE FROM public.events WHERE id = $1", [eventId]);
+
+      return res.json({ message: "Event berhasil dihapus." });
+    } catch (err) {
+      console.error("Admin delete event error:", err);
+      return res.status(500).json({ message: "Server error saat menghapus event (admin)." });
+    }
+  }
+);
+
 // ADMIN: LIST PEMBELIAN TIKET
 app.get(
   "/api/admin/ticket-orders",
@@ -2047,6 +2078,15 @@ app.get(
     }
   }
 );
+
+// ===================================================================
+// ✅ API 404 JSON HANDLER (biar FE gak dapet HTML "<!DOCTYPE ...>") ===
+// ===================================================================
+app.use("/api", (req, res) => {
+  return res.status(404).json({
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+  });
+});
 
 // ===== JALANKAN SERVER =====
 const PORT = process.env.PORT || 5000;
