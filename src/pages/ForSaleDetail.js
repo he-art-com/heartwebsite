@@ -1,16 +1,14 @@
-// src/pages/ForSaleDetail.js
 import React from "react";
 import { useParams } from "react-router-dom";
 import "./ForSaleDetail.css";
 import { ARTWORKS } from "./artworks";
 
-// assets (sementara pakai yang sama)
 import Artwork2 from "../assets/images/3.png";
 
 const ForSaleDetail = () => {
   const { id } = useParams();
 
-  // 🔒 sementara HARD CODE hanya untuk id = 2
+  // sementara HARD CODE hanya untuk id = 2
   if (id !== "2") {
     return (
       <div style={{ padding: 80, textAlign: "center" }}>
